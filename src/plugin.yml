@@ -1,0 +1,19 @@
+name: uGift
+main: me.Sk8r2K10.uGift.uGift
+version: 1.0
+description: Gift/Trade Items to other Players
+commands:
+  gift:
+    description: Gift a Player
+  trade:
+    description: Trade with a Player
+
+permissions:
+    ugift.gift:
+        description: Give access to /gift
+    ugift.admin:
+        description: Give access to Admin commands
+    ugift.help:
+        description: Give access to Help commands
+    ugift.trade:
+        description: Give access to /trade
