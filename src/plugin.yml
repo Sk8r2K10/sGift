@@ -1,5 +1,5 @@
-name: uGift
-main: me.Sk8r2K10.uGift.uGift
+name: sGift
+main: me.Sk8r2K10.sGift.sGift
 version: 1.0
 description: Gift/Trade Items to other Players
 depend: [Vault]
@@ -13,12 +13,13 @@ permissions:
     ugift.gift:
         description: Give access to /gift
         default: op
+        children:
+            ugift.gift.help: true
     ugift.admin:
         description: Give access to Admin commands
-        default: op
-    ugift.help:
-        description: Give access to Help commands
         default: op
     ugift.trade:
         description: Give access to /trade
         default: op
+        children:
+            ugift.trade.help: true
