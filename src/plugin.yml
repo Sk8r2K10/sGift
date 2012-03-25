@@ -12,9 +12,13 @@ commands:
 permissions:
     ugift.gift:
         description: Give access to /gift
+        default: op
     ugift.admin:
         description: Give access to Admin commands
+        default: op
     ugift.help:
         description: Give access to Help commands
+        default: op
     ugift.trade:
         description: Give access to /trade
+        default: op
