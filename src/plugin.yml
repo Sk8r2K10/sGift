@@ -2,6 +2,7 @@ name: uGift
 main: me.Sk8r2K10.uGift.uGift
 version: 1.0
 description: Gift/Trade Items to other Players
+depend: [Vault]
 commands:
   gift:
     description: Gift a Player
