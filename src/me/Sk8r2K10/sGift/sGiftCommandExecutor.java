@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class sGiftCommandExecutor implements CommandExecutor {
-// =)
+
     private sGift plugin;
     ArrayList<Gift> gifts = new ArrayList<Gift>();
     ArrayList<Trade> trades = new ArrayList<Trade>();
@@ -69,24 +69,24 @@ public class sGiftCommandExecutor implements CommandExecutor {
 
                         player.sendMessage(prefix + ChatColor.RED + "No Gifts to accept!");
                     } else {
-                        
-                    Player playerSendingItems = gift.playerSender;
-                    Player Victim = gift.Victim;
-                    ItemStack items = gift.itemStack;
-                    
-                    if (player.getInventory().firstEmpty() == -1) {
+
+                        Player playerSendingItems = gift.playerSender;
+                        Player Victim = gift.Victim;
+                        ItemStack items = gift.itemStack;
+
+                        if (player.getInventory().firstEmpty() == -1) {
                             Location playerloc = player.getLocation();
                             player.getWorld().dropItemNaturally(playerloc, items);
                             player.sendMessage(prefix2 + "Inventory full! Dropped Items at your feet!");
 
                         }
 
-                    Victim.getInventory().addItem(items);
-                    playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + "!");
-                    Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + "!");
-                    log.info(prefix + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.name(items) + " from " + playerSendingItems.getDisplayName());
+                        Victim.getInventory().addItem(items);
+                        playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + "!");
+                        Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + "!");
+                        log.info(prefix + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.name(items) + " from " + playerSendingItems.getDisplayName());
 
-                    gifts.remove(gift);
+                        gifts.remove(gift);
                     }
 
 
@@ -107,26 +107,32 @@ public class sGiftCommandExecutor implements CommandExecutor {
 
                         player.sendMessage(prefix + ChatColor.RED + "No Gifts to deny!");
                     } else {
-                        
-                    Player playerSendingItems = gift.playerSender;
-                    Player Victim = gift.Victim;
-                    ItemStack items = gift.itemStack;
-                    
-                    if (playerSendingItems.getInventory().firstEmpty() == -1) {
+
+                        Player playerSendingItems = gift.playerSender;
+                        Player Victim = gift.Victim;
+                        ItemStack items = gift.itemStack;
+
+                        if (playerSendingItems.getInventory().firstEmpty() == -1) {
                             Location playerloc = playerSendingItems.getLocation();
                             playerSendingItems.getWorld().dropItemNaturally(playerloc, items);
                             playerSendingItems.sendMessage(prefix2 + "Inventory full! Dropped Items at your feet!");
 
                         }
+                        if (!playerSendingItems.isOnline()) {
+                            player.sendMessage(prefix + ChatColor.RED + "Player sending items is not Online!");
+                            player.sendMessage(prefix + ChatColor.RED + "Please wait for " + playerSendingItems.getName() + " to come back online!");
 
-                    playerSendingItems.getInventory().addItem(items);
-                    playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + Victim.getDisplayName() + ChatColor.RED + " has Denied your Gift request!");
-                    playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.RED + " Has been returned to you.");
-                    Victim.sendMessage(prefix + ChatColor.RED + "You denied " + playerSendingItems.getName() + "'s Gift!");
-                    log.info(prefix + Victim.getDisplayName() + " denied " + items.getAmount() + " " + Items.name(items) + " from " + playerSendingItems.getDisplayName());
+                        } else {
+                            playerSendingItems.getInventory().addItem(items);
+                            playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + Victim.getDisplayName() + ChatColor.RED + " has Denied your Gift request!");
+                            playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.RED + " Has been returned to you.");
+                            Victim.sendMessage(prefix + ChatColor.RED + "You denied " + playerSendingItems.getName() + "'s Gift!");
+                            log.info(prefix + Victim.getDisplayName() + " denied " + items.getAmount() + " " + Items.name(items) + " from " + playerSendingItems.getDisplayName());
 
-                    gifts.remove(gift);
+                            gifts.remove(gift);
+                        }
                     }
+
 
 
 
@@ -145,25 +151,25 @@ public class sGiftCommandExecutor implements CommandExecutor {
 
                         player.sendMessage(prefix + ChatColor.RED + "No Gifts to stop!");
                     } else {
-                        
-                    Player playerSendingItems = gift.playerSender;
-                    Player Victim = gift.Victim;
-                    ItemStack items = gift.itemStack;
-                    
-                    if (playerSendingItems.getInventory().firstEmpty() == -1) {
+
+                        Player playerSendingItems = gift.playerSender;
+                        Player Victim = gift.Victim;
+                        ItemStack items = gift.itemStack;
+
+                        if (playerSendingItems.getInventory().firstEmpty() == -1) {
                             Location playerloc = playerSendingItems.getLocation();
                             playerSendingItems.getWorld().dropItemNaturally(playerloc, items);
                             playerSendingItems.sendMessage(prefix2 + "Inventory full! Dropped Items at your feet!");
 
                         }
 
-                    playerSendingItems.getInventory().addItem(items);
-                    playerSendingItems.sendMessage(prefix + ChatColor.RED + "Your Gift has been cancelled by an Admin!");
-                    playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.RED + " has been returned to you.");
-                    Victim.sendMessage(prefix + ChatColor.RED + "Admin cancelled your Gift.");
-                    log.info(prefix + "stopped a gift of " + items.getAmount() + " " + Items.name(items) + " from " + playerSendingItems.getDisplayName());
+                        playerSendingItems.getInventory().addItem(items);
+                        playerSendingItems.sendMessage(prefix + ChatColor.RED + "Your Gift has been cancelled by an Admin!");
+                        playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.RED + " has been returned to you.");
+                        Victim.sendMessage(prefix + ChatColor.RED + "Admin cancelled your Gift.");
+                        log.info(prefix + "stopped a gift of " + items.getAmount() + " " + Items.name(items) + " from " + playerSendingItems.getDisplayName());
 
-                    gifts.remove(gift);
+                        gifts.remove(gift);
                     }
 
 
@@ -185,27 +191,27 @@ public class sGiftCommandExecutor implements CommandExecutor {
 
                         player.sendMessage(prefix + ChatColor.RED + "No Gifts to cancel!");
                     } else {
-                        
-                    Player playerSendingItems = gift.playerSender;
-                    Player Victim = gift.Victim;
-                    ItemStack items = gift.itemStack;
-                    
-                    if (playerSendingItems.getInventory().firstEmpty() == -1) {
+
+                        Player playerSendingItems = gift.playerSender;
+                        Player Victim = gift.Victim;
+                        ItemStack items = gift.itemStack;
+
+                        if (playerSendingItems.getInventory().firstEmpty() == -1) {
                             Location playerloc = playerSendingItems.getLocation();
                             playerSendingItems.getWorld().dropItemNaturally(playerloc, items);
                             playerSendingItems.sendMessage(prefix2 + "Inventory full! Dropped Items at your feet!");
 
                         }
 
-                    playerSendingItems.getInventory().addItem(items);
-                    playerSendingItems.sendMessage(prefix + ChatColor.RED + "Cancelled gift!");
-                    playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.RED + " Has been returned to you.");
-                    Victim.sendMessage(prefix + ChatColor.YELLOW + playerSendingItems.getName() + ChatColor.RED + " Cancelled the Gift!");
+                        playerSendingItems.getInventory().addItem(items);
+                        playerSendingItems.sendMessage(prefix + ChatColor.RED + "Cancelled gift!");
+                        playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.RED + " Has been returned to you.");
+                        Victim.sendMessage(prefix + ChatColor.YELLOW + playerSendingItems.getName() + ChatColor.RED + " Cancelled the Gift!");
 
-                    gifts.remove(gift); 
+                        gifts.remove(gift);
                     }
 
-                    
+
 
                 } else if (player.getServer().getPlayer(args[0]) == null) {
 
@@ -369,22 +375,27 @@ public class sGiftCommandExecutor implements CommandExecutor {
                         Player Victim = trade.Victim;
                         ItemStack items = trade.itemStack;
                         int price = trade.price;
-                        
+
                         if (playerSendingItems.getInventory().firstEmpty() == -1) {
                             Location playerloc = playerSendingItems.getLocation();
                             playerSendingItems.getWorld().dropItemNaturally(playerloc, items);
                             playerSendingItems.sendMessage(prefix2 + "Inventory full! Dropped Items at your feet!");
 
                         }
+                        if (!playerSendingItems.isOnline()) {
+                            player.sendMessage(prefix + ChatColor.RED + "Player sending items is not Online!");
+                            player.sendMessage(prefix + ChatColor.RED + "Please wait for " + playerSendingItems.getName() + " to come back online!");
+                        } else {
+                            playerSendingItems.getInventory().addItem(items);
+                            playerSendingItems.sendMessage(prefix2 + ChatColor.YELLOW + Victim.getDisplayName() + ChatColor.RED + " has Denied your Trade request!");
+                            playerSendingItems.sendMessage(prefix2 + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.RED + " Has been returned to you.");
+                            Victim.sendMessage(prefix2 + ChatColor.RED + "You denied " + playerSendingItems.getName() + "'s Trade!");
+                            log.info(prefix2 + Victim.getDisplayName() + " denied " + items.getAmount() + " " + Items.name(items) + " from " + playerSendingItems.getDisplayName() + " for " + price + " " + plugin.getEcon().currencyNameSingular() + "(s)");
 
-                        playerSendingItems.getInventory().addItem(items);
-                        playerSendingItems.sendMessage(prefix2 + ChatColor.YELLOW + Victim.getDisplayName() + ChatColor.RED + " has Denied your Trade request!");
-                        playerSendingItems.sendMessage(prefix2 + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.RED + " Has been returned to you.");
-                        Victim.sendMessage(prefix2 + ChatColor.RED + "You denied " + playerSendingItems.getName() + "'s Trade!");
-                        log.info(prefix2 + Victim.getDisplayName() + " denied " + items.getAmount() + " " + Items.name(items) + " from " + playerSendingItems.getDisplayName() + " for " + price + " " + plugin.getEcon().currencyNameSingular() + "(s)");
-
-                        trades.remove(trade);
+                            trades.remove(trade);
+                        }
                     }
+
 
 
                 } else if (args[0].equalsIgnoreCase("stop") && player.hasPermission("sgift.admin")) {
@@ -407,7 +418,7 @@ public class sGiftCommandExecutor implements CommandExecutor {
                         Player Victim = trade.Victim;
                         ItemStack items = trade.itemStack;
                         int price = trade.price;
-                        
+
                         if (playerSendingItems.getInventory().firstEmpty() == -1) {
                             Location playerloc = playerSendingItems.getLocation();
                             playerSendingItems.getWorld().dropItemNaturally(playerloc, items);
@@ -446,7 +457,7 @@ public class sGiftCommandExecutor implements CommandExecutor {
                         Player Victim = trade.Victim;
                         ItemStack items = trade.itemStack;
                         int price = trade.price;
-                        
+
                         if (playerSendingItems.getInventory().firstEmpty() == -1) {
                             Location playerloc = playerSendingItems.getLocation();
                             playerSendingItems.getWorld().dropItemNaturally(playerloc, items);
