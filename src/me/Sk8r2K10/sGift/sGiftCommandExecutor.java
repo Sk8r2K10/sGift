@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class sGiftCommandExecutor implements CommandExecutor {
-
+// =)
     private sGift plugin;
     ArrayList<Gift> gifts = new ArrayList<Gift>();
     ArrayList<Trade> trades = new ArrayList<Trade>();
