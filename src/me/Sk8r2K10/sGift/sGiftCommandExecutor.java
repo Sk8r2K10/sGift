@@ -41,16 +41,16 @@ public class sGiftCommandExecutor implements CommandExecutor {
                 if (args[0].equalsIgnoreCase("help") && player.hasPermission("sgift.gift.help")) {
 
                     player.sendMessage(ChatColor.DARK_GRAY + "----------------[" + ChatColor.GREEN + "sGift - Gift Help Menu" + ChatColor.DARK_GRAY + "]-----------------");
-                    player.sendMessage(ChatColor.GREEN + "/gift <PlayerName> <ItemID:#> <Amount>" + ChatColor.GRAY + " - Gifts a player a block");
-                    player.sendMessage(ChatColor.GRAY + "example: /gift Bob log:redwood 1337");
-                    player.sendMessage(ChatColor.GREEN + "/gift accept" + ChatColor.GRAY + " - Accepts a Pending Gift.");
-                    player.sendMessage(ChatColor.GREEN + "/gift deny" + ChatColor.GRAY + " - Denies a pending Gift.");
-                    player.sendMessage(ChatColor.GREEN + "/gift cancel" + ChatColor.GRAY + " - Cancels a gift in progress");
-                    player.sendMessage(ChatColor.GREEN + "/gift help" + ChatColor.GRAY + " - Brings up this Menu.");
+                    player.sendMessage(plugin.getConfig().getString("Help.Gift.Gift"));
+                    player.sendMessage(plugin.getConfig().getString("Help.Gift.Example"));
+                    player.sendMessage(plugin.getConfig().getString("Help.Gift.Accept"));
+                    player.sendMessage(plugin.getConfig().getString("Help.Gift.Deny"));
+                    player.sendMessage(plugin.getConfig().getString("Help.Gift.Cancel"));
+                    player.sendMessage(plugin.getConfig().getString("Help.Gift.Help"));
 
                     if (player.hasPermission("sgift.admin")) {
 
-                        player.sendMessage(ChatColor.GREEN + "/gift stop" + ChatColor.GRAY + " - Stops all gifts in progress");
+                        player.sendMessage(plugin.getConfig().getString("Help.Gift.Stop"));
                     }
 
                 } else if (args[0].equalsIgnoreCase("accept")) {
@@ -306,12 +306,17 @@ public class sGiftCommandExecutor implements CommandExecutor {
                 if (args[0].equalsIgnoreCase("help") && player.hasPermission("sgift.trade.help")) {
 
                     player.sendMessage(ChatColor.DARK_GRAY + "---------------[" + ChatColor.GOLD + "sGift - Trade Help Menu" + ChatColor.DARK_GRAY + "]----------------");
-                    player.sendMessage(ChatColor.GOLD + "/trade <PlayerName> <ItemID:#> <Amount> <Price>" + ChatColor.GRAY + " - Trades with a player");
-                    player.sendMessage(ChatColor.GRAY + "example: /trade Bob log:redwood 1337 9001");
-                    player.sendMessage(ChatColor.GOLD + "/trade accept" + ChatColor.GRAY + " - Accepts a Pending Trade.");
-                    player.sendMessage(ChatColor.GOLD + "/trade deny" + ChatColor.GRAY + " - Denies a pending Trade.");
-                    player.sendMessage(ChatColor.GOLD + "/trade cancel" + ChatColor.GRAY + " - Cancels a trade in progress");
-                    player.sendMessage(ChatColor.GOLD + "/trade help" + ChatColor.GRAY + " - Brings up this Menu.");
+                    player.sendMessage(plugin.getConfig().getString("Help.Trade.Trade"));
+                    player.sendMessage(plugin.getConfig().getString("Help.Trade.Example"));
+                    player.sendMessage(plugin.getConfig().getString("Help.Trade.Accept"));
+                    player.sendMessage(plugin.getConfig().getString("Help.Trade.Deny"));
+                    player.sendMessage(plugin.getConfig().getString("Help.Trade.Cancel"));
+                    player.sendMessage(plugin.getConfig().getString("Help.Trade.Help"));
+                    
+                     if (player.hasPermission("sgift.admin")) {
+
+                        player.sendMessage(plugin.getConfig().getString("Help.Trade.Stop"));
+                     }
 
                 } else if (args[0].equalsIgnoreCase("accept")) {
 
