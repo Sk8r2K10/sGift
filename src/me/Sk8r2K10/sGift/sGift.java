@@ -29,22 +29,7 @@ public class sGift extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
         }
         final FileConfiguration config = this.getConfig();
-        config.options().header("sGift Configuration File");
-        config.addDefault("Help.Gift.Gift", ChatColor.GREEN + "/gift <PlayerName> <ItemID:#> <Amount>" + ChatColor.GRAY + " - Gifts a player a block");
-        config.addDefault("Help.Gift.Example", ChatColor.GRAY + "example: /gift Bob log:redwood 1337");
-        config.addDefault("Help.Gift.Accept" , ChatColor.GREEN + "/gift accept" + ChatColor.GRAY + " - Accepts a Pending Gift.");
-        config.addDefault("Help.Gift.Deny", ChatColor.GREEN + "/gift deny" + ChatColor.GRAY + " - Denies a pending Gift.");
-        config.addDefault("Help.Gift.Cancel", ChatColor.GREEN + "/gift cancel" + ChatColor.GRAY + " - Cancels a gift in progress");
-        config.addDefault("Help.Gift.Stop", ChatColor.GREEN + "/gift stop" + ChatColor.GRAY + " - Stops all gifts in progress");
-        config.addDefault("Help.Gift.Help", ChatColor.GREEN + "/gift help" + ChatColor.GRAY + " - Brings up this Menu.");
-        config.addDefault("Help.Trade.Trade", ChatColor.GOLD + "/trade <PlayerName> <ItemID:#> <Amount> <Price>" + ChatColor.GRAY + " - Trades with a player");
-        config.addDefault("Help.Trade.Example", ChatColor.GRAY + "example: /trade Bob log:redwood 1337 9001");
-        config.addDefault("Help.Trade.Accept", ChatColor.GOLD + "/trade accept" + ChatColor.GRAY + " - Accepts a Pending Trade.");
-        config.addDefault("Help.Trade.Deny", ChatColor.GOLD + "/trade deny" + ChatColor.GRAY + " - Denies a pending Trade.");
-        config.addDefault("Help.Trade.Cancel", ChatColor.GOLD + "/trade cancel" + ChatColor.GRAY + " - Cancels a trade in progress");
-        config.addDefault("Help.Trade.Stop", ChatColor.GOLD + "/trade stop" + ChatColor.GRAY + " - Stops all trades in progress");
-        config.addDefault("Help.Trade.Help", ChatColor.GOLD + "/trade help" + ChatColor.GRAY + " - Brings up this Menu.");
-        config.options().copyDefaults(true);
+        getConfig().options().copyDefaults(true);
         saveConfig();
     }
 

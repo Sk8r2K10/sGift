@@ -1,0 +1,31 @@
+# sGift Configuration File
+# Colours are also customisable, Replace the letter/number after the § symbol with the corresponding colour of choice
+# Example: §4, would give you Dark Red text.
+# Any Text after the colour code, will be in this colour. Use §f to go back to white.
+#   NOTE: If you get Strange letters after colours in strings, Update your CB Build!
+
+# The following option defines if Vault is used. If this is set to false, /trade will be disabled!
+#  --> To be used.
+
+use-vault: true
+
+# The Following section defines the strings used when using the /gift help or /trade help commands
+
+Help:
+  Gift:
+    Gift: §a/gift <PlayerName> <ItemID:#> <Amount>§7 - Gifts a player a block
+    Example: '§7example: /gift Bob log:redwood 1337'
+    Accept: §a/gift accept§7 - Accepts a Pending Gift.
+    Deny: §a/gift deny§7 - Denies a pending Gift.
+    Cancel: §a/gift cancel§7 - Cancels a gift in progress
+    Stop: §a/gift stop§7 - Stops all gifts in progress
+    Help: §a/gift help§7 - Brings up this Menu.
+  Trade:
+    Trade: §6/trade <PlayerName> <ItemID:#> <Amount> <Price>§7 - Trades with a player
+    Example: '§7example: /trade Bob log:redwood 1337 9001'
+    Accept: §6/trade accept§7 - Accepts a Pending Trade.
+    Deny: §6/trade deny§7 - Denies a pending Trade.
+    Cancel: §6/trade cancel§7 - Cancels a trade in progress
+    Stop: §a/trade stop§7 - Stops all trades in progress
+    Help: §6/trade help§7 - Brings up this Menu.
+
