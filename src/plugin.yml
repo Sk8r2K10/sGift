@@ -2,7 +2,7 @@ name: sGift
 main: me.Sk8r2K10.sGift.sGift
 version: 1.0
 description: Gift/Trade Items to other Players
-depend: [Vault]
+softdepend: [Vault]
 commands:
   gift:
     description: Gift a Player

@@ -25,21 +25,37 @@ public class sGift extends JavaPlugin {
         getCommand("trade").setExecutor(executor);
         
         if (!setupEconomy()) {
-            log.severe(String.format("[%s] - Vault not Found! Disabling Plugin.", getDescription().getName()));
-            getServer().getPluginManager().disablePlugin(this);
+            if (this.getConfig().getBoolean("use-vault")) {
+                log.info("[" + getDescription().getName() + "]" + " Vault Enabled! Trading is Enabled");
+            } else if (!this.getConfig().getBoolean("use-vault")) {
+                log.info("[" + getDescription().getName() + "]" + " Vault Disabled! Trading is Disabled");
+            }
+            if (getServer().getPluginManager().getPlugin("Vault") == null)
+                log.info("[" + getDescription().getName() + "]" + " Vault not Found! Disabling Trading by Default");
+                this.getConfig().set("use-vault", false);
+                saveConfig();
+        } else {
+            
         }
-        final FileConfiguration config = this.getConfig();
+        
         getConfig().options().copyDefaults(true);
         saveConfig();
     }
 
     public boolean setupEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+        if (this.getConfig().getBoolean("use-vault")) {
+            if (getServer().getPluginManager().getPlugin("Vault") == null) {
+                this.getConfig().set("use-vault", false);
+                saveConfig();
+                return false;
+            }
+            RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+            if (rsp != null) {
+                econ = rsp.getProvider();
+            }
+
+        } else {
             return false;
-        }
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp != null) {
-            econ = rsp.getProvider();
         }
         return econ != null;
 

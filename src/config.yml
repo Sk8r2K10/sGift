@@ -5,7 +5,6 @@
 #   NOTE: If you get Strange letters after colours in strings, Update your CB Build!
 
 # The following option defines if Vault is used. If this is set to false, /trade will be disabled!
-#  --> To be used.
 
 use-vault: true
 
