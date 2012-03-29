@@ -79,9 +79,10 @@ public class sGiftCommandExecutor implements CommandExecutor {
                             player.getWorld().dropItemNaturally(playerloc, items);
                             player.sendMessage(prefix2 + "Inventory full! Dropped Items at your feet!");
 
+                        } else {
+                            Victim.getInventory().addItem(items);
                         }
 
-                        Victim.getInventory().addItem(items);
                         playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + "!");
                         Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + "!");
                         log.info(prefix + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.name(items) + " from " + playerSendingItems.getDisplayName());
@@ -128,9 +129,12 @@ public class sGiftCommandExecutor implements CommandExecutor {
                             playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.RED + " Has been returned to you.");
                             Victim.sendMessage(prefix + ChatColor.RED + "You denied " + playerSendingItems.getName() + "'s Gift!");
                             log.info(prefix + Victim.getDisplayName() + " denied " + items.getAmount() + " " + Items.name(items) + " from " + playerSendingItems.getDisplayName());
-
+                            
                             gifts.remove(gift);
                         }
+
+
+                        
                     }
 
 
@@ -161,9 +165,10 @@ public class sGiftCommandExecutor implements CommandExecutor {
                             playerSendingItems.getWorld().dropItemNaturally(playerloc, items);
                             playerSendingItems.sendMessage(prefix2 + "Inventory full! Dropped Items at your feet!");
 
+                        } else {
+                            playerSendingItems.getInventory().addItem(items);
                         }
 
-                        playerSendingItems.getInventory().addItem(items);
                         playerSendingItems.sendMessage(prefix + ChatColor.RED + "Your Gift has been cancelled by an Admin!");
                         playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.RED + " has been returned to you.");
                         Victim.sendMessage(prefix + ChatColor.RED + "Admin cancelled your Gift.");
@@ -201,9 +206,10 @@ public class sGiftCommandExecutor implements CommandExecutor {
                             playerSendingItems.getWorld().dropItemNaturally(playerloc, items);
                             playerSendingItems.sendMessage(prefix2 + "Inventory full! Dropped Items at your feet!");
 
+                        } else {
+                            playerSendingItems.getInventory().addItem(items);
                         }
 
-                        playerSendingItems.getInventory().addItem(items);
                         playerSendingItems.sendMessage(prefix + ChatColor.RED + "Cancelled gift!");
                         playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.RED + " Has been returned to you.");
                         Victim.sendMessage(prefix + ChatColor.YELLOW + playerSendingItems.getName() + ChatColor.RED + " Cancelled the Gift!");
@@ -346,9 +352,11 @@ public class sGiftCommandExecutor implements CommandExecutor {
                                 player.getWorld().dropItemNaturally(playerloc, items);
                                 player.sendMessage(prefix2 + "Inventory full! Dropped Items at your feet!");
 
+                            } else {
+                                player.getInventory().addItem(items);
                             }
 
-                            player.getInventory().addItem(items);
+
                             plugin.getEcon().withdrawPlayer(Victim.getName(), price);
                             plugin.getEcon().depositPlayer(playerSendingItems.getName(), price);
 
@@ -430,9 +438,10 @@ public class sGiftCommandExecutor implements CommandExecutor {
                                 playerSendingItems.getWorld().dropItemNaturally(playerloc, items);
                                 playerSendingItems.sendMessage(prefix2 + "Inventory full! Dropped Items at your feet!");
 
+                            } else {
+                                playerSendingItems.getInventory().addItem(items);
                             }
 
-                            playerSendingItems.getInventory().addItem(items);
                             playerSendingItems.sendMessage(prefix2 + ChatColor.RED + "Your Trade has been cancelled by an Admin!");
                             playerSendingItems.sendMessage(prefix2 + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.RED + " has been returned to you.");
                             Victim.sendMessage(prefix2 + ChatColor.RED + "Admin cancelled your Trade.");
@@ -469,9 +478,10 @@ public class sGiftCommandExecutor implements CommandExecutor {
                                 playerSendingItems.getWorld().dropItemNaturally(playerloc, items);
                                 playerSendingItems.sendMessage(prefix2 + "Inventory full! Dropped Items at your feet!");
 
+                            } else {
+                                playerSendingItems.getInventory().addItem(items);
                             }
 
-                            playerSendingItems.getInventory().addItem(items);
                             playerSendingItems.sendMessage(prefix2 + ChatColor.RED + "Cancelled trade!");
                             playerSendingItems.sendMessage(prefix2 + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.RED + " Has been returned to you.");
                             Victim.sendMessage(prefix2 + ChatColor.YELLOW + playerSendingItems.getName() + ChatColor.RED + " Cancelled the Trade!");
@@ -578,7 +588,7 @@ public class sGiftCommandExecutor implements CommandExecutor {
                     player.sendMessage(prefix2 + ChatColor.GRAY + "Correct usage: /trade <Player> <Item> <Amount> <Price>");
                 }
             } else {
-                
+
                 player.sendMessage(prefix2 + ChatColor.RED + "Trading is Currently disabled!");
             }
 
