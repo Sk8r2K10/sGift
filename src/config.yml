@@ -4,9 +4,14 @@
 # Any Text after the colour code, will be in this colour. Use §f to go back to white.
 #   NOTE: If you get Strange letters after colours in strings, Update your CB Build!
 
-# The following option defines if Vault is used. If this is set to false, /trade will be disabled!
+# The Following option defines if Vault is used. If this is set to false, /trade will be disabled!
 
 use-vault: true
+
+# The Following options define if certain features are enabled or not
+
+enable-gift: true
+enable-trade: true
 
 # The Following section defines the strings used when using the /gift help or /trade help commands
 
@@ -25,6 +30,6 @@ Help:
     Accept: §6/trade accept§7 - Accepts a Pending Trade.
     Deny: §6/trade deny§7 - Denies a pending Trade.
     Cancel: §6/trade cancel§7 - Cancels a trade in progress
-    Stop: §a/trade stop§7 - Stops all trades in progress
+    Stop: §6/trade stop§7 - Stops all trades in progress
     Help: §6/trade help§7 - Brings up this Menu.
 

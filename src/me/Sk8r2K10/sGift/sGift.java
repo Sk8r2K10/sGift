@@ -23,21 +23,29 @@ public class sGift extends JavaPlugin {
     public void onEnable() {
         getCommand("gift").setExecutor(executor);
         getCommand("trade").setExecutor(executor);
-        
+
         if (!setupEconomy()) {
-            if (this.getConfig().getBoolean("use-vault")) {
-                log.info("[" + getDescription().getName() + "]" + " Vault Enabled! Trading is Enabled");
-            } else if (!this.getConfig().getBoolean("use-vault")) {
+            if (!this.getConfig().getBoolean("use-vault")) {
+                
                 log.info("[" + getDescription().getName() + "]" + " Vault Disabled! Trading is Disabled");
-            }
-            if (getServer().getPluginManager().getPlugin("Vault") == null)
-                log.info("[" + getDescription().getName() + "]" + " Vault not Found! Disabling Trading by Default");
-                this.getConfig().set("use-vault", false);
+                
+                this.getConfig().set("enable-trade", false);
                 saveConfig();
-        } else {
+                
+            } else if (getServer().getPluginManager().getPlugin("Vault") == null) {
+                
+                log.info("[" + getDescription().getName() + "]" + " Vault not Found! Disabling Trading by Default");
+                
+                this.getConfig().set("use-vault", false);
+                this.getConfig().set("enable-trade", false);
+                saveConfig();
             
+            } else if (this.getConfig().getBoolean("use-vault")) {
+                
+                log.info("[" + getDescription().getName() + "]" + " Vault Enabled! Trading is Enabled");
+            }
         }
-        
+
         getConfig().options().copyDefaults(true);
         saveConfig();
     }
@@ -46,6 +54,7 @@ public class sGift extends JavaPlugin {
         if (this.getConfig().getBoolean("use-vault")) {
             if (getServer().getPluginManager().getPlugin("Vault") == null) {
                 this.getConfig().set("use-vault", false);
+                this.getConfig().set("enable-trade", false);
                 saveConfig();
                 return false;
             }
