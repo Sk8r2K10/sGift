@@ -23,6 +23,7 @@ public class sGift extends JavaPlugin {
     public void onEnable() {
         getCommand("gift").setExecutor(executor);
         getCommand("trade").setExecutor(executor);
+        getCommand("sgift").setExecutor(executor);
 
         if (!setupEconomy()) {
             if (!this.getConfig().getBoolean("use-vault")) {

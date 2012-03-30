@@ -1,6 +1,6 @@
 name: sGift
 main: me.Sk8r2K10.sGift.sGift
-version: 1.1
+version: 1.2
 description: Gift/Trade Items to other Players
 softdepend: [Vault]
 commands:
@@ -8,18 +8,29 @@ commands:
     description: Gift a Player
   trade:
     description: Trade with a Player
+  sgift:
+    description: Admin commands for sGift
 
 permissions:
-    ugift.gift:
+    sgift.gift:
         description: Give access to /gift
         default: op
         children:
-            ugift.gift.help: true
-    ugift.admin:
+            sgift.gift.help: true
+    sgift.admin:
         description: Give access to Admin commands
         default: op
-    ugift.trade:
+    sgift.trade:
         description: Give access to /trade
         default: op
         children:
-            ugift.trade.help: true
+            sgift.trade.help: true
+    sgift.sgift:
+        description: Gives access to /sgift
+        default: op
+    sgift.set:
+        description: Gives access to /sgift set
+        default: op
+    sgift.halt:
+        description: Gives access to /sgift halt
+        default: op

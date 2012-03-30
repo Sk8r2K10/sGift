@@ -26,6 +26,7 @@ public class sGiftCommandExecutor implements CommandExecutor {
         Player player = null;
         String prefix = ChatColor.WHITE + "[" + ChatColor.GREEN + "sGift" + ChatColor.WHITE + "] ";
         String prefix2 = ChatColor.WHITE + "[" + ChatColor.GOLD + "sGift" + ChatColor.WHITE + "] ";
+        String prefix3 = ChatColor.DARK_RED + "[" + ChatColor.RED + "sGift" + ChatColor.DARK_RED + "] ";
         Logger log = Logger.getLogger("Minecraft");
 
         if (sender instanceof Player) {
@@ -301,7 +302,7 @@ public class sGiftCommandExecutor implements CommandExecutor {
                     player.sendMessage(prefix + ChatColor.GRAY + "Correct usage: /gift <Player> <Item> <Amount>");
                 }
             } else {
-                
+
                 player.sendMessage(prefix + ChatColor.RED + "Gifting is currently disabled!");
             }
 
@@ -595,9 +596,154 @@ public class sGiftCommandExecutor implements CommandExecutor {
             }
 
 
-        } else if (!sender.hasPermission("sgift.trade") || !sender.hasPermission("sgift.trade.help") || !sender.hasPermission("sgift.gift") || !sender.hasPermission("sgift.gift.help") || !sender.hasPermission("sgift.admin")) {
+        } else if (commandLabel.equalsIgnoreCase("sgift") && sender.hasPermission("sgift.sgift")) {
+            if (args.length == 1) {
+                if (args[0].equalsIgnoreCase("info")) {
 
-            player.sendMessage(prefix2 + ChatColor.RED + "You don't have permission for that command!");
+                    String info1 = Boolean.toString(plugin.getConfig().getBoolean("use-vault"));
+                    String info2 = Boolean.toString(plugin.getConfig().getBoolean("enable-gift"));
+                    String info3 = Boolean.toString(plugin.getConfig().getBoolean("enable-trade"));
+
+                    player.sendMessage(ChatColor.DARK_RED + "-----------------[" + ChatColor.RED + "sGift - Information" + ChatColor.DARK_RED + "]------------------");
+                    player.sendMessage(ChatColor.RED + "Vault: " + ChatColor.AQUA + info1);
+                    player.sendMessage(ChatColor.RED + "Gifts: " + ChatColor.AQUA + info2);
+                    player.sendMessage(ChatColor.RED + "Trade: " + ChatColor.AQUA + info3);
+
+                } else if (args[0].equalsIgnoreCase("halt") && sender.hasPermission("sgift.halt")) {
+
+                    player.sendMessage(prefix3 + ChatColor.RED + "Abruptly halted all Gifts and Trades!");
+                    player.sendMessage(prefix3 + ChatColor.RED + "No items have been refunded to players!");
+
+                    trades.clear();
+                    gifts.clear();
+
+                } else {
+
+                    player.sendMessage(prefix3 + ChatColor.RED + "Invalid command usage!");
+                    player.sendMessage(prefix3 + ChatColor.GRAY + "/sgift info|halt|set <Option> [true|false]");
+                }
+            } else if (args.length == 2) {
+
+                player.sendMessage(prefix3 + ChatColor.RED + "Invalid command usage!");
+                player.sendMessage(prefix3 + ChatColor.GRAY + "/sgift info|halt|set <Option> [true|false]");
+
+            } else if (args.length == 3 && args[0].equalsIgnoreCase("set") && sender.hasPermission("sgift.set")) {
+                if (args[1].equalsIgnoreCase("vault")) {
+                    if (args[2].equalsIgnoreCase("true")) {
+                        if (!plugin.getConfig().getBoolean("use-vault")) {
+                            if (plugin.getServer().getPluginManager().getPlugin("Vault") != null) {
+
+                                plugin.getConfig().set("use-vault", true);
+                                plugin.saveConfig();
+
+                                player.sendMessage(prefix3 + ChatColor.AQUA + "Vault has been set to true in Config");
+
+                            } else {
+
+                                player.sendMessage(prefix3 + ChatColor.RED + "Vault could not be found, Vault remains disabled.");
+                            }
+                        } else {
+
+                            player.sendMessage(prefix3 + ChatColor.RED + "Vault is already enabled!");
+                        }
+                    } else if (args[2].equalsIgnoreCase("false")) {
+                        if (plugin.getConfig().getBoolean("use-vault")) {
+
+                            plugin.getConfig().set("use-vault", false);
+                            plugin.getConfig().set("enable-trade", false);
+                            plugin.saveConfig();
+
+                            player.sendMessage(prefix3 + ChatColor.AQUA + "Vault has been set to false in Config");
+                            player.sendMessage(prefix3 + ChatColor.RED + "Subsequently, Trading has been disabled!");
+
+                        } else {
+
+                            player.sendMessage(prefix3 + ChatColor.RED + "Vault is already disabled!");
+                        }
+
+                    } else {
+
+                        player.sendMessage(prefix3 + ChatColor.RED + "Invalid command usage!");
+                        player.sendMessage(prefix3 + ChatColor.GRAY + "/sgift info|halt|set <Option> [true|false]");
+                    }
+                } else if (args[1].equalsIgnoreCase("gifts")) {
+                    if (args[2].equalsIgnoreCase("true")) {
+                        if (!plugin.getConfig().getBoolean("enable-gift")) {
+
+                            plugin.getConfig().set("enable-gift", true);
+                            plugin.saveConfig();
+
+                            player.sendMessage(prefix3 + ChatColor.AQUA + "Gifting has been set to true in Config");
+
+                        } else {
+
+                            player.sendMessage(prefix3 + ChatColor.RED + "Gifting is already enabled!");
+                        }
+                    } else if (args[2].equalsIgnoreCase("false")) {
+                        if (plugin.getConfig().getBoolean("enable-gift")) {
+
+                            plugin.getConfig().set("enable-gift", false);
+                            plugin.saveConfig();
+
+                            player.sendMessage(prefix3 + ChatColor.AQUA + "Gifting has been set to false in Config");
+
+                        } else {
+
+                            player.sendMessage(prefix3 + ChatColor.RED + "Gifting is already disabled!");
+                        }
+                    } else {
+                        
+                        player.sendMessage(prefix3 + ChatColor.RED + "Invalid command usage!");
+                        player.sendMessage(prefix3 + ChatColor.GRAY + "/sgift info|halt|set <Option> [true|false]");
+                    }
+                    
+                } else if (args[1].equalsIgnoreCase("trade")) {
+                    if (args[2].equalsIgnoreCase("true")) {
+                        if (!plugin.getConfig().getBoolean("enable-trade")) {
+
+                            plugin.getConfig().set("enable-trade", true);
+                            plugin.saveConfig();
+
+                            player.sendMessage(prefix3 + ChatColor.AQUA + "Trading has been set to true in Config");
+
+                        } else {
+
+                            player.sendMessage(prefix3 + ChatColor.RED + "Trading is already enabled!");
+                        }
+                    } else if (args[2].equalsIgnoreCase("false")) {
+                        if (plugin.getConfig().getBoolean("enable-trade")) {
+
+                            plugin.getConfig().set("enable-trade", false);
+                            plugin.saveConfig();
+
+                            player.sendMessage(prefix3 + ChatColor.AQUA + "Trading has been set to false in Config");
+
+                        } else {
+
+                            player.sendMessage(prefix3 + ChatColor.RED + "Trading is already disabled!");
+                        }
+                    } else {
+
+                        player.sendMessage(prefix3 + ChatColor.RED + "Invalid command usage!");
+                        player.sendMessage(prefix3 + ChatColor.GRAY + "/sgift info|halt|set <Option> [true|false]");
+                    }
+                } else {
+                    
+                    player.sendMessage(prefix3 + ChatColor.RED + "Invalid command usage!");
+                    player.sendMessage(prefix3 + ChatColor.GRAY + "/sgift info|halt|set <Option> [true|false]");
+                }
+            } else if (args.length == 0) {
+                
+                player.sendMessage(prefix2 + ChatColor.RED + "By Sk8r2K9. /sgift info|halt|set <Option> [true|false]");
+            } else if (args.length > 3) {
+                
+                player.sendMessage(prefix3 + ChatColor.RED + "Invalid command usage!");
+                player.sendMessage(prefix3 + ChatColor.GRAY + "/sgift info|halt|set <Option> [true|false]");
+            }
+
+        } else if (!sender.hasPermission("sgift.trade") || !sender.hasPermission("sgift.trade.help") || !sender.hasPermission("sgift.gift") || !sender.hasPermission("sgift.gift.help") || !sender.hasPermission("sgift.admin") || !sender.hasPermission("sgift.sgift") || !sender.hasPermission("sgift.halt") || !sender.hasPermission("sgift.set")) {
+
+            player.sendMessage(prefix + ChatColor.RED + "You don't have permission for that command!");
 
         }
         return false;
