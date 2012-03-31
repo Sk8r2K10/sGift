@@ -32,4 +32,9 @@ Help:
     Cancel: §6/trade cancel§7 - Cancels a trade in progress
     Stop: §6/trade stop§7 - Stops all trades in progress
     Help: §6/trade help§7 - Brings up this Menu.
+  sGift:
+    Info: §c/sgift info§7 - Shows Configuration and Gift information.
+    Halt: §c/sgift halt§7 - Stops all outgoing Gifts and Trades.
+    Set: §c/sgift set§7 - Set an option in the Config file to true or false.
+    Example: '§7example: /sgift set gifts true -> Gifting Enabled'
 

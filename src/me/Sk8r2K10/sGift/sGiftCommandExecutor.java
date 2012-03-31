@@ -2,6 +2,7 @@ package me.Sk8r2K10.sGift;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -15,6 +16,7 @@ public class sGiftCommandExecutor implements CommandExecutor {
     private sGift plugin;
     ArrayList<Gift> gifts = new ArrayList<Gift>();
     ArrayList<Trade> trades = new ArrayList<Trade>();
+    ArrayList<Sender> senders = new ArrayList<Sender>();
 
     public sGiftCommandExecutor(sGift instance) {
         plugin = instance;
@@ -221,11 +223,11 @@ public class sGiftCommandExecutor implements CommandExecutor {
 
 
 
-                    } else if (player.getServer().getPlayer(args[0]) == null) {
+                    } else if (Bukkit.getServer().getPlayer(args[0]) == null) {
 
                         player.sendMessage(prefix + ChatColor.RED + "Player not Online.");
 
-                    } else if (player.getServer().getPlayer(args[0]) == player) {
+                    } else if (Bukkit.getServer().getPlayer(args[0]) == player) {
 
                         player.sendMessage(prefix + ChatColor.RED + "Don't gift Items to yourself!");
 
@@ -241,10 +243,10 @@ public class sGiftCommandExecutor implements CommandExecutor {
                     player.sendMessage(prefix + ChatColor.GRAY + "Correct usage: /gift <Player> <Item> <Amount>");
 
                 } else if (args.length == 3) {
-                    if (player.getServer().getPlayer(args[0]) != player) {
-                        if (player.getServer().getPlayer(args[0]) != null) {
+                    if (Bukkit.getServer().getPlayer(args[0]) != player) {
+                        if (Bukkit.getServer().getPlayer(args[0]) != null) {
 
-                            Player Victim = player.getServer().getPlayer(args[0]);
+                            Player Victim = Bukkit.getServer().getPlayer(args[0]);
                             int amount = plugin.getInt(args[2]);
 
                             if (Items.parse(args[1], amount) != null) {
@@ -256,6 +258,7 @@ public class sGiftCommandExecutor implements CommandExecutor {
                                         if (Item.getEnchantments().isEmpty()) {
 
                                             gifts.add(new Gift(Victim, player, Item));
+                                            senders.add(new Sender(player));
 
                                             player.getInventory().removeItem(Item);
 
@@ -493,11 +496,11 @@ public class sGiftCommandExecutor implements CommandExecutor {
                         }
 
 
-                    } else if (player.getServer().getPlayer(args[0]) == null) {
+                    } else if (Bukkit.getServer().getPlayer(args[0]) == null) {
 
                         player.sendMessage(prefix2 + ChatColor.RED + "Player not Online.");
 
-                    } else if (player.getServer().getPlayer(args[0]) == player) {
+                    } else if (Bukkit.getServer().getPlayer(args[0]) == player) {
 
                         player.sendMessage(prefix2 + ChatColor.RED + "Don't trade Items with yourself!");
 
@@ -518,11 +521,11 @@ public class sGiftCommandExecutor implements CommandExecutor {
                     player.sendMessage(prefix2 + ChatColor.GRAY + "Correct usage: /trade <Player> <Item> <Amount> <Price>");
 
                 } else if (args.length == 4) {
-                    if (player.getServer().getPlayer(args[0]) != player) {
-                        if (player.getServer().getPlayer(args[0]) != null) {
+                    if (Bukkit.getServer().getPlayer(args[0]) != player) {
+                        if (Bukkit.getServer().getPlayer(args[0]) != null) {
 
                             int price = plugin.getInt(args[3]);
-                            Player Victim = player.getServer().getPlayer(args[0]);
+                            Player Victim = Bukkit.getServer().getPlayer(args[0]);
                             int amount = plugin.getInt(args[2]);
 
                             if (Items.parse(args[1], amount) != null) {
@@ -536,6 +539,7 @@ public class sGiftCommandExecutor implements CommandExecutor {
                                                 if (plugin.getEcon().getBalance(Victim.getName()) >= price) {
 
                                                     trades.add(new Trade(Victim, player, Item, price));
+                                                    senders.add(new Sender(player));
 
                                                     player.getInventory().removeItem(Item);
 
@@ -608,6 +612,19 @@ public class sGiftCommandExecutor implements CommandExecutor {
                     player.sendMessage(ChatColor.RED + "Vault: " + ChatColor.AQUA + info1);
                     player.sendMessage(ChatColor.RED + "Gifts: " + ChatColor.AQUA + info2);
                     player.sendMessage(ChatColor.RED + "Trade: " + ChatColor.AQUA + info3);
+                    
+                    StringBuilder senderList = new StringBuilder();
+                    
+                    for (Sender s : senders) {
+                        if (senderList.length() > 0) {
+                            
+                            senderList.append(ChatColor.RED + ", " + ChatColor.AQUA);
+                            
+                        }
+                        senderList.append(s.Sender.getName());
+                    }
+                    player.sendMessage(ChatColor.RED + "Senders: " + ChatColor.AQUA + senderList);
+                    
 
                 } else if (args[0].equalsIgnoreCase("halt") && sender.hasPermission("sgift.halt")) {
 
@@ -617,6 +634,14 @@ public class sGiftCommandExecutor implements CommandExecutor {
                     trades.clear();
                     gifts.clear();
 
+                } else if (args[0].equalsIgnoreCase("help")) {
+                    
+                    player.sendMessage(ChatColor.DARK_RED + "---------------[" + ChatColor.RED + "sGift - sGift Help Menu" + ChatColor.DARK_RED + "]----------------");
+                    player.sendMessage(plugin.getConfig().getString("Help.sGift.Info"));
+                    player.sendMessage(plugin.getConfig().getString("Help.sGift.Halt"));
+                    player.sendMessage(plugin.getConfig().getString("Help.sGift.Set"));
+                    player.sendMessage(plugin.getConfig().getString("Help.sGift.Example"));
+                
                 } else {
 
                     player.sendMessage(prefix3 + ChatColor.RED + "Invalid command usage!");
