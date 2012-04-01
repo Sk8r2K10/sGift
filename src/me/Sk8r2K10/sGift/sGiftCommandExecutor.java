@@ -60,12 +60,21 @@ public class sGiftCommandExecutor implements CommandExecutor {
                     } else if (args[0].equalsIgnoreCase("accept")) {
 
                         Gift gift = null;
+                        Sender Sender1 = null;
 
                         for (Gift g : gifts) {
 
                             if (g.Victim == player) {
 
                                 gift = g;
+
+                                for (Sender s : senders) {
+
+                                    if (s.Sender == g.playerSender) {
+
+                                        Sender1 = s;
+                                    }
+                                }
                             }
                         }
 
@@ -92,19 +101,27 @@ public class sGiftCommandExecutor implements CommandExecutor {
                             log.info(prefix + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.name(items) + " from " + playerSendingItems.getDisplayName());
 
                             gifts.remove(gift);
+                            senders.remove(Sender1);
                         }
-
-
 
                     } else if (args[0].equalsIgnoreCase("deny")) {
 
                         Gift gift = null;
+                        Sender Sender1 = null;
 
                         for (Gift g : gifts) {
 
                             if (g.Victim == player) {
 
                                 gift = g;
+
+                                for (Sender s : senders) {
+
+                                    if (s.Sender == g.playerSender) {
+
+                                        Sender1 = s;
+                                    }
+                                }
                             }
                         }
 
@@ -135,58 +152,64 @@ public class sGiftCommandExecutor implements CommandExecutor {
                                 log.info(prefix + Victim.getDisplayName() + " denied " + items.getAmount() + " " + Items.name(items) + " from " + playerSendingItems.getDisplayName());
 
                                 gifts.remove(gift);
+                                senders.remove(Sender1);
                             }
-
-
-
                         }
-
-
-
 
                     } else if (args[0].equalsIgnoreCase("stop") && player.hasPermission("sgift.admin")) {
+                        while (gifts.size() > 0) {
 
-                        Gift gift = null;
+                            Gift gift = null;
+                            Sender Sender1 = null;
 
-                        for (Gift g : gifts) {
+                            for (Gift g : gifts) {
 
-                            if (g.itemStack != null) {
-                                gift = g;
+                                if (g.itemStack != null) {
+                                    gift = g;
+
+                                    for (Sender s : senders) {
+
+                                        if (s.Sender != null) {
+
+                                            Sender1 = s;
+                                        }
+                                    }
+                                }
                             }
 
-                        }
-                        if (gift == null) {
+                            if (gift == null) {
 
-                            player.sendMessage(prefix + ChatColor.RED + "No Gifts to stop!");
-                        } else {
-
-                            Player playerSendingItems = gift.playerSender;
-                            Player Victim = gift.Victim;
-                            ItemStack items = gift.itemStack;
-
-                            if (playerSendingItems.getInventory().firstEmpty() == -1) {
-                                Location playerloc = playerSendingItems.getLocation();
-                                playerSendingItems.getWorld().dropItemNaturally(playerloc, items);
-                                playerSendingItems.sendMessage(prefix2 + "Inventory full! Dropped Items at your feet!");
-
+                                player.sendMessage(prefix + ChatColor.RED + "No Gifts to stop!");
                             } else {
-                                playerSendingItems.getInventory().addItem(items);
+
+                                Player playerSendingItems = gift.playerSender;
+                                Player Victim = gift.Victim;
+                                ItemStack items = gift.itemStack;
+
+                                if (playerSendingItems.getInventory().firstEmpty() == -1) {
+                                    Location playerloc = playerSendingItems.getLocation();
+                                    playerSendingItems.getWorld().dropItemNaturally(playerloc, items);
+                                    playerSendingItems.sendMessage(prefix2 + "Inventory full! Dropped Items at your feet!");
+
+                                } else {
+                                    playerSendingItems.getInventory().addItem(items);
+                                }
+
+                                playerSendingItems.sendMessage(prefix + ChatColor.RED + "Your Gift has been cancelled by an Admin!");
+                                playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.RED + " has been returned to you.");
+                                Victim.sendMessage(prefix + ChatColor.RED + "Admin cancelled your Gift.");
+                                log.info(prefix + "stopped a gift of " + items.getAmount() + " " + Items.name(items) + " from " + playerSendingItems.getDisplayName());
+
+                                gifts.remove(gift);
+                                senders.remove(Sender1);
                             }
-
-                            playerSendingItems.sendMessage(prefix + ChatColor.RED + "Your Gift has been cancelled by an Admin!");
-                            playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.RED + " has been returned to you.");
-                            Victim.sendMessage(prefix + ChatColor.RED + "Admin cancelled your Gift.");
-                            log.info(prefix + "stopped a gift of " + items.getAmount() + " " + Items.name(items) + " from " + playerSendingItems.getDisplayName());
-
-                            gifts.remove(gift);
                         }
-
-
-
+                        player.sendMessage(prefix + ChatColor.GREEN + "Cancelled all Gifts safely.");
 
                     } else if (args[0].equalsIgnoreCase("cancel")) {
 
                         Gift gift = null;
+                        Sender Sender1 = null;
 
                         for (Gift g : gifts) {
 
@@ -194,6 +217,15 @@ public class sGiftCommandExecutor implements CommandExecutor {
 
                                 gift = g;
                             }
+                        }
+
+                        for (Sender s : senders) {
+
+                            if (s.Sender == player) {
+
+                                Sender1 = s;
+                            }
+
                         }
 
                         if (gift == null) {
@@ -218,10 +250,9 @@ public class sGiftCommandExecutor implements CommandExecutor {
                             playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.RED + " Has been returned to you.");
                             Victim.sendMessage(prefix + ChatColor.YELLOW + playerSendingItems.getName() + ChatColor.RED + " Cancelled the Gift!");
 
+                            senders.remove(Sender1);
                             gifts.remove(gift);
                         }
-
-
 
                     } else if (Bukkit.getServer().getPlayer(args[0]) == null) {
 
@@ -334,12 +365,21 @@ public class sGiftCommandExecutor implements CommandExecutor {
                     } else if (args[0].equalsIgnoreCase("accept")) {
 
                         Trade trade = null;
+                        Sender Sender1 = null;
 
                         for (Trade t : trades) {
 
                             if (t.Victim == player) {
 
                                 trade = t;
+
+                                for (Sender s : senders) {
+
+                                    if (s.Sender == t.playerSender) {
+
+                                        Sender1 = s;
+                                    }
+                                }
                             }
                         }
 
@@ -371,18 +411,27 @@ public class sGiftCommandExecutor implements CommandExecutor {
                             log.info(prefix2 + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.name(items) + " from " + playerSendingItems.getDisplayName() + " for " + price + plugin.getEcon().currencyNameSingular() + "(s)");
 
                             trades.remove(trade);
+                            senders.remove(Sender1);
                         }
-
 
                     } else if (args[0].equalsIgnoreCase("deny")) {
 
                         Trade trade = null;
+                        Sender Sender1 = null;
 
                         for (Trade t : trades) {
 
                             if (t.Victim == player) {
 
                                 trade = t;
+
+                                for (Sender s : senders) {
+
+                                    if (s.Sender == t.playerSender) {
+
+                                        Sender1 = s;
+                                    }
+                                }
                             }
                         }
 
@@ -413,53 +462,65 @@ public class sGiftCommandExecutor implements CommandExecutor {
                                 log.info(prefix2 + Victim.getDisplayName() + " denied " + items.getAmount() + " " + Items.name(items) + " from " + playerSendingItems.getDisplayName() + " for " + price + " " + plugin.getEcon().currencyNameSingular() + "(s)");
 
                                 trades.remove(trade);
+                                senders.remove(Sender1);
                             }
                         }
-
-
 
                     } else if (args[0].equalsIgnoreCase("stop") && player.hasPermission("sgift.admin")) {
+                        while (trades.size() > 0) {
 
-                        Trade trade = null;
+                            Trade trade = null;
+                            Sender Sender1 = null;
 
-                        for (Trade t : trades) {
+                            for (Trade t : trades) {
 
-                            if (t.itemStack != null) {
-                                trade = t;
+                                if (t.itemStack != null) {
+
+                                    trade = t;
+
+                                    for (Sender s : senders) {
+
+                                        if (s.Sender != null) {
+
+                                            Sender1 = s;
+                                        }
+                                    }
+                                }
                             }
+                            if (trade == null) {
 
-                        }
-                        if (trade == null) {
-
-                            player.sendMessage(prefix2 + ChatColor.RED + "No Trades to stop!");
-                        } else {
-
-                            Player playerSendingItems = trade.playerSender;
-                            Player Victim = trade.Victim;
-                            ItemStack items = trade.itemStack;
-                            int price = trade.price;
-
-                            if (playerSendingItems.getInventory().firstEmpty() == -1) {
-                                Location playerloc = playerSendingItems.getLocation();
-                                playerSendingItems.getWorld().dropItemNaturally(playerloc, items);
-                                playerSendingItems.sendMessage(prefix2 + "Inventory full! Dropped Items at your feet!");
-
+                                player.sendMessage(prefix2 + ChatColor.RED + "No Trades to stop!");
                             } else {
-                                playerSendingItems.getInventory().addItem(items);
+
+                                Player playerSendingItems = trade.playerSender;
+                                Player Victim = trade.Victim;
+                                ItemStack items = trade.itemStack;
+                                int price = trade.price;
+
+                                if (playerSendingItems.getInventory().firstEmpty() == -1) {
+                                    Location playerloc = playerSendingItems.getLocation();
+                                    playerSendingItems.getWorld().dropItemNaturally(playerloc, items);
+                                    playerSendingItems.sendMessage(prefix2 + "Inventory full! Dropped Items at your feet!");
+
+                                } else {
+                                    playerSendingItems.getInventory().addItem(items);
+                                }
+
+                                playerSendingItems.sendMessage(prefix2 + ChatColor.RED + "Your Trade has been cancelled by an Admin!");
+                                playerSendingItems.sendMessage(prefix2 + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.RED + " has been returned to you.");
+                                Victim.sendMessage(prefix2 + ChatColor.RED + "Admin cancelled your Trade.");
+                                log.info(prefix2 + "stopped a trade of " + items.getAmount() + " " + Items.name(items) + " from " + playerSendingItems.getDisplayName() + " for " + price + " " + plugin.getEcon().currencyNameSingular() + "(s)");
+
+                                trades.remove(trade);
+                                senders.remove(Sender1);
                             }
-
-                            playerSendingItems.sendMessage(prefix2 + ChatColor.RED + "Your Trade has been cancelled by an Admin!");
-                            playerSendingItems.sendMessage(prefix2 + ChatColor.YELLOW + items.getAmount() + " " + Items.name(items) + ChatColor.RED + " has been returned to you.");
-                            Victim.sendMessage(prefix2 + ChatColor.RED + "Admin cancelled your Trade.");
-                            log.info(prefix2 + "stopped a trade of " + items.getAmount() + " " + Items.name(items) + " from " + playerSendingItems.getDisplayName() + " for " + price + " " + plugin.getEcon().currencyNameSingular() + "(s)");
-                            player.sendMessage(prefix2 + ChatColor.GREEN + "Cancelled all Trades safely.");
-
-                            trades.remove(trade);
                         }
+                        player.sendMessage(prefix2 + ChatColor.GREEN + "Cancelled all Trades safely.");
 
                     } else if (args[0].equalsIgnoreCase("cancel")) {
 
                         Trade trade = null;
+                        Sender Sender1 = null;
 
                         for (Trade t : trades) {
 
@@ -467,6 +528,15 @@ public class sGiftCommandExecutor implements CommandExecutor {
 
                                 trade = t;
                             }
+                        }
+
+                        for (Sender s : senders) {
+
+                            if (s.Sender == player) {
+
+                                Sender1 = s;
+                            }
+
                         }
 
                         if (trade == null) {
@@ -493,6 +563,7 @@ public class sGiftCommandExecutor implements CommandExecutor {
                             Victim.sendMessage(prefix2 + ChatColor.YELLOW + playerSendingItems.getName() + ChatColor.RED + " Cancelled the Trade!");
 
                             trades.remove(trade);
+                            senders.remove(Sender1);
                         }
 
 
@@ -612,19 +683,19 @@ public class sGiftCommandExecutor implements CommandExecutor {
                     player.sendMessage(ChatColor.RED + "Vault: " + ChatColor.AQUA + info1);
                     player.sendMessage(ChatColor.RED + "Gifts: " + ChatColor.AQUA + info2);
                     player.sendMessage(ChatColor.RED + "Trade: " + ChatColor.AQUA + info3);
-                    
+
                     StringBuilder senderList = new StringBuilder();
-                    
+
                     for (Sender s : senders) {
                         if (senderList.length() > 0) {
-                            
+
                             senderList.append(ChatColor.RED + ", " + ChatColor.AQUA);
-                            
+
                         }
                         senderList.append(s.Sender.getName());
                     }
                     player.sendMessage(ChatColor.RED + "Senders: " + ChatColor.AQUA + senderList);
-                    
+
 
                 } else if (args[0].equalsIgnoreCase("halt") && sender.hasPermission("sgift.halt")) {
 
@@ -635,13 +706,13 @@ public class sGiftCommandExecutor implements CommandExecutor {
                     gifts.clear();
 
                 } else if (args[0].equalsIgnoreCase("help")) {
-                    
+
                     player.sendMessage(ChatColor.DARK_RED + "---------------[" + ChatColor.RED + "sGift - sGift Help Menu" + ChatColor.DARK_RED + "]----------------");
                     player.sendMessage(plugin.getConfig().getString("Help.sGift.Info"));
                     player.sendMessage(plugin.getConfig().getString("Help.sGift.Halt"));
                     player.sendMessage(plugin.getConfig().getString("Help.sGift.Set"));
                     player.sendMessage(plugin.getConfig().getString("Help.sGift.Example"));
-                
+
                 } else {
 
                     player.sendMessage(prefix3 + ChatColor.RED + "Invalid command usage!");
@@ -717,11 +788,11 @@ public class sGiftCommandExecutor implements CommandExecutor {
                             player.sendMessage(prefix3 + ChatColor.RED + "Gifting is already disabled!");
                         }
                     } else {
-                        
+
                         player.sendMessage(prefix3 + ChatColor.RED + "Invalid command usage!");
                         player.sendMessage(prefix3 + ChatColor.GRAY + "/sgift info|halt|set <Option> [true|false]");
                     }
-                    
+
                 } else if (args[1].equalsIgnoreCase("trade")) {
                     if (args[2].equalsIgnoreCase("true")) {
                         if (!plugin.getConfig().getBoolean("enable-trade")) {
@@ -753,15 +824,15 @@ public class sGiftCommandExecutor implements CommandExecutor {
                         player.sendMessage(prefix3 + ChatColor.GRAY + "/sgift info|halt|set <Option> [true|false]");
                     }
                 } else {
-                    
+
                     player.sendMessage(prefix3 + ChatColor.RED + "Invalid command usage!");
                     player.sendMessage(prefix3 + ChatColor.GRAY + "/sgift info|halt|set <Option> [true|false]");
                 }
             } else if (args.length == 0) {
-                
+
                 player.sendMessage(prefix2 + ChatColor.RED + "By Sk8r2K9. /sgift info|halt|set <Option> [true|false]");
             } else if (args.length > 3) {
-                
+
                 player.sendMessage(prefix3 + ChatColor.RED + "Invalid command usage!");
                 player.sendMessage(prefix3 + ChatColor.GRAY + "/sgift info|halt|set <Option> [true|false]");
             }
