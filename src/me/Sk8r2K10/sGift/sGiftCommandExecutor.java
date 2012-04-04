@@ -704,6 +704,7 @@ public class sGiftCommandExecutor implements CommandExecutor {
 
                     trades.clear();
                     gifts.clear();
+                    senders.clear();
 
                 } else if (args[0].equalsIgnoreCase("help")) {
 
