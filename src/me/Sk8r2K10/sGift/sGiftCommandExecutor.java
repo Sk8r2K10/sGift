@@ -306,14 +306,15 @@ public class sGiftCommandExecutor implements CommandExecutor {
                                     } else {
 
                                         player.sendMessage(prefix + ChatColor.RED + "You don't have enough " + Items.name(Item) + ", or Item is partially Used!");
+                                        player.sendMessage(prefix + ChatColor.RED + "Check your Item ID's and don't forget data Values.");
                                     }
 
                                 } else {
 
-                                    player.sendMessage(prefix + ChatColor.RED + "Amount provided is Invalid!");
+                                    player.sendMessage(prefix + ChatColor.RED + "Amount specified is Invalid!");
                                 }
                             } else {
-                                player.sendMessage(prefix + ChatColor.RED + "Material provided is Invalid!");
+                                player.sendMessage(prefix + ChatColor.RED + "Material specified is Invalid!");
                             }
 
                         } else {
@@ -631,19 +632,20 @@ public class sGiftCommandExecutor implements CommandExecutor {
                                         } else {
 
                                             player.sendMessage(prefix2 + ChatColor.RED + "You don't have enough " + Items.name(Item) + ", or Item is partially Used!");
+                                            player.sendMessage(prefix2 + ChatColor.RED + "Check your Item ID's and don't forget data Values.");
                                         }
 
 
                                     } else {
-                                        player.sendMessage(prefix2 + ChatColor.RED + "Price provided is Invalid!");
+                                        player.sendMessage(prefix2 + ChatColor.RED + "Price specified is Invalid!");
                                     }
 
                                 } else {
 
-                                    player.sendMessage(prefix2 + ChatColor.RED + "Amount provided is Invalid!");
+                                    player.sendMessage(prefix2 + ChatColor.RED + "Amount specified is Invalid!");
                                 }
                             } else {
-                                player.sendMessage(prefix2 + ChatColor.RED + "Material provided is Invalid!");
+                                player.sendMessage(prefix2 + ChatColor.RED + "Material specified is Invalid!");
                             }
 
                         } else {
