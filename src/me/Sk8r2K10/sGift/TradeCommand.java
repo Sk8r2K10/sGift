@@ -1,6 +1,5 @@
 package me.Sk8r2K10.sGift;
 
-import java.util.ArrayList;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
