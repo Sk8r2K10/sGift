@@ -45,8 +45,8 @@ public class sGiftCommand implements CommandExecutor {
                     if (args[0].equalsIgnoreCase("info")) {
 
                         String info1 = Boolean.toString(plugin.getConfig().getBoolean("use-vault"));
-                        String info2 = Boolean.toString(plugin.getConfig().getBoolean("enable-gift"));
-                        String info3 = Boolean.toString(plugin.getConfig().getBoolean("enable-trade"));
+                        String info2 = Boolean.toString(plugin.getConfig().getBoolean("Features.enable-gift"));
+                        String info3 = Boolean.toString(plugin.getConfig().getBoolean("Features.enable-trade"));
 
                         player.sendMessage(ChatColor.DARK_RED + "-----------------[" + ChatColor.RED + "sGift - Information" + ChatColor.DARK_RED + "]------------------");
                         player.sendMessage(ChatColor.RED + "Vault: " + ChatColor.AQUA + info1);
@@ -116,7 +116,7 @@ public class sGiftCommand implements CommandExecutor {
                             if (plugin.getConfig().getBoolean("use-vault")) {
 
                                 plugin.getConfig().set("use-vault", false);
-                                plugin.getConfig().set("enable-trade", false);
+                                plugin.getConfig().set("Features.enable-trade", false);
                                 plugin.saveConfig();
 
                                 player.sendMessage(prefix + ChatColor.AQUA + "Vault has been set to false in Config");
@@ -134,9 +134,9 @@ public class sGiftCommand implements CommandExecutor {
                         }
                     } else if (args[1].equalsIgnoreCase("gift")) {
                         if (args[2].equalsIgnoreCase("true")) {
-                            if (!plugin.getConfig().getBoolean("enable-gift")) {
+                            if (!plugin.getConfig().getBoolean("Features.enable-gift")) {
 
-                                plugin.getConfig().set("enable-gift", true);
+                                plugin.getConfig().set("Features.enable-gift", true);
                                 plugin.saveConfig();
 
                                 player.sendMessage(prefix + ChatColor.AQUA + "Gifting has been set to true in Config");
@@ -146,9 +146,9 @@ public class sGiftCommand implements CommandExecutor {
                                 player.sendMessage(prefix + ChatColor.RED + "Gifting is already enabled!");
                             }
                         } else if (args[2].equalsIgnoreCase("false")) {
-                            if (plugin.getConfig().getBoolean("enable-gift")) {
+                            if (plugin.getConfig().getBoolean("Features.enable-gift")) {
 
-                                plugin.getConfig().set("enable-gift", false);
+                                plugin.getConfig().set("Features.enable-gift", false);
                                 plugin.saveConfig();
 
                                 player.sendMessage(prefix + ChatColor.AQUA + "Gifting has been set to false in Config");
@@ -165,9 +165,9 @@ public class sGiftCommand implements CommandExecutor {
 
                     } else if (args[1].equalsIgnoreCase("trade")) {
                         if (args[2].equalsIgnoreCase("true")) {
-                            if (!plugin.getConfig().getBoolean("enable-trade")) {
+                            if (!plugin.getConfig().getBoolean("Features.enable-trade")) {
 
-                                plugin.getConfig().set("enable-trade", true);
+                                plugin.getConfig().set("Features.enable-trade", true);
                                 plugin.saveConfig();
 
                                 player.sendMessage(prefix + ChatColor.AQUA + "Trading has been set to true in Config");
@@ -177,9 +177,9 @@ public class sGiftCommand implements CommandExecutor {
                                 player.sendMessage(prefix + ChatColor.RED + "Trading is already enabled!");
                             }
                         } else if (args[2].equalsIgnoreCase("false")) {
-                            if (plugin.getConfig().getBoolean("enable-trade")) {
+                            if (plugin.getConfig().getBoolean("Features.enable-trade")) {
 
-                                plugin.getConfig().set("enable-trade", false);
+                                plugin.getConfig().set("Features.enable-trade", false);
                                 plugin.saveConfig();
 
                                 player.sendMessage(prefix + ChatColor.AQUA + "Trading has been set to false in Config");

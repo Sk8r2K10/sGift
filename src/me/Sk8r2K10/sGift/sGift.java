@@ -42,7 +42,7 @@ public class sGift extends JavaPlugin {
                 
                 log.info(logpre + " Vault Disabled! Trading is Disabled");
                 
-                this.getConfig().set("enable-trade", false);
+                this.getConfig().set("Features.enable-trade", false);
                 saveConfig();
                 
             } else if (getServer().getPluginManager().getPlugin("Vault") == null) {
@@ -50,7 +50,7 @@ public class sGift extends JavaPlugin {
                 log.info(logpre + " Vault not Found! Disabling Trading by Default");
                 
                 this.getConfig().set("use-vault", false);
-                this.getConfig().set("enable-trade", false);
+                this.getConfig().set("Features.enable-trade", false);
                 saveConfig();
             
             } else if (this.getConfig().getBoolean("use-vault")) {
@@ -67,7 +67,7 @@ public class sGift extends JavaPlugin {
         if (this.getConfig().getBoolean("use-vault")) {
             if (getServer().getPluginManager().getPlugin("Vault") == null) {
                 this.getConfig().set("use-vault", false);
-                this.getConfig().set("enable-trade", false);
+                this.getConfig().set("Features.enable-trade", false);
                 saveConfig();
                 return false;
             }
