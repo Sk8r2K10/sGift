@@ -1,19 +1,19 @@
-# sGift Configuration File
-# Colours are also customisable, Replace the letter/number after the § symbol with the corresponding colour of choice
+# sGift Configuration File.
+# Colours are also customisable, Replace the letter/number after the § symbol with the corresponding colour of choice.
 # Example: §4, would give you Dark Red text.
 # Any Text after the colour code, will be in this colour. Use §f to go back to white.
 #   NOTE: If you get Strange letters after colours in strings, Update your CB Build!
 
-# The Following option defines if Vault is used. If this is set to false, /trade will be disabled!
+# The use-vault option defines if Vault is used. If this is set to false, /trade will be disabled!
 
+# The "Features" section of options define if certain features are enabled or not.
+
+# The "Help" section defines the strings shown to the player when using the help commands.
 use-vault: true
 
-# The Following options define if certain features are enabled or not
-
-enable-gift: true
-enable-trade: true
-
-# The Following section defines the strings used when using the /gift help or /trade help commands
+Features:
+  enable-gift: true
+  enable-trade: true
 
 Help:
   Gift:
@@ -36,5 +36,5 @@ Help:
     Info: §c/sgift info§7 - Shows Configuration and Gift information.
     Halt: §c/sgift halt§7 - Stops all outgoing Gifts and Trades.
     Set: §c/sgift set§7 - Set an option in the Config file to true or false.
-    Example: '§7example: /sgift set gifts true -> Gifting Enabled'
+    Example: '§7example: /sgift set gift true -> Gifting Enabled'
 

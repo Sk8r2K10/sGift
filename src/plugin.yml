@@ -1,6 +1,6 @@
 name: sGift
 main: me.Sk8r2K10.sGift.sGift
-version: 1.2.2
+version: 1.2.3
 description: Gift/Trade Items to other Players
 softdepend: [Vault]
 commands:
@@ -25,9 +25,6 @@ permissions:
         default: op
         children:
             sgift.trade.help: true
-    sgift.sgift:
-        description: Gives access to /sgift
-        default: op
     sgift.set:
         description: Gives access to /sgift set
         default: op
