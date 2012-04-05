@@ -2,8 +2,6 @@ package me.Sk8r2K10.sGift;
 
 import java.util.logging.Logger;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
