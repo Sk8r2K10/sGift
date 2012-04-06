@@ -4,13 +4,11 @@
 # Any Text after the colour code, will be in this colour. Use §f to go back to white.
 #   NOTE: If you get Strange letters after colours in strings, Update your CB Build!
 
-# The use-vault option defines if Vault is used. If this is set to false, /trade will be disabled!
+# The use-vault option has been removed and is now a Hard depend!
 
 # The "Features" section of options define if certain features are enabled or not.
 
 # The "Help" section defines the strings shown to the player when using the help commands.
-use-vault: true
-
 Features:
   enable-gift: true
   enable-trade: true

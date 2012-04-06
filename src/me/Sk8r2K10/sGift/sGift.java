@@ -5,8 +5,6 @@ import java.util.logging.Logger;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,26 +35,28 @@ public class sGift extends JavaPlugin {
         PluginDescriptionFile pdf = getDescription();
         String logpre = "[" + pdf.getName() + " " + pdf.getVersion() + "] ";
 
-        if (!setupEconomy()) {
-            if (!this.getConfig().getBoolean("use-vault")) {
-                
-                log.info(logpre + " Vault Disabled! Trading is Disabled");
-                
-                this.getConfig().set("Features.enable-trade", false);
-                saveConfig();
-                
-            } else if (getServer().getPluginManager().getPlugin("Vault") == null) {
-                
-                log.info(logpre + " Vault not Found! Disabling Trading by Default");
-                
-                this.getConfig().set("use-vault", false);
-                this.getConfig().set("Features.enable-trade", false);
-                saveConfig();
+        if (getServer().getPluginManager().getPlugin("Vault") != null) {
             
-            } else if (this.getConfig().getBoolean("use-vault")) {
+            log.info(logpre + "Vault found! Enabling plugin.");
+            
+            if (!setupEconomy() && getConfig().getBoolean("Features.enable-trade")) {
                 
-                log.info(logpre + " Vault Enabled! Trading is Enabled");
+                log.severe(logpre + "Economy plugin not found. Disabling trading."); 
+                
+                getConfig().set("Features.enable-trade", false);
+                saveConfig();
+            } else if (getConfig().getBoolean("Features.enable-trade")) {
+                
+                log.info(logpre + "Economy plugin " + econ.getName() + " has been found. Trading will remain enabled.");
+                
             }
+            
+        } else {
+            
+            log.severe(logpre + "Vault not found! Disabling plugin.");
+            
+            getServer().getPluginManager().disablePlugin(this);
+            
         }
 
         getConfig().options().copyDefaults(true);
@@ -64,9 +64,8 @@ public class sGift extends JavaPlugin {
     }
 
     public boolean setupEconomy() {
-        if (this.getConfig().getBoolean("use-vault")) {
+        if (this.getConfig().getBoolean("Features.enable-trade")) {
             if (getServer().getPluginManager().getPlugin("Vault") == null) {
-                this.getConfig().set("use-vault", false);
                 this.getConfig().set("Features.enable-trade", false);
                 saveConfig();
                 return false;
@@ -74,6 +73,8 @@ public class sGift extends JavaPlugin {
             RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
             if (rsp != null) {
                 econ = rsp.getProvider();
+            } else {
+                return false;                
             }
 
         } else {
@@ -86,20 +87,6 @@ public class sGift extends JavaPlugin {
     public Economy getEcon() {
 
         return this.econ;
-    }
-
-    public boolean inventoryContains(Inventory inventory, ItemStack item) {
-        int count = 0;
-        ItemStack[] items = inventory.getContents();
-        for (int i = 0; i < items.length; i++) {
-            if (items[i] != null && items[i].getType() == item.getType() && items[i].getDurability() == item.getDurability()) {
-                count += items[i].getAmount();
-            }
-            if (count >= item.getAmount()) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public static int getInt(String string) {

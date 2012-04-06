@@ -43,15 +43,13 @@ public class sGiftCommand implements CommandExecutor {
                 
                 if (args.length == 1) {
                     if (args[0].equalsIgnoreCase("info")) {
-
-                        String info1 = Boolean.toString(plugin.getConfig().getBoolean("use-vault"));
-                        String info2 = Boolean.toString(plugin.getConfig().getBoolean("Features.enable-gift"));
-                        String info3 = Boolean.toString(plugin.getConfig().getBoolean("Features.enable-trade"));
+                        
+                        String info1 = Boolean.toString(plugin.getConfig().getBoolean("Features.enable-gift"));
+                        String info2 = Boolean.toString(plugin.getConfig().getBoolean("Features.enable-trade"));
 
                         player.sendMessage(ChatColor.DARK_RED + "-----------------[" + ChatColor.RED + "sGift - Information" + ChatColor.DARK_RED + "]------------------");
-                        player.sendMessage(ChatColor.RED + "Vault: " + ChatColor.AQUA + info1);
-                        player.sendMessage(ChatColor.RED + "Gifts: " + ChatColor.AQUA + info2);
-                        player.sendMessage(ChatColor.RED + "Trade: " + ChatColor.AQUA + info3);
+                        player.sendMessage(ChatColor.RED + "Gift: " + ChatColor.AQUA + info1);
+                        player.sendMessage(ChatColor.RED + "Trade: " + ChatColor.AQUA + info2);
 
                         StringBuilder senderList = new StringBuilder();
 
@@ -94,45 +92,7 @@ public class sGiftCommand implements CommandExecutor {
                     player.sendMessage(prefix + ChatColor.GRAY + "/sgift info|halt|set <Option> [true|false]");
 
                 } else if (args.length == 3 && args[0].equalsIgnoreCase("set") && sender.hasPermission("sgift.set")) {
-                    if (args[1].equalsIgnoreCase("vault")) {
-                        if (args[2].equalsIgnoreCase("true")) {
-                            if (!plugin.getConfig().getBoolean("use-vault")) {
-                                if (plugin.getServer().getPluginManager().getPlugin("Vault") != null) {
-
-                                    plugin.getConfig().set("use-vault", true);
-                                    plugin.saveConfig();
-
-                                    player.sendMessage(prefix + ChatColor.AQUA + "Vault has been set to true in Config");
-
-                                } else {
-
-                                    player.sendMessage(prefix + ChatColor.RED + "Vault could not be found, Vault remains disabled.");
-                                }
-                            } else {
-
-                                player.sendMessage(prefix + ChatColor.RED + "Vault is already enabled!");
-                            }
-                        } else if (args[2].equalsIgnoreCase("false")) {
-                            if (plugin.getConfig().getBoolean("use-vault")) {
-
-                                plugin.getConfig().set("use-vault", false);
-                                plugin.getConfig().set("Features.enable-trade", false);
-                                plugin.saveConfig();
-
-                                player.sendMessage(prefix + ChatColor.AQUA + "Vault has been set to false in Config");
-                                player.sendMessage(prefix + ChatColor.RED + "Subsequently, Trading has been disabled!");
-
-                            } else {
-
-                                player.sendMessage(prefix + ChatColor.RED + "Vault is already disabled!");
-                            }
-
-                        } else {
-
-                            player.sendMessage(prefix + ChatColor.RED + "Invalid command usage!");
-                            player.sendMessage(prefix + ChatColor.GRAY + "/sgift info|halt|set <Option> [true|false]");
-                        }
-                    } else if (args[1].equalsIgnoreCase("gift")) {
+                     if (args[1].equalsIgnoreCase("gift")) {
                         if (args[2].equalsIgnoreCase("true")) {
                             if (!plugin.getConfig().getBoolean("Features.enable-gift")) {
 
