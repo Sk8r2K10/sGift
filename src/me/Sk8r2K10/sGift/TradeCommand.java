@@ -36,7 +36,7 @@ public class TradeCommand implements CommandExecutor {
 	    player = null;
 	}
 
-	if (commandLabel.equalsIgnoreCase("trade") && sender.hasPermission("sgift.trade")) {
+	if (commandLabel.equalsIgnoreCase("trade") && sender.hasPermission("sgift.trade.trade")) {
 
 	    PluginDescriptionFile pdf = plugin.getDescription();
 	    String logpre = "[" + pdf.getName() + " " + pdf.getVersion() + "] ";
@@ -59,7 +59,7 @@ public class TradeCommand implements CommandExecutor {
 				player.sendMessage(plugin.getConfig().getString("Help.Trade.Stop"));
 			    }
 
-			} else if (args[0].equalsIgnoreCase("accept")) {
+			} else if (args[0].equalsIgnoreCase("accept") && sender.hasPermission("sgift.trade.accept")) {
 
 			    Trade trade = null;
 			    Sender Sender1 = null;
@@ -123,7 +123,7 @@ public class TradeCommand implements CommandExecutor {
 
 			    }
 
-			} else if (args[0].equalsIgnoreCase("deny")) {
+			} else if (args[0].equalsIgnoreCase("deny") && sender.hasPermission("sgift.trade.deny")) {
 
 			    Trade trade = null;
 			    Sender Sender1 = null;
@@ -247,7 +247,7 @@ public class TradeCommand implements CommandExecutor {
 			    }
 			    player.sendMessage(prefix + ChatColor.GREEN + "Cancelled all Trades safely.");
 
-			} else if (args[0].equalsIgnoreCase("cancel")) {
+			} else if (args[0].equalsIgnoreCase("cancel") && sender.hasPermission("sgift.trade.cancel")) {
 
 			    Trade trade = null;
 			    Sender Sender1 = null;
@@ -307,19 +307,23 @@ public class TradeCommand implements CommandExecutor {
 			    }
 
 
-			} else if (Bukkit.getServer().getPlayer(args[0]) == null) {
-
-			    player.sendMessage(prefix + ChatColor.RED + "Player not Online.");
-
-			} else if (Bukkit.getServer().getPlayer(args[0]) == player) {
-
-			    player.sendMessage(prefix + ChatColor.RED + "Don't trade Items with yourself!");
-
-			} else {
+			} else if (args.length == 2 && sender.hasPermission("sgift.trade.start")) {
 
 			    player.sendMessage(prefix + ChatColor.RED + "Too few arguments!");
 			    player.sendMessage(prefix + ChatColor.GRAY + "Correct usage: /trade <Player> <Item> <Amount> <Price>");
 
+			} else if (Bukkit.getServer().getPlayer(args[0]) == player && sender.hasPermission("sgift.trade.start")) {
+
+			    player.sendMessage(prefix + ChatColor.RED + "Don't trade Items with yourself!");
+
+			} else if (Bukkit.getServer().getPlayer(args[0]) == null && sender.hasPermission("sgift.trade.start")) {
+
+			    player.sendMessage(prefix + ChatColor.RED + "Player not Online.");
+
+			} else {
+			    
+			    plugin.noPerms(player);
+				
 			}
 		    } else if (args.length == 2) {
 
@@ -331,7 +335,7 @@ public class TradeCommand implements CommandExecutor {
 			player.sendMessage(prefix + ChatColor.RED + "Too Few arguments!");
 			player.sendMessage(prefix + ChatColor.GRAY + "Correct usage: /trade <Player> <Item> <Amount> <Price>");
 
-		    } else if (args.length == 4) {
+		    } else if (args.length == 4 && sender.hasPermission("sgift.trade.start")) {
 			if (Bukkit.getServer().getPlayer(args[0]) != player) {
 			    if (Bukkit.getServer().getPlayer(args[0]) != null) {
 
@@ -476,7 +480,7 @@ public class TradeCommand implements CommandExecutor {
 	    }
 
 	} else {
-	    plugin.hasPerms(player, commandLabel);
+	    plugin.noPerms(player);
 	}
 	return false;
     }

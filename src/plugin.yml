@@ -1,6 +1,6 @@
 name: sGift
 main: me.Sk8r2K10.sGift.sGift
-version: 1.2.3
+version: 1.2.5
 description: Gift/Trade Items to other Players
 softdepend: [Vault]
 commands:
@@ -12,22 +12,88 @@ commands:
     description: Admin commands for sGift
 
 permissions:
-    sgift.gift:
+    sgift.gift.*:
+        description: Give access to /gift and all sub commands
+        default: op
+        children:
+            sgift.gift.gift: true
+            sgift.gift.help: true
+            sgift.gift.accept: true
+            sgift.gift.deny: true
+            sgift.gift.cancel: true
+            sgift.gift.start: true
+    sgift.trade.*:
+        description: Give access to /trade and all sub commands
+        default: op
+        children:
+            sgift.trade.trade: true
+            sgift.trade.help: true
+            sgift.trade.accept: true
+            sgift.trade.deny: true
+            sgift.trade.cancel: true
+            sgift.trade.start: true
+    sgift.*:
+        description: Give access to Admin commands
+        default: false
+        children:
+            sgift.sgift: true
+            sgift.set: true
+            sgift.halt: true
+            sgift.gift: true
+            sgift.gift.help: true
+            sgift.gift.accept: true
+            sgift.gift.deny: true
+            sgift.gift.cancel: true
+            sgift.gift.start: true
+            sgift.trade: true
+            sgift.trade.help: true
+            sgift.trade.accept: true
+            sgift.trade.deny: true
+            sgift.trade.cancel: true
+            sgift.trade.start: true
+    sgift.gift.gift:
         description: Give access to /gift
         default: op
-        children:
-            sgift.gift.help: true
-    sgift.admin:
-        description: Give access to Admin commands
+    sgift.gift.help: 
+        description: Give access to /gift help
         default: op
-    sgift.trade:
+    sgift.gift.accept: 
+        description: Give access to /gift accept
+        defaul: op
+    sgift.gift.deny: 
+        description: Give access to /gift deny
+        default: op
+    sgift.gift.cancel: 
+        description: Give access to /gift cancel
+        default: op
+    sgift.gift.start: 
+        description: Give access to /gift <Player> <Item> <Amount>
+        default: op
+    sgift.trade.trade:
         description: Give access to /trade
         default: op
-        children:
-            sgift.trade.help: true
+    sgift.trade.help: 
+        description: Give access to /trade help
+        default: op
+    sgift.trade.accept: 
+        description: Give access to /trade accept
+        defaul: op
+    sgift.trade.deny: 
+        description: Give access to /trade deny
+        default: op
+    sgift.trade.cancel: 
+        description: Give access to /trade cancel
+        default: op
+    sgift.trade.start: 
+        description: Give access to /trade <Player> <Item> <Amount>
+        default: op
+    sgift.sgift:
+        description: Gives access to /sgift
+        default: false
     sgift.set:
         description: Gives access to /sgift set
-        default: op
+        default: false
     sgift.halt:
         description: Gives access to /sgift halt
-        default: op
+        default: false
+    

@@ -106,52 +106,10 @@ public class sGift extends JavaPlugin {
         return true;
     }
     
-    public void hasPerms(Player player, String commandLabel) {
+    public void noPerms(Player player) {
         
         String errpre = "[" + ChatColor.RED + "sGift" + ChatColor.WHITE + "] " + ChatColor.RED;
         
-        if (commandLabel.equalsIgnoreCase("trade")) {
-            if (!player.hasPermission("sgift.trade")) {
-                
-                player.sendMessage(errpre + "You don't have permission for /trade!");
-                player.sendMessage(errpre + "Node required: sgift.trade");
-                
-            } else if (!player.hasPermission("sgift.trade.help")) {
-                
-                player.sendMessage(errpre + "You don't have permission for /trade help!");
-                player.sendMessage(errpre + "Node required: sgift.trade.help");
-                
-            }
-            
-        }
-        if (commandLabel.equalsIgnoreCase("gift")) {
-            if (!player.hasPermission("sgift.gift")) {
-                
-                player.sendMessage(errpre + "You don't have permission for /gift!");
-                player.sendMessage(errpre + "Node required: sgift.gift");
-            } else if (!player.hasPermission("sgift.gift.help")) {
-                
-                player.sendMessage(errpre + "You don't have permission for /gift help!");
-                player.sendMessage(errpre + "Node required: sgift.gift.help");
-            }
-            
-        } 
-        if (commandLabel.equalsIgnoreCase("sgift")) {
-            if (!player.hasPermission("sgift.admin")) {
-                
-                player.sendMessage(errpre + "You don't have permission for sGift admin commands!");
-                player.sendMessage(errpre + "Node required: sgift.admin");
-            } else  if (!player.hasPermission("sgift.set")) {
-                
-                player.sendMessage(errpre + "You don't have permission for /sgift set!");
-                player.sendMessage(errpre + "Node required: sgift.set");
-            } else if (!player.hasPermission("sgift.halt")) {
-                
-                player.sendMessage(errpre + "You don't have permission for /sgift hakt!");
-                player.sendMessage(errpre + "Node required: sgift.halt");
-            }
-        }
-        
-        
+        player.sendMessage(errpre + ChatColor.RED + "You don't have permission to use that command!");
     }
 }

@@ -9,7 +9,6 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -35,7 +34,7 @@ public class GiftCommand implements CommandExecutor {
 
 	    player = null;
 	}
-	if (commandLabel.equalsIgnoreCase("gift") && sender.hasPermission("sgift.gift")) {
+	if (commandLabel.equalsIgnoreCase("gift") && sender.hasPermission("sgift.gift.gift")) {
 
 	    PluginDescriptionFile pdf = plugin.getDescription();
 	    String logpre = "[" + pdf.getName() + " " + pdf.getVersion() + "] ";
@@ -61,7 +60,7 @@ public class GiftCommand implements CommandExecutor {
 			    player.sendMessage(plugin.getConfig().getString("Help.Gift.Stop"));
 			}
 
-		    } else if (args[0].equalsIgnoreCase("accept")) {
+		    } else if (args[0].equalsIgnoreCase("accept") && sender.hasPermission("sgift.gift.accept")) {
 
 			Gift gift = null;
 			Sender Sender1 = null;
@@ -120,7 +119,7 @@ public class GiftCommand implements CommandExecutor {
 
 			}
 
-		    } else if (args[0].equalsIgnoreCase("deny")) {
+		    } else if (args[0].equalsIgnoreCase("deny") && sender.hasPermission("sgift.gift.deny")) {
 
 			Gift gift = null;
 			Sender Sender1 = null;
@@ -244,7 +243,7 @@ public class GiftCommand implements CommandExecutor {
 			}
 			player.sendMessage(prefix + ChatColor.GREEN + "Cancelled all Gifts safely.");
 
-		    } else if (args[0].equalsIgnoreCase("cancel")) {
+		    } else if (args[0].equalsIgnoreCase("cancel") && sender.hasPermission("sgift.gift.cancel")) {
 
 			Gift gift = null;
 			Sender Sender1 = null;
@@ -302,6 +301,11 @@ public class GiftCommand implements CommandExecutor {
 
 			}
 
+		    } else if (args.length == 1 && sender.hasPermission("sgift.gift.start")) {
+			
+			player.sendMessage(prefix + ChatColor.RED + "Too Few arguments!");
+			player.sendMessage(prefix + ChatColor.GRAY + "Correct usage: /gift <Player> <Item> <Amount>");
+		
 		    } else if (Bukkit.getServer().getPlayer(args[0]) == null) {
 
 			player.sendMessage(prefix + ChatColor.RED + "Player not Online.");
@@ -312,8 +316,7 @@ public class GiftCommand implements CommandExecutor {
 
 		    } else {
 
-			player.sendMessage(prefix + ChatColor.RED + "Too few arguments!");
-			player.sendMessage(prefix + ChatColor.GRAY + "Correct usage: /gift <Player> <Item> <Amount>");
+			plugin.noPerms(player);
 
 		    }
 		} else if (args.length == 2) {
@@ -321,7 +324,7 @@ public class GiftCommand implements CommandExecutor {
 		    player.sendMessage(prefix + ChatColor.RED + "Too Few arguments!");
 		    player.sendMessage(prefix + ChatColor.GRAY + "Correct usage: /gift <Player> <Item> <Amount>");
 
-		} else if (args.length == 3) {
+		} else if (args.length == 3 && sender.hasPermission("sgift.gift.start")) {
 		    if (Bukkit.getServer().getPlayer(args[0]) != player) {
 			if (Bukkit.getServer().getPlayer(args[0]) != null) {
 
@@ -429,13 +432,10 @@ public class GiftCommand implements CommandExecutor {
 
 		    log.warning(logpre + "Don't send sGift commands through console!");
 		}
-
-
-
 	    }
 	} else {
 
-	    plugin.hasPerms(player, commandLabel);
+	    plugin.noPerms(player);
 	}
 	return false;
     }

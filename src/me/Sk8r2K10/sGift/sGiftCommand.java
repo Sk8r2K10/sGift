@@ -81,11 +81,14 @@ public class sGiftCommand implements CommandExecutor {
                         player.sendMessage(plugin.getConfig().getString("Help.sGift.Set"));
                         player.sendMessage(plugin.getConfig().getString("Help.sGift.Example"));
 
-                    } else {
+                    } else if (sender.hasPermission("sgift.halt")) {
 
                         player.sendMessage(prefix + ChatColor.RED + "Invalid command usage!");
                         player.sendMessage(prefix + ChatColor.GRAY + "/sgift info|halt|set <Option> [true|false]");
-                    }
+                    } else {
+			
+			plugin.noPerms(player);			
+		    }
                 } else if (args.length == 2) {
 
                     player.sendMessage(prefix + ChatColor.RED + "Invalid command usage!");
@@ -169,7 +172,7 @@ public class sGiftCommand implements CommandExecutor {
 
             } else {
 
-                plugin.hasPerms(player, commandLabel);
+                plugin.noPerms(player);
             }
 
         } else {
