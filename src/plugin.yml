@@ -59,7 +59,7 @@ permissions:
         default: op
     sgift.gift.accept: 
         description: Give access to /gift accept
-        defaul: op
+        default: op
     sgift.gift.deny: 
         description: Give access to /gift deny
         default: op
@@ -77,7 +77,7 @@ permissions:
         default: op
     sgift.trade.accept: 
         description: Give access to /trade accept
-        defaul: op
+        default: op
     sgift.trade.deny: 
         description: Give access to /trade deny
         default: op
