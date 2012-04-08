@@ -34,7 +34,7 @@ public class GiftCommand implements CommandExecutor {
 
 	    player = null;
 	}
-	if (commandLabel.equalsIgnoreCase("gift") && sender.hasPermission("sgift.gift.gift")) {
+	if (commandLabel.equalsIgnoreCase("gift") && plugin.getPerms(player, "sgift.gift.gift")) {
 
 	    PluginDescriptionFile pdf = plugin.getDescription();
 	    String logpre = "[" + pdf.getName() + " " + pdf.getVersion() + "] ";
@@ -45,7 +45,7 @@ public class GiftCommand implements CommandExecutor {
 		    log.warning(logpre + "Don't send sGift commands through console!");
 
 		} else if (args.length == 1) {
-		    if (args[0].equalsIgnoreCase("help") && player.hasPermission("sgift.gift.help")) {
+		    if (args[0].equalsIgnoreCase("help") && plugin.getPerms(player, "sgift.gift.help")) {
 
 			player.sendMessage(ChatColor.DARK_GRAY + "----------------[" + ChatColor.GREEN + "sGift - Gift Help Menu" + ChatColor.DARK_GRAY + "]-----------------");
 			player.sendMessage(plugin.getConfig().getString("Help.Gift.Gift"));
@@ -60,7 +60,7 @@ public class GiftCommand implements CommandExecutor {
 			    player.sendMessage(plugin.getConfig().getString("Help.Gift.Stop"));
 			}
 
-		    } else if (args[0].equalsIgnoreCase("accept") && sender.hasPermission("sgift.gift.accept")) {
+		    } else if (args[0].equalsIgnoreCase("accept") && plugin.getPerms(player, "sgift.gift.accept")) {
 
 			Gift gift = null;
 			Sender Sender1 = null;
@@ -119,7 +119,7 @@ public class GiftCommand implements CommandExecutor {
 
 			}
 
-		    } else if (args[0].equalsIgnoreCase("deny") && sender.hasPermission("sgift.gift.deny")) {
+		    } else if (args[0].equalsIgnoreCase("deny") && plugin.getPerms(player, "sgift.gift.deny")) {
 
 			Gift gift = null;
 			Sender Sender1 = null;
@@ -181,7 +181,7 @@ public class GiftCommand implements CommandExecutor {
 			    }
 			}
 
-		    } else if (args[0].equalsIgnoreCase("stop") && player.hasPermission("sgift.admin")) {
+		    } else if (args[0].equalsIgnoreCase("stop") && plugin.getPerms(player, "sgift.sgift")) {
 			while (plugin.gifts.size() > 0) {
 
 			    Gift gift = null;
@@ -243,7 +243,7 @@ public class GiftCommand implements CommandExecutor {
 			}
 			player.sendMessage(prefix + ChatColor.GREEN + "Cancelled all Gifts safely.");
 
-		    } else if (args[0].equalsIgnoreCase("cancel") && sender.hasPermission("sgift.gift.cancel")) {
+		    } else if (args[0].equalsIgnoreCase("cancel") && plugin.getPerms(player, "sgift.gift.cancel")) {
 
 			Gift gift = null;
 			Sender Sender1 = null;
@@ -301,7 +301,7 @@ public class GiftCommand implements CommandExecutor {
 
 			}
 
-		    } else if (args.length == 1 && sender.hasPermission("sgift.gift.start")) {
+		    } else if (args.length == 1 && plugin.getPerms(player, "sgift.gift.start")) {
 			
 			player.sendMessage(prefix + ChatColor.RED + "Too Few arguments!");
 			player.sendMessage(prefix + ChatColor.GRAY + "Correct usage: /gift <Player> <Item> <Amount>");
@@ -314,17 +314,13 @@ public class GiftCommand implements CommandExecutor {
 
 			player.sendMessage(prefix + ChatColor.RED + "Don't gift Items to yourself!");
 
-		    } else {
-
-			plugin.noPerms(player);
-
 		    }
 		} else if (args.length == 2) {
 
 		    player.sendMessage(prefix + ChatColor.RED + "Too Few arguments!");
 		    player.sendMessage(prefix + ChatColor.GRAY + "Correct usage: /gift <Player> <Item> <Amount>");
 
-		} else if (args.length == 3 && sender.hasPermission("sgift.gift.start")) {
+		} else if (args.length == 3 && plugin.getPerms(player, "sgift.gift.start")) {
 		    if (Bukkit.getServer().getPlayer(args[0]) != player) {
 			if (Bukkit.getServer().getPlayer(args[0]) != null) {
 
@@ -433,9 +429,6 @@ public class GiftCommand implements CommandExecutor {
 		    log.warning(logpre + "Don't send sGift commands through console!");
 		}
 	    }
-	} else {
-
-	    plugin.noPerms(player);
 	}
 	return false;
     }

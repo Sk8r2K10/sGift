@@ -106,10 +106,26 @@ public class sGift extends JavaPlugin {
         return true;
     }
     
-    public void noPerms(Player player) {
+    public void noPerms(Player player, String permNode) {
         
         String errpre = "[" + ChatColor.RED + "sGift" + ChatColor.WHITE + "] " + ChatColor.RED;
         
         player.sendMessage(errpre + ChatColor.RED + "You don't have permission to use that command!");
+	player.sendMessage(errpre + "Permission node: " + ChatColor.YELLOW + permNode + ChatColor.RED + " is required.");
+    }
+    
+    public boolean getPerms(Player player, String permNode) {
+	
+	if (player.hasPermission(permNode)) {
+	    
+	    return true;
+	    
+	} else {
+	    
+	    noPerms(player, permNode);	    
+	    
+	    return false;
+	    
+	}
     }
 }

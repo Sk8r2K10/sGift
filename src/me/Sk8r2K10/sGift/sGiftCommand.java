@@ -37,7 +37,7 @@ public class sGiftCommand implements CommandExecutor {
         }
                 
         if (player != null) {
-            if (commandLabel.equalsIgnoreCase("sgift") && sender.hasPermission("sgift.sgift")) {
+            if (commandLabel.equalsIgnoreCase("sgift") && plugin.getPerms(player, "sgift.sgift")) {
                 
                               
                 
@@ -64,7 +64,7 @@ public class sGiftCommand implements CommandExecutor {
                         player.sendMessage(ChatColor.RED + "Senders: " + ChatColor.AQUA + senderList);
 
 
-                    } else if (args[0].equalsIgnoreCase("halt") && sender.hasPermission("sgift.halt")) {
+                    } else if (args[0].equalsIgnoreCase("halt") && plugin.getPerms(player, "sgift.halt")) {
 
                         player.sendMessage(prefix + ChatColor.RED + "Abruptly halted all Gifts and Trades!");
                         player.sendMessage(prefix + ChatColor.RED + "No items have been refunded to players!");
@@ -87,14 +87,15 @@ public class sGiftCommand implements CommandExecutor {
                         player.sendMessage(prefix + ChatColor.GRAY + "/sgift info|halt|set <Option> [true|false]");
                     } else {
 			
-			plugin.noPerms(player);			
+			player.sendMessage(prefix + ChatColor.RED + "Invalid command usage!");
+                        player.sendMessage(prefix + ChatColor.GRAY + "/sgift info|halt|set <Option> [true|false]");			
 		    }
                 } else if (args.length == 2) {
 
                     player.sendMessage(prefix + ChatColor.RED + "Invalid command usage!");
                     player.sendMessage(prefix + ChatColor.GRAY + "/sgift info|halt|set <Option> [true|false]");
 
-                } else if (args.length == 3 && args[0].equalsIgnoreCase("set") && sender.hasPermission("sgift.set")) {
+                } else if (args.length == 3 && args[0].equalsIgnoreCase("set") && plugin.getPerms(player, "sgift.set")) {
                      if (args[1].equalsIgnoreCase("gift")) {
                         if (args[2].equalsIgnoreCase("true")) {
                             if (!plugin.getConfig().getBoolean("Features.enable-gift")) {
@@ -168,13 +169,8 @@ public class sGiftCommand implements CommandExecutor {
 
                     player.sendMessage(prefix + ChatColor.RED + "Invalid command usage!");
                     player.sendMessage(prefix + ChatColor.GRAY + "/sgift info|halt|set <Option> [true|false]");
-                }
-
-            } else {
-
-                plugin.noPerms(player);
-            }
-
+                } 
+            } 
         } else {
             
             log.warning(logpre + "Don't send sGift commands through console!");

@@ -36,7 +36,7 @@ public class TradeCommand implements CommandExecutor {
 	    player = null;
 	}
 
-	if (commandLabel.equalsIgnoreCase("trade") && sender.hasPermission("sgift.trade.trade")) {
+	if (commandLabel.equalsIgnoreCase("trade") && plugin.getPerms(player, "sgift.trade.trade")) {
 
 	    PluginDescriptionFile pdf = plugin.getDescription();
 	    String logpre = "[" + pdf.getName() + " " + pdf.getVersion() + "] ";
@@ -44,7 +44,7 @@ public class TradeCommand implements CommandExecutor {
 	    if (plugin.getConfig().getBoolean("Features.enable-trade")) {
 		if (player != null) {
 		    if (args.length == 1) {
-			if (args[0].equalsIgnoreCase("help") && player.hasPermission("sgift.trade.help")) {
+			if (args[0].equalsIgnoreCase("help") && plugin.getPerms(player, "sgift.trade.help")) {
 
 			    player.sendMessage(ChatColor.DARK_GRAY + "---------------[" + ChatColor.GOLD + "sGift - Trade Help Menu" + ChatColor.DARK_GRAY + "]----------------");
 			    player.sendMessage(plugin.getConfig().getString("Help.Trade.Trade"));
@@ -59,7 +59,7 @@ public class TradeCommand implements CommandExecutor {
 				player.sendMessage(plugin.getConfig().getString("Help.Trade.Stop"));
 			    }
 
-			} else if (args[0].equalsIgnoreCase("accept") && sender.hasPermission("sgift.trade.accept")) {
+			} else if (args[0].equalsIgnoreCase("accept") && plugin.getPerms(player, "sgift.trade.accept")) {
 
 			    Trade trade = null;
 			    Sender Sender1 = null;
@@ -123,7 +123,7 @@ public class TradeCommand implements CommandExecutor {
 
 			    }
 
-			} else if (args[0].equalsIgnoreCase("deny") && sender.hasPermission("sgift.trade.deny")) {
+			} else if (args[0].equalsIgnoreCase("deny") && plugin.getPerms(player, "sgift.trade.deny")) {
 
 			    Trade trade = null;
 			    Sender Sender1 = null;
@@ -184,7 +184,7 @@ public class TradeCommand implements CommandExecutor {
 				}
 			    }
 
-			} else if (args[0].equalsIgnoreCase("stop") && player.hasPermission("sgift.admin")) {
+			} else if (args[0].equalsIgnoreCase("stop") && plugin.getPerms(player, "sgift.sgift")) {
 			    while (plugin.trades.size() > 0) {
 
 				Trade trade = null;
@@ -247,7 +247,7 @@ public class TradeCommand implements CommandExecutor {
 			    }
 			    player.sendMessage(prefix + ChatColor.GREEN + "Cancelled all Trades safely.");
 
-			} else if (args[0].equalsIgnoreCase("cancel") && sender.hasPermission("sgift.trade.cancel")) {
+			} else if (args[0].equalsIgnoreCase("cancel") && plugin.getPerms(player, "sgift.trade.cancel")) {
 
 			    Trade trade = null;
 			    Sender Sender1 = null;
@@ -307,7 +307,7 @@ public class TradeCommand implements CommandExecutor {
 			    }
 
 
-			} else if (args.length == 2 && sender.hasPermission("sgift.trade.start")) {
+			} else if (args.length == 2 && plugin.getPerms(player, "sgift.trade.start")) {
 
 			    player.sendMessage(prefix + ChatColor.RED + "Too few arguments!");
 			    player.sendMessage(prefix + ChatColor.GRAY + "Correct usage: /trade <Player> <Item> <Amount> <Price>");
@@ -320,10 +320,6 @@ public class TradeCommand implements CommandExecutor {
 
 			    player.sendMessage(prefix + ChatColor.RED + "Player not Online.");
 
-			} else {
-			    
-			    plugin.noPerms(player);
-				
 			}
 		    } else if (args.length == 2) {
 
@@ -335,7 +331,7 @@ public class TradeCommand implements CommandExecutor {
 			player.sendMessage(prefix + ChatColor.RED + "Too Few arguments!");
 			player.sendMessage(prefix + ChatColor.GRAY + "Correct usage: /trade <Player> <Item> <Amount> <Price>");
 
-		    } else if (args.length == 4 && sender.hasPermission("sgift.trade.start")) {
+		    } else if (args.length == 4 && plugin.getPerms(player, "sgift.trade.start")) {
 			if (Bukkit.getServer().getPlayer(args[0]) != player) {
 			    if (Bukkit.getServer().getPlayer(args[0]) != null) {
 
@@ -453,6 +449,11 @@ public class TradeCommand implements CommandExecutor {
 			    player.sendMessage(prefix + ChatColor.RED + "You can't Trade with yourself!");
 			}
 
+		    } else if (args.length == 4 && sender.hasPermission("sgift.trade.start")) {
+			
+			player.sendMessage(prefix + ChatColor.RED + "Invalid command usage!");
+			player.sendMessage(prefix + ChatColor.GRAY + "Correct usage: /trade <Player> <Item> <Amount> <Price>");
+		
 		    } else if (args.length == 0) {
 
 			player.sendMessage(prefix + ChatColor.RED + "By Sk8r2K9. /trade help for more info");
@@ -460,6 +461,10 @@ public class TradeCommand implements CommandExecutor {
 		    } else if (args.length >= 5) {
 
 			player.sendMessage(prefix + ChatColor.RED + "Too many arguments!");
+			player.sendMessage(prefix + ChatColor.GRAY + "Correct usage: /trade <Player> <Item> <Amount> <Price>");
+		    } else {
+			
+			player.sendMessage(prefix + ChatColor.RED + "Invalid command usage!");
 			player.sendMessage(prefix + ChatColor.GRAY + "Correct usage: /trade <Player> <Item> <Amount> <Price>");
 		    }
 		} else {
@@ -474,13 +479,8 @@ public class TradeCommand implements CommandExecutor {
 		} else {
 
 		    log.warning(logpre + "Don't send sGift commands through console!");
-
 		}
-
 	    }
-
-	} else {
-	    plugin.noPerms(player);
 	}
 	return false;
     }
