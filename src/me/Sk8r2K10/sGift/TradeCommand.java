@@ -345,7 +345,7 @@ public class TradeCommand implements CommandExecutor {
 				if (args[1].equalsIgnoreCase("hand")) {
 				    if (player.getItemInHand() != null) {
 
-					Item = player.getItemInHand();
+					Item = player.getItemInHand().clone();
 
 					if (amount != 0) {
 					    if (price != 0) {
