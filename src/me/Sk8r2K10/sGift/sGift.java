@@ -1,5 +1,6 @@
 package me.Sk8r2K10.sGift;
 
+import java.security.Permission;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import net.milkbowl.vault.economy.Economy;
@@ -16,6 +17,7 @@ public class sGift extends JavaPlugin {
     private final sGiftCommand admin = new sGiftCommand(this);
     
     public static Economy econ = null;
+    public static Permission perms = null;
     private static final Logger log = Logger.getLogger("Minecraft");
     
     public ArrayList<Trade> trades = new ArrayList<Trade>();
@@ -83,10 +85,21 @@ public class sGift extends JavaPlugin {
         return econ != null;
 
     }
+    
+    public boolean setupPerms() {
+	RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+        perms = rsp.getProvider();
+        return perms != null;
+    }
 
     public Economy getEcon() {
 
         return this.econ;
+    }
+    
+    public Permission getPermissions() {
+	
+	return this.perms;
     }
 
     public static int getInt(String string) {
