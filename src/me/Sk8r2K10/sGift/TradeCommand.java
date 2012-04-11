@@ -44,7 +44,18 @@ public class TradeCommand implements CommandExecutor {
 	    if (plugin.getConfig().getBoolean("Features.enable-trade")) {
 		if (player != null) {
 		    if (args.length == 1) {
-			if (args[0].equalsIgnoreCase("help") && plugin.getPerms(player, "sgift.trade.help")) {
+			if (args[0].equalsIgnoreCase("auto") && plugin.getPerms(player, "sgift.trade.start")) {
+			    
+			    if (!player.hasPermission("sgift.trade.auto")) {
+				
+				player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Accept enabled for Trading!");
+				plugin.getPermissions().playerAdd(player, "sgift.trade.auto");
+			    } else {
+				
+				player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Accept disabled for Trading!");
+				plugin.getPermissions().playerRemove(player, "sgift.trade.auto");
+			    }
+			} else if (args[0].equalsIgnoreCase("help") && plugin.getPerms(player, "sgift.trade.help")) {
 
 			    player.sendMessage(ChatColor.DARK_GRAY + "---------------[" + ChatColor.GOLD + "sGift - Trade Help Menu" + ChatColor.DARK_GRAY + "]----------------");
 			    player.sendMessage(plugin.getConfig().getString("Help.Trade.Trade"));

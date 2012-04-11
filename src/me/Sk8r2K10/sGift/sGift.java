@@ -1,9 +1,9 @@
 package me.Sk8r2K10.sGift;
 
-import java.security.Permission;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -60,6 +60,15 @@ public class sGift extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             
         }
+	if (setupPerms()) {
+	    
+	    log.info(logpre + "Permissions plugin " + getPermissions().getName() + " has been found. Plugin will remain enabled.");
+	} else {
+	    
+	    log.severe(logpre + "Permissions plugin was not Found! Disabling plugin!");
+	    
+	    getServer().getPluginManager().disablePlugin(this);
+	}
 
         getConfig().options().copyDefaults(true);
         saveConfig();
@@ -88,8 +97,15 @@ public class sGift extends JavaPlugin {
     
     public boolean setupPerms() {
 	RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-        perms = rsp.getProvider();
-        return perms != null;
+	
+	if (rsp != null) {
+	    
+	    perms = rsp.getProvider();
+	    return perms != null;
+	} else {
+	    
+	    return false;
+	}       
     }
 
     public Economy getEcon() {

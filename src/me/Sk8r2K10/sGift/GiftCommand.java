@@ -45,7 +45,20 @@ public class GiftCommand implements CommandExecutor {
 		    log.warning(logpre + "Don't send sGift commands through console!");
 
 		} else if (args.length == 1) {
-		    if (args[0].equalsIgnoreCase("help") && plugin.getPerms(player, "sgift.gift.help")) {
+		    if (args[0].equalsIgnoreCase("auto") && plugin.getPerms(player, "sgift.gift.start")) {
+						
+			if (!player.hasPermission("sgift.gift.auto")) {
+			    
+			    player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Accept enabled for Gifting!");
+			    plugin.getPermissions().playerAdd(player, "sgift.gift.auto");
+			} else {
+			    
+			    player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Accept disabled for Gifting!");
+			    plugin.getPermissions().playerRemove(player, "sgift.gift.auto");
+			}
+					
+			
+		    } else if (args[0].equalsIgnoreCase("help") && plugin.getPerms(player, "sgift.gift.help")) {
 
 			player.sendMessage(ChatColor.DARK_GRAY + "----------------[" + ChatColor.GREEN + "sGift - Gift Help Menu" + ChatColor.DARK_GRAY + "]-----------------");
 			player.sendMessage(plugin.getConfig().getString("Help.Gift.Gift"));
