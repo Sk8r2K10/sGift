@@ -90,6 +90,9 @@ permissions:
     sgift.trade.start: 
         description: Give access to /trade <Player> <Item> <Amount>
         default: op
+    sgift.gift.auto:
+        description: Makes player accept instantly upon Trading
+        default: false
     sgift.sgift:
         description: Gives access to /sgift
         default: false
