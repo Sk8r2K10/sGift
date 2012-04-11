@@ -301,11 +301,6 @@ public class GiftCommand implements CommandExecutor {
 
 			}
 
-		    } else if (args.length == 1 && plugin.getPerms(player, "sgift.gift.start")) {
-			
-			player.sendMessage(prefix + ChatColor.RED + "Too Few arguments!");
-			player.sendMessage(prefix + ChatColor.GRAY + "Correct usage: /gift <Player> <Item> <Amount>");
-		
 		    } else if (Bukkit.getServer().getPlayer(args[0]) == null) {
 
 			player.sendMessage(prefix + ChatColor.RED + "Player not Online.");
@@ -314,6 +309,11 @@ public class GiftCommand implements CommandExecutor {
 
 			player.sendMessage(prefix + ChatColor.RED + "Don't gift Items to yourself!");
 
+		    } else if (plugin.getPerms(player, "sgift.gift.start")) {
+			
+			player.sendMessage(prefix + ChatColor.RED + "Too Few arguments!");
+			player.sendMessage(prefix + ChatColor.GRAY + "Correct usage: /gift <Player> <Item> <Amount>");
+		
 		    }
 		} else if (args.length == 2) {
 

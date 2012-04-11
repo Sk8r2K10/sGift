@@ -307,10 +307,6 @@ public class TradeCommand implements CommandExecutor {
 			    }
 
 
-			} else if (args.length == 2 && plugin.getPerms(player, "sgift.trade.start")) {
-
-			    player.sendMessage(prefix + ChatColor.RED + "Too few arguments!");
-			    player.sendMessage(prefix + ChatColor.GRAY + "Correct usage: /trade <Player> <Item> <Amount> <Price>");
 
 			} else if (Bukkit.getServer().getPlayer(args[0]) == player && sender.hasPermission("sgift.trade.start")) {
 
@@ -320,6 +316,10 @@ public class TradeCommand implements CommandExecutor {
 
 			    player.sendMessage(prefix + ChatColor.RED + "Player not Online.");
 
+			} else if (plugin.getPerms(player, "sgift.trade.start")) {
+
+			    player.sendMessage(prefix + ChatColor.RED + "Too few arguments!");
+			    player.sendMessage(prefix + ChatColor.GRAY + "Correct usage: /trade <Player> <Item> <Amount> <Price>");
 			}
 		    } else if (args.length == 2) {
 
