@@ -45,13 +45,13 @@ public class TradeCommand implements CommandExecutor {
 		if (player != null) {
 		    if (args.length == 1) {
 			if (args[0].equalsIgnoreCase("auto") && plugin.getPerms(player, "sgift.trade.start")) {
-			    
+
 			    if (!player.hasPermission("sgift.trade.auto")) {
-				
+
 				player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Accept enabled for Trading!");
 				plugin.getPermissions().playerAdd(player, "sgift.trade.auto");
 			    } else {
-				
+
 				player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Accept disabled for Trading!");
 				plugin.getPermissions().playerRemove(player, "sgift.trade.auto");
 			    }
@@ -411,17 +411,17 @@ public class TradeCommand implements CommandExecutor {
 
 								Player playerSendingItems = trade.playerSender;
 								ItemStack items = trade.itemStack;
-								
+
 								if (player.getInventory().firstEmpty() == -1) {
 								    Location playerloc = player.getLocation();
 								    Victim.getWorld().dropItemNaturally(playerloc, items);
-								    
+
 								    Victim.sendMessage(prefix + ChatColor.YELLOW + "Auto Accepting, Use /trade auto to toggle this on or off!");
 								    Victim.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
 
 								    plugin.getEcon().withdrawPlayer(Victim.getName(), price);
 								    plugin.getEcon().depositPlayer(playerSendingItems.getName(), price);
-								    
+
 								    playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
 								    Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
 								    log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName() + " for " + price + plugin.getEcon().currencyNameSingular() + "(s)");
@@ -434,7 +434,7 @@ public class TradeCommand implements CommandExecutor {
 
 								    plugin.getEcon().withdrawPlayer(Victim.getName(), price);
 								    plugin.getEcon().depositPlayer(playerSendingItems.getName(), price);
-								    
+
 								    Victim.sendMessage(prefix + ChatColor.YELLOW + "Auto Accepting, Use /trade auto to toggle this on or off!");
 								    playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
 								    Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
@@ -443,9 +443,7 @@ public class TradeCommand implements CommandExecutor {
 								    plugin.trades.remove(trade);
 								    plugin.senders.remove(Sender1);
 								}
-
 							    }
-
 							}
 
 
@@ -490,6 +488,71 @@ public class TradeCommand implements CommandExecutor {
 						    player.sendMessage(prefix + ChatColor.YELLOW + "Waiting for " + Victim.getName() + " to accept...");
 						    Victim.sendMessage(prefix + ChatColor.WHITE + "New Trade from " + ChatColor.YELLOW + player.getDisplayName() + ChatColor.WHITE + " of " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + " " + plugin.getEcon().currencyNameSingular() + "(s)");
 						    Victim.sendMessage(prefix + ChatColor.WHITE + "Do " + ChatColor.YELLOW + "/trade accept" + ChatColor.WHITE + " to accept this Trade or " + ChatColor.YELLOW + "/trade deny" + ChatColor.WHITE + " to deny this trade!");
+
+						    if (Victim.hasPermission("sgift.trade.auto")) {
+
+							Trade trade = null;
+							Sender Sender1 = null;
+
+							for (Trade t : plugin.trades) {
+
+							    if (t.Victim == Victim) {
+
+								trade = t;
+
+								for (Sender s : plugin.senders) {
+
+								    if (s.Sender == t.playerSender) {
+
+									Sender1 = s;
+								    }
+								}
+							    }
+							}
+
+							if (trade == null) {
+
+							    player.sendMessage(prefix + ChatColor.RED + "No Trades to accept!");
+							} else {
+
+							    Player playerSendingItems = trade.playerSender;
+							    ItemStack items = trade.itemStack;
+
+							    if (player.getInventory().firstEmpty() == -1) {
+								Location playerloc = player.getLocation();
+								Victim.getWorld().dropItemNaturally(playerloc, items);
+
+								Victim.sendMessage(prefix + ChatColor.YELLOW + "Auto Accepting, Use /trade auto to toggle this on or off!");
+								Victim.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
+
+								plugin.getEcon().withdrawPlayer(Victim.getName(), price);
+								plugin.getEcon().depositPlayer(playerSendingItems.getName(), price);
+
+								playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
+								Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
+								log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName() + " for " + price + plugin.getEcon().currencyNameSingular() + "(s)");
+
+								plugin.trades.remove(trade);
+								plugin.senders.remove(Sender1);
+
+							    } else {
+								Victim.getInventory().addItem(items);
+
+								plugin.getEcon().withdrawPlayer(Victim.getName(), price);
+								plugin.getEcon().depositPlayer(playerSendingItems.getName(), price);
+
+								Victim.sendMessage(prefix + ChatColor.YELLOW + "Auto Accepting, Use /trade auto to toggle this on or off!");
+								playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
+								Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
+								log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName() + " for " + price + plugin.getEcon().currencyNameSingular() + "(s)");
+
+								plugin.trades.remove(trade);
+								plugin.senders.remove(Sender1);
+							    }
+
+							}
+
+						    }
 						} else {
 
 						    player.sendMessage(prefix + ChatColor.RED + "That player doesn't have enough money!");

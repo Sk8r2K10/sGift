@@ -15,6 +15,8 @@ public class sGiftCommand implements CommandExecutor {
     Player player = null;
     String prefix = ChatColor.WHITE + "[" + ChatColor.DARK_RED + "sGift" + ChatColor.WHITE + "] ";
     Logger log = Logger.getLogger("Minecraft");
+    private boolean halt = false;
+    private boolean reload = false;
     
     
 
@@ -38,8 +40,6 @@ public class sGiftCommand implements CommandExecutor {
                 
         if (player != null) {
             if (commandLabel.equalsIgnoreCase("sgift") && plugin.getPerms(player, "sgift.sgift")) {
-                
-                              
                 
                 if (args.length == 1) {
                     if (args[0].equalsIgnoreCase("info")) {
@@ -66,12 +66,12 @@ public class sGiftCommand implements CommandExecutor {
 
                     } else if (args[0].equalsIgnoreCase("halt") && plugin.getPerms(player, "sgift.halt")) {
 
-                        player.sendMessage(prefix + ChatColor.RED + "Abruptly halted all Gifts and Trades!");
-                        player.sendMessage(prefix + ChatColor.RED + "No items have been refunded to players!");
-
-                        plugin.trades.clear();
-                        plugin.gifts.clear();
-                        plugin.senders.clear();
+                        player.sendMessage(prefix + ChatColor.RED + "This will Abruptly halt all Gifts, Trades and Swaps!");
+                        player.sendMessage(prefix + ChatColor.YELLOW + "No items will been refunded!");
+			player.sendMessage(prefix + ChatColor.YELLOW + "Are you sure you wish to continue?");
+			player.sendMessage("/sgift yes" + ChatColor.YELLOW + " or " + ChatColor.WHITE + "/sgift no.");
+			
+			halt = true;
 
                     } else if (args[0].equalsIgnoreCase("help")) {
 
@@ -81,10 +81,46 @@ public class sGiftCommand implements CommandExecutor {
                         player.sendMessage(plugin.getConfig().getString("Help.sGift.Set"));
                         player.sendMessage(plugin.getConfig().getString("Help.sGift.Example"));
 
-                    } else if (sender.hasPermission("sgift.halt")) {
+                    } else if (args[0].equalsIgnoreCase("reload") && plugin.getPerms(player, "sgift.reload")) {
+			
+			player.sendMessage(prefix + ChatColor.RED + "Reloading plugin. Any active Trades, Gifts or Swaps will be Forcefully cancelled. No Items will be returned.");
+			player.sendMessage(prefix + ChatColor.YELLOW + "It is recommended that you do /gift stop then /trade stop followed by /swap stop before executing this command.");
+			player.sendMessage(prefix + ChatColor.YELLOW + "Are you sure you wish to continue?");
+			player.sendMessage("/sgift yes" + ChatColor.YELLOW + " or " + ChatColor.WHITE + "/sgift no.");
+			
+			reload = true;
+			
+		    } else if (args[0].equalsIgnoreCase("yes") && (plugin.getPerms(player, "sgift.reload") || plugin.getPerms(player, "sgift.halt")) ) {
+			
+			if (reload) {
+			    
+			    player.sendMessage(prefix + ChatColor.RED + "Reloading plugin...");
+			    plugin.getPluginLoader().disablePlugin(plugin);
+			    plugin.getPluginLoader().enablePlugin(plugin);
+			    player.sendMessage(prefix + ChatColor.RED + "Plugin reloaded.");
+			    
+			    reload = false;
+			} else if (halt) {
+			    
+			    player.sendMessage(prefix + ChatColor.RED + "Abruptly halted all Gifts and Trades!");
+			    player.sendMessage(prefix + ChatColor.RED + "No items have been refunded to players!");
 
-                        player.sendMessage(prefix + ChatColor.RED + "Invalid command usage!");
-                        player.sendMessage(prefix + ChatColor.GRAY + "/sgift info|halt|set <Option> [true|false]");
+			    plugin.trades.clear();
+			    plugin.gifts.clear();
+			    plugin.senders.clear();
+			    
+			    halt = false;
+			} else {
+			    
+			    player.sendMessage(prefix + ChatColor.RED + "Nothing to confirm!");
+			}
+			    
+		    } else if (args[0].equalsIgnoreCase("no") && (plugin.getPerms(player, "sgift.reload") || plugin.getPerms(player, "sgift.halt"))) {
+
+			player.sendMessage(prefix + ChatColor.RED + "Cancelled!");
+			
+			halt = false;
+			reload = false;
                     } else {
 			
 			player.sendMessage(prefix + ChatColor.RED + "Invalid command usage!");

@@ -15,6 +15,7 @@ public class sGift extends JavaPlugin {
     private final TradeCommand trade = new TradeCommand(this);
     private final GiftCommand gift = new GiftCommand(this);
     private final sGiftCommand admin = new sGiftCommand(this);
+    private final SwapCommand swap = new SwapCommand(this);
     
     public static Economy econ = null;
     public static Permission perms = null;
@@ -23,6 +24,7 @@ public class sGift extends JavaPlugin {
     public ArrayList<Trade> trades = new ArrayList<Trade>();
     public ArrayList<Sender> senders = new ArrayList<Sender>();
     public ArrayList<Gift> gifts = new ArrayList<Gift>();
+    public ArrayList<Swap> swaps = new ArrayList<Swap>();
 
     @Override
     public void onDisable() {
@@ -33,6 +35,7 @@ public class sGift extends JavaPlugin {
         getCommand("gift").setExecutor(gift);
         getCommand("trade").setExecutor(trade);
         getCommand("sgift").setExecutor(admin);
+	getCommand("swap").setExecutor(swap);
         
         PluginDescriptionFile pdf = getDescription();
         String logpre = "[" + pdf.getName() + " " + pdf.getVersion() + "] ";
@@ -49,7 +52,7 @@ public class sGift extends JavaPlugin {
                 saveConfig();
             } else if (getConfig().getBoolean("Features.enable-trade")) {
                 
-                log.info(logpre + "Economy plugin " + econ.getName() + " has been found. Trading will remain enabled.");
+                log.info(logpre + "Economy plugin " + econ.getName() + " has been found.");
                 
             }
             
@@ -62,7 +65,7 @@ public class sGift extends JavaPlugin {
         }
 	if (setupPerms()) {
 	    
-	    log.info(logpre + "Permissions plugin " + getPermissions().getName() + " has been found. Plugin will remain enabled.");
+	    log.info(logpre + "Permissions plugin " + getPermissions().getName() + " has been found.");
 	} else {
 	    
 	    log.severe(logpre + "Permissions plugin was not Found! Disabling plugin!");
@@ -145,10 +148,16 @@ public class sGift extends JavaPlugin {
     
     public boolean getPerms(Player player, String permNode) {
 	
-	if (player.hasPermission(permNode)) {
+	PluginDescriptionFile pdf = getDescription();
+        String logpre = "[" + pdf.getName() + " " + pdf.getVersion() + "] ";
+	
+	if (player == null) {
+	    
+	    log.warning(logpre + "Don't send sGift Commands through Console!");
+	    return false;
+	} else if (player.hasPermission(permNode)) {
 	    
 	    return true;
-	    
 	} else {
 	    
 	    noPerms(player, permNode);	    

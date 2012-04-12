@@ -8,6 +8,8 @@ commands:
     description: Gift a Player
   trade:
     description: Trade with a Player
+  swap:
+    description: Swap with a Player
   sgift:
     description: Admin commands for sGift
 
@@ -39,18 +41,25 @@ permissions:
             sgift.sgift: true
             sgift.set: true
             sgift.halt: true
-            sgift.gift: true
+            sgift.reload: true
+            sgift.gift.gift: true
             sgift.gift.help: true
             sgift.gift.accept: true
             sgift.gift.deny: true
             sgift.gift.cancel: true
             sgift.gift.start: true
-            sgift.trade: true
+            sgift.trade.trade: true
             sgift.trade.help: true
             sgift.trade.accept: true
             sgift.trade.deny: true
             sgift.trade.cancel: true
             sgift.trade.start: true
+            sgift.swap.swap: true
+            sgift.swap.help: true
+            sgift.swap.accept: true
+            sgift.swap.deny: true
+            sgift.swap.cancel: true
+            sgift.swap.start: true
     sgift.gift.gift:
         description: Give access to /gift
         default: op
@@ -93,6 +102,27 @@ permissions:
     sgift.trade.auto:
         description: Makes player accept instantly upon Trading
         default: false
+    sgift.swap.swap:
+        description: Give access to /swap
+        default: op
+    sgift.swap.help: 
+        description: Give access to /swap help
+        default: op
+    sgift.swap.accept: 
+        description: Give access to /swap accept
+        default: op
+    sgift.swap.deny: 
+        description: Give access to /swap deny
+        default: op
+    sgift.swap.cancel: 
+        description: Give access to /swap cancel
+        default: op
+    sgift.swap.start: 
+        description: Give access to /swap <Player> <Item> <Amount>
+        default: op
+    sgift.swap.auto:
+        description: Makes player accept instantly upon Swapping
+        default: false
     sgift.sgift:
         description: Gives access to /sgift
         default: false
@@ -101,5 +131,8 @@ permissions:
         default: false
     sgift.halt:
         description: Gives access to /sgift halt
+        default: false
+    sgift.reload:
+        description: Gives access to /sgift reload
         default: false
     

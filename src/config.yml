@@ -12,10 +12,11 @@
 Features:
   enable-gift: true
   enable-trade: true
+  enable-swap: true
 
 Help:
   Gift:
-    Gift: §a/gift <PlayerName> <ItemID:#> <Amount>§7 - Gifts a player a block
+    Gift: §a/gift <PlayerName> <ItemID> <Amount>§7 - Gifts a player a block
     Example: '§7example: /gift Bob log:redwood 1337'
     Accept: §a/gift accept§7 - Accepts a Pending Gift.
     Deny: §a/gift deny§7 - Denies a pending Gift.
@@ -23,13 +24,21 @@ Help:
     Stop: §a/gift stop§7 - Stops all gifts in progress
     Help: §a/gift help§7 - Brings up this Menu.
   Trade:
-    Trade: §6/trade <PlayerName> <ItemID:#> <Amount> <Price>§7 - Trades with a player
+    Trade: §6/trade <PlayerName> <ItemID> <Amount> <Price>§7 - Trades with a player
     Example: '§7example: /trade Bob log:redwood 1337 9001'
     Accept: §6/trade accept§7 - Accepts a Pending Trade.
     Deny: §6/trade deny§7 - Denies a pending Trade.
     Cancel: §6/trade cancel§7 - Cancels a trade in progress
     Stop: §6/trade stop§7 - Stops all trades in progress
     Help: §6/trade help§7 - Brings up this Menu.
+  Swap:
+    Swap: §b/swap <PlayerName> <ItemID> <Amount> <Item to swap> <Amount>§7 - Swaps with a player
+    Example: '§7example: /swap Bob redwood_log 1337 orange_dye 9001'
+    Accept: §b/swap accept§7 - Accepts a Pending Swap.
+    Deny: §b/swap deny§7 - Denies a pending Swap.
+    Cancel: §b/swap cancel§7 - Cancels a swap in progress
+    Stop: §b/swap stop§7 - Stops all tswaps in progress
+    Help: §b/swap help§7 - Brings up this Menu.
   sGift:
     Info: §c/sgift info§7 - Shows Configuration and Gift information.
     Halt: §c/sgift halt§7 - Stops all outgoing Gifts and Trades.
