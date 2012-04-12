@@ -34,6 +34,16 @@ permissions:
             sgift.trade.deny: true
             sgift.trade.cancel: true
             sgift.trade.start: true
+    sgift.swap.*:
+        description: Give access to /swap and all sub commands
+        default: op
+        children:
+            sgift.swap.swap: true
+            sgift.swap.help: true
+            sgift.swap.accept: true
+            sgift.swap.deny: true
+            sgift.swap.cancel: true
+            sgift.swap.start: true
     sgift.*:
         description: Give access to Admin commands
         default: false
