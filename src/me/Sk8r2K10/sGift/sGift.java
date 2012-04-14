@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -165,5 +166,21 @@ public class sGift extends JavaPlugin {
 	    return false;
 	    
 	}
+    }
+    
+    public boolean isWithinRange(Location accepterLoc, Location senderLoc) {
+	
+	int maxDist = this.getConfig().getInt("Options.max-distance");
+	
+	double x = accepterLoc.getX() - senderLoc.getX();
+	double y = accepterLoc.getY() - senderLoc.getY();
+	double z = accepterLoc.getZ() - senderLoc.getZ();
+	
+	double dist = x*x + y*y + z*z;
+	if (dist < maxDist * maxDist) {
+	    
+	    return true;	    
+	}
+	return false;
     }
 }

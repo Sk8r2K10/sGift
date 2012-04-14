@@ -8,7 +8,8 @@
 
 # The "Features" section of options define if certain features are enabled or not.
 
-# The "Options" section is for definable characteristics of mechanisms in sGift 
+# The "Options" section is for definable characteristics of mechanisms in sGift
+# -> For options such as max-distance, Leave as 0 for infinite distance.
 
 # The "Help" section defines the strings shown to the player when using the help commands.
 Features:
