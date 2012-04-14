@@ -8,11 +8,16 @@
 
 # The "Features" section of options define if certain features are enabled or not.
 
+# The "Options" section is for definable characteristics of mechanisms in sGift 
+
 # The "Help" section defines the strings shown to the player when using the help commands.
 Features:
   enable-gift: true
   enable-trade: true
   enable-swap: true
+  
+Options:
+  max-distance: 0
 
 Help:
   Gift:
