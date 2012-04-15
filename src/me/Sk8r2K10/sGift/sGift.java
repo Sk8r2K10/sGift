@@ -186,13 +186,33 @@ public class sGift extends JavaPlugin {
 	return false;
     }
     
+    public boolean itemsAreNull(ItemStack Item) {
+	
+	PluginDescriptionFile pdf = getDescription();
+	String logpre = "[" + pdf.getName() + " " + pdf.getVersion() + "] ";
+	
+	try {
+	    Items.itemByStack(Item).getName();
+	    
+	} catch (NullPointerException e) {
+	    log.warning(logpre + "Vault is either out of date, Or not up to speed!");
+	    return true;
+	}
+	
+	return false;
+    }
+    
     public boolean itemsAreNull(ItemStack Item, ItemStack ItemFromVictim) {
+	
+	PluginDescriptionFile pdf = getDescription();
+	String logpre = "[" + pdf.getName() + " " + pdf.getVersion() + "] ";
 	
 	try {
 	    Items.itemByStack(Item).getName();
 	    Items.itemByStack(ItemFromVictim).getName();
-	} catch (NullPointerException e) {
 	    
+	} catch (NullPointerException e) {
+	    log.warning(logpre + "Vault is either out of date, Or not up to speed!");
 	    return true;
 	}
 	
