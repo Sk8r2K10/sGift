@@ -481,18 +481,15 @@ public class GiftCommand implements CommandExecutor {
 
 							Location playerloc = Victim.getLocation();
 							Victim.getWorld().dropItemNaturally(playerloc, items);
+							Victim.sendMessage(prefix + ChatColor.YELLOW + "Auto Accepting, Use /gift auto to toggle this on or off!");
 							try {
-
-							    Victim.sendMessage(prefix + ChatColor.YELLOW + "Auto Accepting, Use /gift auto to toggle this on or off!");
 							    Victim.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
 							    playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + "!");
 							    Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + "!");
 
 							    log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName());
 
-							} catch (NullPointerException e) {
-
-							    Victim.sendMessage(prefix + ChatColor.YELLOW + "Auto Accepting, Use /gift auto to toggle this on or off!");
+							} catch (NullPointerException e) { 
 							    Victim.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
 							    playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " Unknown Item " + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + "!");
 							    Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " Unknow Item " + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + "!");
@@ -506,19 +503,17 @@ public class GiftCommand implements CommandExecutor {
 						    } else {
 
 							Victim.getInventory().addItem(items);
+							Victim.sendMessage(prefix + ChatColor.YELLOW + "Auto Accepting, Use /gift auto to toggle this on or off!");
 							try {
-							    Victim.sendMessage(prefix + ChatColor.YELLOW + "Auto Accepting, Use /gift auto to toggle this on or off!");
 							    playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + "!");
 							    Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + "!");
 							    
 							    log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName());
 							} catch (NullPointerException e) {
-							    
-							    Victim.sendMessage(prefix + ChatColor.YELLOW + "Auto Accepting, Use /gift auto to toggle this on or off!");
 							    playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " Unknown Item " + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + "!");
 							    Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " Unknown Item " + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + "!");
 
-							    log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " Unknown Item from " + playerSendingItems.getDisplayName());
+							    log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " Unknown Item(Vault is either out of date, Or not up to speed) from " + playerSendingItems.getDisplayName());
 
 							}
 							plugin.gifts.remove(gift);
