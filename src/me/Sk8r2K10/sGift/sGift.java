@@ -3,10 +3,12 @@ package me.Sk8r2K10.sGift;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.item.Items;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -181,6 +183,19 @@ public class sGift extends JavaPlugin {
 	    
 	    return true;	    
 	}
+	return false;
+    }
+    
+    public boolean itemsAreNull(ItemStack Item, ItemStack ItemFromVictim) {
+	
+	try {
+	    Items.itemByStack(Item).getName();
+	    Items.itemByStack(ItemFromVictim).getName();
+	} catch (NullPointerException e) {
+	    
+	    return true;
+	}
+	
 	return false;
     }
 }

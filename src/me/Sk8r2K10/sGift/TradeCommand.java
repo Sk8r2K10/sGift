@@ -516,8 +516,6 @@ public class TradeCommand implements CommandExecutor {
 								}
 							    }
 							}
-
-
 						    } else {
 
 							player.sendMessage(prefix + ChatColor.RED + "That player doesn't have enough money!");
