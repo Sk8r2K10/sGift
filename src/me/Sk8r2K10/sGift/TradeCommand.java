@@ -44,17 +44,34 @@ public class TradeCommand implements CommandExecutor {
 	    if (plugin.getConfig().getBoolean("Features.enable-trade")) {
 		if (player != null) {
 		    if (args.length == 1) {
-			if (args[0].equalsIgnoreCase("auto") && plugin.getPerms(player, "sgift.trade.start")) {
-
+			if (args[0].equalsIgnoreCase("auto") && plugin.getPerms(player, "sgift.trade.accept")) {
+			    
 			    if (!player.hasPermission("sgift.trade.auto")) {
 
 				player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Accept enabled for Trading!");
 				plugin.getPermissions().playerAdd(player, "sgift.trade.auto");
+				plugin.getPermissions().playerRemove(player, "-sgift.trade.auto");
 			    } else {
 
 				player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Accept disabled for Trading!");
 				plugin.getPermissions().playerRemove(player, "sgift.trade.auto");
+				plugin.getPermissions().playerAdd(player, "-sgift.trade.auto");
 			    }
+			
+		    } else if (args[0].equalsIgnoreCase("auto-deny") && plugin.getPerms(player, "sgift.trade.deny")) {
+
+				if (!player.hasPermission("sgift.trade.autodeny")) {
+
+				    player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Deny enabled for Trading!");
+				    plugin.getPermissions().playerAdd(player, "sgift.trade.autodeny");
+				    plugin.getPermissions().playerRemove(player, "-sgift.trade.autodeny");
+				} else {
+
+				    player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Deny disabled for Trading!");
+				    plugin.getPermissions().playerRemove(player, "sgift.trade.autodeny");
+				    plugin.getPermissions().playerAdd(player, "-sgift.trade.autodeny");
+				}
+				
 			} else if (args[0].equalsIgnoreCase("help") && plugin.getPerms(player, "sgift.trade.help")) {
 
 			    player.sendMessage(ChatColor.DARK_GRAY + "---------------[" + ChatColor.GOLD + "sGift - Trade Help Menu" + ChatColor.DARK_GRAY + "]----------------");
@@ -71,6 +88,8 @@ public class TradeCommand implements CommandExecutor {
 			    }
 
 			} else if (args[0].equalsIgnoreCase("accept") && plugin.getPerms(player, "sgift.trade.accept")) {
+
+
 
 			    Trade trade = null;
 			    Sender Sender1 = null;
@@ -101,39 +120,56 @@ public class TradeCommand implements CommandExecutor {
 				ItemStack items = trade.itemStack;
 				int price = trade.price;
 
-				if (player.getInventory().firstEmpty() == -1) {
-				    Location playerloc = player.getLocation();
-				    player.getWorld().dropItemNaturally(playerloc, items);
-				    player.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
+				if (plugin.getEcon().getBalance(player.getName()) >= price) {
 
-				    plugin.getEcon().withdrawPlayer(Victim.getName(), price);
-				    plugin.getEcon().depositPlayer(playerSendingItems.getName(), price);
+				    if (player.getInventory().firstEmpty() == -1) {
+					Location playerloc = player.getLocation();
+					player.getWorld().dropItemNaturally(playerloc, items);
+					player.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
 
-				    playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
-				    Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
-				    log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName() + " for " + price + plugin.getEcon().currencyNameSingular() + "(s)");
+					plugin.getEcon().withdrawPlayer(Victim.getName(), price);
+					plugin.getEcon().depositPlayer(playerSendingItems.getName(), price);
 
-				    plugin.trades.remove(trade);
-				    plugin.senders.remove(Sender1);
+					playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
+					Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
+					log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName() + " for " + price + plugin.getEcon().currencyNameSingular() + "(s)");
 
+					plugin.trades.remove(trade);
+					plugin.senders.remove(Sender1);
+
+				    } else {
+					player.getInventory().addItem(items);
+
+					plugin.getEcon().withdrawPlayer(Victim.getName(), price);
+					plugin.getEcon().depositPlayer(playerSendingItems.getName(), price);
+
+					playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
+					Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
+					log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName() + " for " + price + plugin.getEcon().currencyNameSingular() + "(s)");
+
+					plugin.trades.remove(trade);
+					plugin.senders.remove(Sender1);
+				    }
 				} else {
-				    player.getInventory().addItem(items);
-
-				    plugin.getEcon().withdrawPlayer(Victim.getName(), price);
-				    plugin.getEcon().depositPlayer(playerSendingItems.getName(), price);
-
-				    playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
-				    Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
-				    log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName() + " for " + price + plugin.getEcon().currencyNameSingular() + "(s)");
-
+				    
+				    player.sendMessage(prefix + ChatColor.RED + "You don't have enough money to accept that!");
+				    playerSendingItems.sendMessage(prefix + ChatColor.RED + "The player you were trading with doesn't have enough money anymore!");
+				    
+				    if (playerSendingItems.getInventory().firstEmpty() == -1) {
+					
+					Location playerloc = playerSendingItems.getLocation();
+					playerSendingItems.getWorld().dropItemNaturally(playerloc, items);
+					playerSendingItems.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
+					
+				    } else {
+					
+					playerSendingItems.getInventory().addItem(items);
+				    }
+				    
 				    plugin.trades.remove(trade);
 				    plugin.senders.remove(Sender1);
 				}
-
-
-
 			    }
-
 			} else if (args[0].equalsIgnoreCase("deny") && plugin.getPerms(player, "sgift.trade.deny")) {
 
 			    Trade trade = null;
@@ -368,8 +404,136 @@ public class TradeCommand implements CommandExecutor {
 					    if (price != 0) {
 						if (!plugin.itemsAreNull(Item)) {
 						    if (Item.getAmount() >= amount) {
+							if (!Victim.hasPermission("sgift.trade.autodeny")) {
+							    if (plugin.getEcon().getBalance(Victim.getName()) >= price) {
+								Item.setAmount(amount);
+
+								plugin.trades.add(new Trade(Victim, player, Item, price));
+								plugin.senders.add(new Sender(player));
+
+								new InventoryManager(player).remove(Item);
+
+								player.sendMessage(prefix + ChatColor.WHITE + "Now Trading " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName() + ChatColor.WHITE + " with " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + " " + plugin.getEcon().currencyNameSingular() + "(s)");
+								player.sendMessage(prefix + ChatColor.YELLOW + "Waiting for " + Victim.getName() + " to accept...");
+								Victim.sendMessage(prefix + ChatColor.WHITE + "New Trade from " + ChatColor.YELLOW + player.getDisplayName() + ChatColor.WHITE + " of " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + " " + plugin.getEcon().currencyNameSingular() + "(s)");
+								Victim.sendMessage(prefix + ChatColor.WHITE + "Do " + ChatColor.YELLOW + "/trade accept" + ChatColor.WHITE + " to accept this Trade or " + ChatColor.YELLOW + "/trade deny" + ChatColor.WHITE + " to deny this trade!");
+
+								if (Item.getEnchantments().size() > 0) {
+
+								    Victim.sendMessage(prefix + ChatColor.YELLOW + "This Item is enchanted!");
+
+								}
+								if (Item.getDurability() < Item.getType().getMaxDurability()) {
+
+								    Victim.sendMessage(prefix + ChatColor.RED + "Warning! This item has " + (Item.getType().getMaxDurability() - Item.getDurability()) + " uses left out of a maximum of " + Item.getType().getMaxDurability() + " uses.");
+
+								}
+								if (Victim.hasPermission("sgift.trade.auto")) {
+
+								    Trade trade = null;
+								    Sender Sender1 = null;
+
+								    for (Trade t : plugin.trades) {
+
+									if (t.Victim == Victim) {
+
+									    trade = t;
+
+									    for (Sender s : plugin.senders) {
+
+										if (s.Sender == t.playerSender) {
+
+										    Sender1 = s;
+										}
+									    }
+									}
+								    }
+
+								    if (trade == null) {
+
+									player.sendMessage(prefix + ChatColor.RED + "No Trades to accept!");
+								    } else {
+
+									Player playerSendingItems = trade.playerSender;
+									ItemStack items = trade.itemStack;
+
+									if (Victim.getInventory().firstEmpty() == -1) {
+									    Location playerloc = player.getLocation();
+									    Victim.getWorld().dropItemNaturally(playerloc, items);
+
+									    Victim.sendMessage(prefix + ChatColor.YELLOW + "Auto Accepting, Use /trade auto to toggle this on or off!");
+									    Victim.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
+
+									    plugin.getEcon().withdrawPlayer(Victim.getName(), price);
+									    plugin.getEcon().depositPlayer(playerSendingItems.getName(), price);
+
+
+									    playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
+									    Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
+									    log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName() + " for " + price + plugin.getEcon().currencyNameSingular() + "(s)");
+
+									    plugin.trades.remove(trade);
+									    plugin.senders.remove(Sender1);
+
+									} else {
+									    Victim.getInventory().addItem(items);
+
+									    plugin.getEcon().withdrawPlayer(Victim.getName(), price);
+									    plugin.getEcon().depositPlayer(playerSendingItems.getName(), price);
+
+									    Victim.sendMessage(prefix + ChatColor.YELLOW + "Auto Accepting, Use /trade auto to toggle this on or off!");
+
+									    playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
+									    Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
+									    log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName() + " for " + price + plugin.getEcon().currencyNameSingular() + "(s)");
+
+									    plugin.trades.remove(trade);
+									    plugin.senders.remove(Sender1);
+									}
+								    }
+								}
+							    } else {
+
+								player.sendMessage(prefix + ChatColor.RED + "That player doesn't have enough money!");
+							    }
+
+							} else {
+
+							    player.sendMessage(prefix + ChatColor.RED + "That player doesn't want to Trade with you!");
+							}
+						    } else {
+
+							player.sendMessage(prefix + ChatColor.RED + "You do not have enough of that Item in your hand!");
+						    }
+
+
+						} else {
+
+						    player.sendMessage(prefix + ChatColor.RED + "Items attempted to trade are currently unsupported.");
+						}
+					    } else {
+
+						player.sendMessage(prefix + ChatColor.RED + "Invalid price!");
+					    }
+
+					} else {
+
+					    player.sendMessage(prefix + ChatColor.RED + "Invalid amount!");
+					}
+				    } else {
+
+					player.sendMessage(prefix + ChatColor.RED + "There's no Item in your Hand!");
+				    }
+				} else if (ii != null) {
+
+				    Item = new ItemStack(ii.getType(), amount, ii.getSubTypeId());
+
+				    if (amount != 0) {
+					if (price != 0) {
+					    if (!plugin.itemsAreNull(Item)) {
+						if (new InventoryManager(player).contains(Item, true, true)) {
+						    if (!Victim.hasPermission("sgift.trade.autodeny")) {
 							if (plugin.getEcon().getBalance(Victim.getName()) >= price) {
-							    Item.setAmount(amount);
 
 							    plugin.trades.add(new Trade(Victim, player, Item, price));
 							    plugin.senders.add(new Sender(player));
@@ -381,16 +545,6 @@ public class TradeCommand implements CommandExecutor {
 							    Victim.sendMessage(prefix + ChatColor.WHITE + "New Trade from " + ChatColor.YELLOW + player.getDisplayName() + ChatColor.WHITE + " of " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + " " + plugin.getEcon().currencyNameSingular() + "(s)");
 							    Victim.sendMessage(prefix + ChatColor.WHITE + "Do " + ChatColor.YELLOW + "/trade accept" + ChatColor.WHITE + " to accept this Trade or " + ChatColor.YELLOW + "/trade deny" + ChatColor.WHITE + " to deny this trade!");
 
-							    if (Item.getEnchantments().size() > 0) {
-
-								Victim.sendMessage(prefix + ChatColor.YELLOW + "This Item is enchanted!");
-
-							    }
-							    if (Item.getDurability() < Item.getType().getMaxDurability()) {
-
-								Victim.sendMessage(prefix + ChatColor.RED + "Warning! This item has " + (Item.getType().getMaxDurability() - Item.getDurability()) + " uses left out of a maximum of " + Item.getType().getMaxDurability() + " uses.");
-
-							    }
 							    if (Victim.hasPermission("sgift.trade.auto")) {
 
 								Trade trade = null;
@@ -430,7 +584,6 @@ public class TradeCommand implements CommandExecutor {
 									plugin.getEcon().withdrawPlayer(Victim.getName(), price);
 									plugin.getEcon().depositPlayer(playerSendingItems.getName(), price);
 
-
 									playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
 									Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
 									log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName() + " for " + price + plugin.getEcon().currencyNameSingular() + "(s)");
@@ -461,116 +614,9 @@ public class TradeCommand implements CommandExecutor {
 							}
 
 						    } else {
-
-							player.sendMessage(prefix + ChatColor.RED + "You do not have enough of that Item in your hand!");
-						    }
-
-
-						} else {
-
-						    player.sendMessage(prefix + ChatColor.RED + "Items attempted to trade are currently unsupported.");
-						}
-					    } else {
-
-						player.sendMessage(prefix + ChatColor.RED + "Invalid price!");
-					    }
-
-					} else {
-
-					    player.sendMessage(prefix + ChatColor.RED + "Invalid amount!");
-					}
-				    } else {
-
-					player.sendMessage(prefix + ChatColor.RED + "There's no Item in your Hand!");
-				    }
-				} else if (ii != null) {
-
-				    Item = new ItemStack(ii.getType(), amount, ii.getSubTypeId());
-
-				    if (amount != 0) {
-					if (price != 0) {
-					    if (!plugin.itemsAreNull(Item)) {
-						if (new InventoryManager(player).contains(Item, true, true)) {
-						    if (plugin.getEcon().getBalance(Victim.getName()) >= price) {
-
-							plugin.trades.add(new Trade(Victim, player, Item, price));
-							plugin.senders.add(new Sender(player));
-
-							new InventoryManager(player).remove(Item);
-
-							player.sendMessage(prefix + ChatColor.WHITE + "Now Trading " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName() + ChatColor.WHITE + " with " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + " " + plugin.getEcon().currencyNameSingular() + "(s)");
-							player.sendMessage(prefix + ChatColor.YELLOW + "Waiting for " + Victim.getName() + " to accept...");
-							Victim.sendMessage(prefix + ChatColor.WHITE + "New Trade from " + ChatColor.YELLOW + player.getDisplayName() + ChatColor.WHITE + " of " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + " " + plugin.getEcon().currencyNameSingular() + "(s)");
-							Victim.sendMessage(prefix + ChatColor.WHITE + "Do " + ChatColor.YELLOW + "/trade accept" + ChatColor.WHITE + " to accept this Trade or " + ChatColor.YELLOW + "/trade deny" + ChatColor.WHITE + " to deny this trade!");
-
-							if (Victim.hasPermission("sgift.trade.auto")) {
-
-							    Trade trade = null;
-							    Sender Sender1 = null;
-
-							    for (Trade t : plugin.trades) {
-
-								if (t.Victim == Victim) {
-
-								    trade = t;
-
-								    for (Sender s : plugin.senders) {
-
-									if (s.Sender == t.playerSender) {
-
-									    Sender1 = s;
-									}
-								    }
-								}
-							    }
-
-							    if (trade == null) {
-
-								player.sendMessage(prefix + ChatColor.RED + "No Trades to accept!");
-							    } else {
-
-								Player playerSendingItems = trade.playerSender;
-								ItemStack items = trade.itemStack;
-
-								if (player.getInventory().firstEmpty() == -1) {
-								    Location playerloc = player.getLocation();
-								    Victim.getWorld().dropItemNaturally(playerloc, items);
-
-								    Victim.sendMessage(prefix + ChatColor.YELLOW + "Auto Accepting, Use /trade auto to toggle this on or off!");
-								    Victim.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
-
-								    plugin.getEcon().withdrawPlayer(Victim.getName(), price);
-								    plugin.getEcon().depositPlayer(playerSendingItems.getName(), price);
-
-								    playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
-								    Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
-								    log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName() + " for " + price + plugin.getEcon().currencyNameSingular() + "(s)");
-
-								    plugin.trades.remove(trade);
-								    plugin.senders.remove(Sender1);
-
-								} else {
-								    Victim.getInventory().addItem(items);
-
-								    plugin.getEcon().withdrawPlayer(Victim.getName(), price);
-								    plugin.getEcon().depositPlayer(playerSendingItems.getName(), price);
-
-								    Victim.sendMessage(prefix + ChatColor.YELLOW + "Auto Accepting, Use /trade auto to toggle this on or off!");
-
-								    playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
-								    Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
-								    log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName() + " for " + price + plugin.getEcon().currencyNameSingular() + "(s)");
-
-								    plugin.trades.remove(trade);
-								    plugin.senders.remove(Sender1);
-								}
-							    }
-							}
-						    } else {
 							
-							player.sendMessage(prefix + ChatColor.RED + "That player doesn't have enough money!");
+							player.sendMessage(prefix + ChatColor.RED + "That player doesn't want to Trade with you!");
 						    }
-
 						} else {
 
 						    player.sendMessage(prefix + ChatColor.RED + "You don't have enough " + Items.itemByStack(Item).getName() + ", or Item is partially Used/Enchanted!");
