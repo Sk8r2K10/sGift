@@ -28,6 +28,8 @@ Help:
     Deny: §a/gift deny§7 - Denies a pending Gift.
     Cancel: §a/gift cancel§7 - Cancels a gift in progress
     Stop: §a/gift stop§7 - Stops all gifts in progress
+    Auto: §a/gift auto§7 - Toggles Auto-Accept.
+    AutoDeny: §a/gift auto-deny§7 - Toggles Auto-Deny.
     Help: §a/gift help§7 - Brings up this Menu.
   Trade:
     Trade: §6/trade <PlayerName> <ItemID> <Amount> <Price>§7 - Trades with a player
@@ -36,18 +38,25 @@ Help:
     Deny: §6/trade deny§7 - Denies a pending Trade.
     Cancel: §6/trade cancel§7 - Cancels a trade in progress
     Stop: §6/trade stop§7 - Stops all trades in progress
+    Auto: §6/trade auto§7 - Toggles Auto-Accept.
+    AutoDeny: §6/trade auto-deny§7 - Toggles Auto-Deny.
     Help: §6/trade help§7 - Brings up this Menu.
   Swap:
-    Swap: §b/swap <PlayerName> <ItemID> <Amount> <Item to swap> <Amount>§7 - Swaps with a player
+    Swap: §b/swap <PlayerName> <ItemID> <Amount> <Item to swap> <Amount>§7 - Swaps with a player.
     Example: '§7example: /swap Bob redwood_log 1337 orange_dye 9001'
     Accept: §b/swap accept§7 - Accepts a Pending Swap.
     Deny: §b/swap deny§7 - Denies a pending Swap.
-    Cancel: §b/swap cancel§7 - Cancels a swap in progress
-    Stop: §b/swap stop§7 - Stops all tswaps in progress
+    Cancel: §b/swap cancel§7 - Cancels a swap in progress.
+    Stop: §b/swap stop§7 - Stops all swaps in progress.
+    Auto: §b/swap auto§7 - Toggles Auto-Accept.
+    AutoDeny: §b/swap auto-deny§7 - Toggles Auto-Deny.
     Help: §b/swap help§7 - Brings up this Menu.
   sGift:
     Info: §c/sgift info§7 - Shows Configuration and Gift information.
     Halt: §c/sgift halt§7 - Stops all outgoing Gifts and Trades.
     Set: §c/sgift set§7 - Set an option in the Config file to true or false.
     Example: '§7example: /sgift set gift true -> Gifting Enabled'
+    Reload: §c/sgift reload[-config]§7 - Reloads plugin, or if defined, config.
+    Confirm: §c/sgift yes§7 - Confirms a potentially dangerous operation.
+    Deny: §c/sgift no§7 - Cancels a potentially dangerous operation.
 
