@@ -16,6 +16,10 @@ Features:
   enable-gift: true
   enable-trade: true
   enable-swap: true
+  allow-auto: 
+    gift: true
+    trade: false
+    swap: false
   
 Options:
   max-distance: 0
