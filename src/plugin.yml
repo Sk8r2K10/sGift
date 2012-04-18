@@ -24,8 +24,8 @@ permissions:
             sgift.gift.deny: true
             sgift.gift.cancel: true
             sgift.gift.start: true
-            sgift.gift.auto: false
-            sgift.gift.autodeny: false
+            sgift.gift.auto: true
+            sgift.gift.autodeny: true
     sgift.trade.*:
         description: Give access to /trade and all sub commands
         default: op
@@ -36,8 +36,8 @@ permissions:
             sgift.trade.deny: true
             sgift.trade.cancel: true
             sgift.trade.start: true
-            sgift.trade.auto: false
-            sgift.trade.autodeny: false
+            sgift.trade.auto: true
+            sgift.trade.autodeny: true
     sgift.swap.*:
         description: Give access to /swap and all sub commands
         default: op
@@ -48,40 +48,8 @@ permissions:
             sgift.swap.deny: true
             sgift.swap.cancel: true
             sgift.swap.start: true
-            sgift.swap.auto: false
-            sgift.swap.autodeny: false
-    sgift.*:
-        description: Give access to Admin commands
-        default: false
-        children:
-            sgift.sgift: true
-            sgift.set: true
-            sgift.halt: true
-            sgift.reload: true
-            sgift.gift.gift: true
-            sgift.gift.help: true
-            sgift.gift.accept: true
-            sgift.gift.deny: true
-            sgift.gift.cancel: true
-            sgift.gift.start: true
-            sgift.gift.auto: false
-            sgift.gift.autodeny: false
-            sgift.trade.trade: true
-            sgift.trade.help: true
-            sgift.trade.accept: true
-            sgift.trade.deny: true
-            sgift.trade.cancel: true
-            sgift.trade.start: true
-            sgift.trade.auto: false
-            sgift.trade.autodeny: false
-            sgift.swap.swap: true
-            sgift.swap.help: true
-            sgift.swap.accept: true
-            sgift.swap.deny: true
-            sgift.swap.cancel: true
-            sgift.swap.start: true
-            sgift.swap.auto: false
-            sgift.swap.autodeny: false
+            sgift.swap.auto: true
+            sgift.swap.autodeny: true
     sgift.gift.gift:
         description: Give access to /gift
         default: op
@@ -101,11 +69,11 @@ permissions:
         description: Give access to /gift <Player> <Item> <Amount>
         default: op
     sgift.gift.auto:
-        description: Makes player accept instantly upon Gifting
-        default: false
+        description: Allows for toggling of Auto-Accept
+        default: op
     sgift.gift.autodeny: 
-        description: Makes player impossible to Gift
-        default: false
+        description: Allows for toggling of Auto-Deny
+        default: op
     sgift.trade.trade:
         description: Give access to /trade
         default: op
@@ -125,11 +93,11 @@ permissions:
         description: Give access to /trade <Player> <Item> <Amount>
         default: op
     sgift.trade.auto:
-        description: Makes player accept instantly upon Trading
-        default: false
+        description: Allows for toggling of Auto-Accept
+        default: op
     sgift.trade.autodeny: 
-        description: Makes player impossible to Trade with
-        default: false
+        description: Allows for toggling of Auto-Deny
+        default: op
     sgift.swap.swap:
         description: Give access to /swap
         default: op
@@ -149,11 +117,11 @@ permissions:
         description: Give access to /swap <Player> <Item> <Amount>
         default: op
     sgift.swap.auto:
-        description: Makes player accept instantly upon Swapping
-        default: false
+        description: Allows for toggling of Auto-Accept
+        default: op
     sgift.swap.autodeny:
-        description: Makes player impossible to Swap with
-        default: false
+        description: Allows for toggling of Auto-Deny
+        default: op
     sgift.sgift:
         description: Gives access to /sgift
         default: false
@@ -165,5 +133,23 @@ permissions:
         default: false
     sgift.reload:
         description: Gives access to /sgift reload
+        default: false
+    sgift.toggles.gift.accept:
+        description: Toggles Auto-Accept
+        default: false
+    sgift.toggles.gift.deny:
+        description: Toggles Auto-Deny
+        default: false
+    sgift.toggles.trade.accept:
+        description: Toggles Auto-Accept
+        default: false
+    sgift.toggles.trade.deny:
+        description: Toggles Auto-Deny
+        default: false
+    sgift.toggles.swap.accept:
+        description: Toggles Auto-Accept
+        default: false
+    sgift.toggles.swap.deny:
+        description: Toggles Auto-Deny
         default: false
     

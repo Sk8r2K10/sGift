@@ -45,32 +45,40 @@ public class GiftCommand implements CommandExecutor {
 		    log.warning(logpre + "Don't send sGift commands through console!");
 
 		} else if (args.length == 1) {
-		    if (args[0].equalsIgnoreCase("auto") && plugin.getPerms(player, "sgift.gift.accept")) {
+		    if (args[0].equalsIgnoreCase("auto") && plugin.getPerms(player, "sgift.gift.auto")) {
+			if (plugin.getConfig().getBoolean("Features.allow-auto.gift")) {
+			    if (!player.hasPermission("sgift.toggles.gift.accept")) {
 
-			if (!player.hasPermission("sgift.gift.auto")) {
+				player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Accept enabled for Gifting!");
+				plugin.getPermissions().playerAdd(player, "sgift.toggles.gift.accept");
+				plugin.getPermissions().playerRemove(player, "-sgift.toggles.gift.accept");
+			    } else {
 
-			    player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Accept enabled for Gifting!");
-			    plugin.getPermissions().playerAdd(player, "sgift.gift.auto");
-			    plugin.getPermissions().playerRemove(player, "-sgift.gift.auto");
+				player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Accept disabled for Gifting!");
+				plugin.getPermissions().playerRemove(player, "sgift.toggles.gift.accept");
+				plugin.getPermissions().playerAdd(player, "-sgift.toggles.gift.accept");
+			    }
+
 			} else {
-
-			    player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Accept disabled for Gifting!");
-			    plugin.getPermissions().playerRemove(player, "sgift.gift.auto");
-			    plugin.getPermissions().playerAdd(player, "-sgift.gift.auto");
+			    
+			    player.sendMessage(prefix + ChatColor.RED + "Auto-Features are Disabled.");
 			}
+		    } else if (args[0].equalsIgnoreCase("auto-deny") && plugin.getPerms(player, "sgift.gift.autodeny")) {
+			if (plugin.getConfig().getBoolean("Features.allow-auto.gift")) {
+			    if (!player.hasPermission("sgift.toggles.gift.deny")) {
 
-		    } else if (args[0].equalsIgnoreCase("auto-deny") && plugin.getPerms(player, "sgift.gift.deny")) {
+				player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Deny enabled for Gifting!");
+				plugin.getPermissions().playerAdd(player, "sgift.toggles.gift.deny");
+				plugin.getPermissions().playerRemove(player, "-sgift.toggles.gift.deny");
+			    } else {
 
-			if (!player.hasPermission("sgift.gift.autodeny")) {
-
-			    player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Deny enabled for Gifting!");
-			    plugin.getPermissions().playerAdd(player, "sgift.gift.autodeny");
-			    plugin.getPermissions().playerRemove(player, "-sgift.gift.autodeny");
+				player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Deny disabled for Gifting!");
+				plugin.getPermissions().playerRemove(player, "sgift.toggles.gift.deny");
+				plugin.getPermissions().playerAdd(player, "-sgift.toggles.gift.deny");
+			    }
 			} else {
-
-			    player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Deny disabled for Gifting!");
-			    plugin.getPermissions().playerRemove(player, "sgift.gift.autodeny");
-			    plugin.getPermissions().playerAdd(player, "-sgift.gift.autodeny");
+			    
+			    player.sendMessage(prefix + ChatColor.RED + "Auto-Features are Disabled.");
 			}
 		    } else if (args[0].equalsIgnoreCase("help") && plugin.getPerms(player, "sgift.gift.help")) {
 
@@ -367,7 +375,7 @@ public class GiftCommand implements CommandExecutor {
 				    if (plugin.rangeIsDisabled() || plugin.isWithinRange(VictimLoc, playerLoc)) {
 					if (amount != 0) {
 					    if (!plugin.itemsAreNull(Item)) {
-						if (!Victim.hasPermission("sgift.gift.autodeny")) {
+						if (!Victim.hasPermission("sgift.toggles.gift.deny")) {
 						    if (Item.getAmount() >= amount) {
 
 							Item.setAmount(amount);
@@ -391,7 +399,7 @@ public class GiftCommand implements CommandExecutor {
 							    Victim.sendMessage(prefix + ChatColor.YELLOW + "This Item is enchanted!");
 
 							}
-							if (Victim.hasPermission("sgift.gift.auto")) {
+							if (Victim.hasPermission("sgift.toggles.gift.accept")) {
 
 							    Gift gift = null;
 							    Sender Sender1 = null;
@@ -488,7 +496,7 @@ public class GiftCommand implements CommandExecutor {
 				if (plugin.rangeIsDisabled() || plugin.isWithinRange(VictimLoc, playerLoc)) {
 				    if (amount != 0) {
 					if (!plugin.itemsAreNull(Item)) {
-					    if (!Victim.hasPermission("sgift.gift.autodeny")) {
+					    if (!Victim.hasPermission("sgift.toggles.gift.deny")) {
 						if (new InventoryManager(player).contains(Item, true, true)) {
 
 						    plugin.gifts.add(new Gift(Victim, player, Item));
@@ -500,7 +508,7 @@ public class GiftCommand implements CommandExecutor {
 						    player.sendMessage(prefix + ChatColor.YELLOW + "Waiting for " + Victim.getName() + " to accept...");
 						    Victim.sendMessage(prefix + ChatColor.WHITE + "New Gift from " + ChatColor.YELLOW + player.getDisplayName() + ChatColor.WHITE + " of " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName());
 						    Victim.sendMessage(prefix + ChatColor.WHITE + "Do " + ChatColor.YELLOW + "/Gift accept" + ChatColor.WHITE + " to accept this Gift or " + ChatColor.YELLOW + "/Gift deny" + ChatColor.WHITE + " to deny this Gift!");
-						    if (Victim.hasPermission("sgift.gift.auto")) {
+						    if (Victim.hasPermission("sgift.toggles.gift.accept")) {
 
 							Gift gift = null;
 							Sender Sender1 = null;

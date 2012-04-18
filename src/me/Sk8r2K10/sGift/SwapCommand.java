@@ -45,31 +45,39 @@ public class SwapCommand implements CommandExecutor {
 		    log.warning(logpre + "Don't send sGift commands through console!");
 
 		} else if (args.length == 1) {
-		    if (args[0].equalsIgnoreCase("auto") && plugin.getPerms(player, "sgift.swap.accept")) {
+		    if (args[0].equalsIgnoreCase("auto") && plugin.getPerms(player, "sgift.swap.auto")) {
+			if (plugin.getConfig().getBoolean("Features.allow-auto.swap")) {
+			    if (!player.hasPermission("sgift.toggles.swap.accept")) {
 
-			if (!player.hasPermission("sgift.swap.auto")) {
+				player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Accept enabled for Swapping!");
+				plugin.getPermissions().playerAdd(player, "sgift.toggles.swap.accept");
+				plugin.getPermissions().playerRemove(player, "-sgift.toggles.swap.accept");
+			    } else {
 
-			    player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Accept enabled for Swapping!");
-			    plugin.getPermissions().playerAdd(player, "sgift.swap.auto");
-			    plugin.getPermissions().playerRemove(player, "-sgift.swap.auto");
+				player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Accept disabled for Swapping!");
+				plugin.getPermissions().playerRemove(player, "sgift.toggles.swap.accept");
+				plugin.getPermissions().playerAdd(player, "-sgift.toggles.swap.accept");
+			    }
 			} else {
-
-			    player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Accept disabled for Swapping!");
-			    plugin.getPermissions().playerRemove(player, "sgift.swap.auto");
-			    plugin.getPermissions().playerAdd(player, "-sgift.swap.auto");
+			    
+			    player.sendMessage(prefix + ChatColor.RED + "Auto-Features are Disabled.");
 			}
-		    } else if (args[0].equalsIgnoreCase("auto-deny") && plugin.getPerms(player, "sgift.swap.deny")) {
+		    } else if (args[0].equalsIgnoreCase("auto-deny") && plugin.getPerms(player, "sgift.swap.autodeny")) {
+			if (plugin.getConfig().getBoolean("Features.allow-auto.swap")) {
+			    if (!player.hasPermission("sgift.toggles.swap.deny")) {
 
-			if (!player.hasPermission("sgift.swap.autodeny")) {
+				player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Deny enabled for Swapping!");
+				plugin.getPermissions().playerAdd(player, "sgift.toggles.swap.deny");
+				plugin.getPermissions().playerRemove(player, "-sgift.toggles.swap.deny");
+			    } else {
 
-			    player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Deny enabled for Swapping!");
-			    plugin.getPermissions().playerAdd(player, "sgift.swap.autodeny");
-			    plugin.getPermissions().playerRemove(player, "-sgift.swap.autodeny");
+				player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Deny disabled for Swapping!");
+				plugin.getPermissions().playerRemove(player, "sgift.toggles.swap.deny");
+				plugin.getPermissions().playerAdd(player, "-sgift.toggles.swap.deny");
+			    }
 			} else {
-
-			    player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Deny disabled for Swapping!");
-			    plugin.getPermissions().playerRemove(player, "sgift.swap.autodeny");
-			    plugin.getPermissions().playerAdd(player, "-sgift.swap.autodeny");
+			    
+			    player.sendMessage(prefix + ChatColor.RED + "Auto-Features are Disabled.");
 			}
 		    } else if (args[0].equalsIgnoreCase("help") && plugin.getPerms(player, "sgift.swap.help")) {
 
@@ -403,7 +411,7 @@ public class SwapCommand implements CommandExecutor {
 						    ItemFromVictim = new ItemStack(ii2.getType(), amountFromVictim, ii2.getSubTypeId());
 
 						    if (!plugin.itemsAreNull(Item, ItemFromVictim)) {
-							if (!Victim.hasPermission("sgift.swap.autodeny")) {
+							if (!Victim.hasPermission("sgift.toggles.swap.deny")) {
 							    if (new InventoryManager(Victim).contains(ItemFromVictim, true, true)) {
 
 								plugin.swaps.add(new Swap(Victim, player, Item, ItemFromVictim));
@@ -427,7 +435,7 @@ public class SwapCommand implements CommandExecutor {
 								    player.sendMessage(Item.getEnchantments().toString());
 
 								}
-								if (Victim.hasPermission("sgift.swap.auto")) {
+								if (Victim.hasPermission("sgift.toggles.swap.accept")) {
 
 								    Swap swap = null;
 								    Sender Sender1 = null;
@@ -548,7 +556,7 @@ public class SwapCommand implements CommandExecutor {
 						ItemFromVictim = new ItemStack(ii2.getType(), amountFromVictim, ii2.getSubTypeId());
 
 						if (Items.itemByStack(Item).getName() != null && Items.itemByStack(ItemFromVictim) != null) {
-						    if (!Victim.hasPermission("sgift.swap.autodeny")) {
+						    if (!Victim.hasPermission("sgift.toggles.swap.deny")) {
 							if (new InventoryManager(Victim).contains(ItemFromVictim, true, true)) {
 
 							    plugin.swaps.add(new Swap(Victim, player, Item, ItemFromVictim));
@@ -581,7 +589,7 @@ public class SwapCommand implements CommandExecutor {
 								player.sendMessage(prefix + ChatColor.RED + "The Item being requested is Enchanted!");
 
 							    }
-							    if (Victim.hasPermission("sgift.swap.auto")) {
+							    if (Victim.hasPermission("sgift.toggles.swap.accept")) {
 
 								Swap swap = null;
 								Sender Sender1 = null;

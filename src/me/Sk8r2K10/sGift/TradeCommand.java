@@ -44,34 +44,40 @@ public class TradeCommand implements CommandExecutor {
 	    if (plugin.getConfig().getBoolean("Features.enable-trade")) {
 		if (player != null) {
 		    if (args.length == 1) {
-			if (args[0].equalsIgnoreCase("auto") && plugin.getPerms(player, "sgift.trade.accept")) {
+			if (args[0].equalsIgnoreCase("auto") && plugin.getPerms(player, "sgift.trade.auto")) {
+			    if (plugin.getConfig().getBoolean("Features.allow-auto.trade")) {
+				if (!player.hasPermission("sgift.toggles.trade.accept")) {
 
-			    if (!player.hasPermission("sgift.trade.auto")) {
+				    player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Accept enabled for Trading!");
+				    plugin.getPermissions().playerAdd(player, "sgift.toggles.trade.accept");
+				    plugin.getPermissions().playerRemove(player, "-sgift.toggles.trade.accept");
+				} else {
 
-				player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Accept enabled for Trading!");
-				plugin.getPermissions().playerAdd(player, "sgift.trade.auto");
-				plugin.getPermissions().playerRemove(player, "-sgift.trade.auto");
+				    player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Accept disabled for Trading!");
+				    plugin.getPermissions().playerRemove(player, "sgift.toggles.trade.accept");
+				    plugin.getPermissions().playerAdd(player, "-sgift.toggles.trade.accept");
+				}
 			    } else {
-
-				player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Accept disabled for Trading!");
-				plugin.getPermissions().playerRemove(player, "sgift.trade.auto");
-				plugin.getPermissions().playerAdd(player, "-sgift.trade.auto");
+				
+				player.sendMessage(prefix + ChatColor.RED + "Auto-Features are Disabled.");
 			    }
+			} else if (args[0].equalsIgnoreCase("auto-deny") && plugin.getPerms(player, "sgift.trade.autodeny")) {
+			    if (plugin.getConfig().getBoolean("Features.allow-auto.trade")) {
+				if (!player.hasPermission("sgift.toggles.trade.deny")) {
 
-			} else if (args[0].equalsIgnoreCase("auto-deny") && plugin.getPerms(player, "sgift.trade.deny")) {
+				    player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Deny enabled for Trading!");
+				    plugin.getPermissions().playerAdd(player, "sgift.toggles.trade.deny");
+				    plugin.getPermissions().playerRemove(player, "-sgift.toggles.trade.deny");
+				} else {
 
-			    if (!player.hasPermission("sgift.trade.autodeny")) {
-
-				player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Deny enabled for Trading!");
-				plugin.getPermissions().playerAdd(player, "sgift.trade.autodeny");
-				plugin.getPermissions().playerRemove(player, "-sgift.trade.autodeny");
+				    player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Deny disabled for Trading!");
+				    plugin.getPermissions().playerRemove(player, "sgift.toggles.trade.deny");
+				    plugin.getPermissions().playerAdd(player, "-sgift.toggles.trade.deny");
+				}
 			    } else {
-
-				player.sendMessage(prefix + ChatColor.YELLOW + "Auto-Deny disabled for Trading!");
-				plugin.getPermissions().playerRemove(player, "sgift.trade.autodeny");
-				plugin.getPermissions().playerAdd(player, "-sgift.trade.autodeny");
+				
+				player.sendMessage(prefix + ChatColor.RED + "Auto-Features are Disabled.");
 			    }
-
 			} else if (args[0].equalsIgnoreCase("help") && plugin.getPerms(player, "sgift.trade.help")) {
 
 			    player.sendMessage(ChatColor.DARK_GRAY + "---------------[" + ChatColor.GOLD + "sGift - Trade Help Menu" + ChatColor.DARK_GRAY + "]----------------");
@@ -410,7 +416,7 @@ public class TradeCommand implements CommandExecutor {
 						if (price != 0) {
 						    if (!plugin.itemsAreNull(Item)) {
 							if (Item.getAmount() >= amount) {
-							    if (!Victim.hasPermission("sgift.trade.autodeny")) {
+							    if (!Victim.hasPermission("sgift.toggles.trade.deny")) {
 								if (plugin.getEcon().getBalance(Victim.getName()) >= price) {
 								    Item.setAmount(amount);
 
@@ -434,7 +440,7 @@ public class TradeCommand implements CommandExecutor {
 									Victim.sendMessage(prefix + ChatColor.RED + "Warning! This item has " + (Item.getType().getMaxDurability() - Item.getDurability()) + " uses left out of a maximum of " + Item.getType().getMaxDurability() + " uses.");
 
 								    }
-								    if (Victim.hasPermission("sgift.trade.auto")) {
+								    if (Victim.hasPermission("sgift.toggles.trade.accept")) {
 
 									Trade trade = null;
 									Sender Sender1 = null;
@@ -547,7 +553,7 @@ public class TradeCommand implements CommandExecutor {
 					    if (price != 0) {
 						if (!plugin.itemsAreNull(Item)) {
 						    if (new InventoryManager(player).contains(Item, true, true)) {
-							if (!Victim.hasPermission("sgift.trade.autodeny")) {
+							if (!Victim.hasPermission("sgift.toggles.trade.deny")) {
 							    if (plugin.getEcon().getBalance(Victim.getName()) >= price) {
 
 								plugin.trades.add(new Trade(Victim, player, Item, price));
@@ -560,7 +566,7 @@ public class TradeCommand implements CommandExecutor {
 								Victim.sendMessage(prefix + ChatColor.WHITE + "New Trade from " + ChatColor.YELLOW + player.getDisplayName() + ChatColor.WHITE + " of " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + " " + plugin.getEcon().currencyNameSingular() + "(s)");
 								Victim.sendMessage(prefix + ChatColor.WHITE + "Do " + ChatColor.YELLOW + "/trade accept" + ChatColor.WHITE + " to accept this Trade or " + ChatColor.YELLOW + "/trade deny" + ChatColor.WHITE + " to deny this trade!");
 
-								if (Victim.hasPermission("sgift.trade.auto")) {
+								if (Victim.hasPermission("sgift.toggles.trade.accept")) {
 
 								    Trade trade = null;
 								    Sender Sender1 = null;

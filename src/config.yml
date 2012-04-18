@@ -12,6 +12,7 @@
 # -> For options such as max-distance, Leave as 0 for infinite distance.
 
 # The "Help" section defines the strings shown to the player when using the help commands.
+# -> These **WONT** change the commands themselves.
 Features:
   enable-gift: true
   enable-trade: true

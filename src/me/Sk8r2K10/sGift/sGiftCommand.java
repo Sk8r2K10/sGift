@@ -141,7 +141,7 @@ public class sGiftCommand implements CommandExecutor {
 		    player.sendMessage(prefix + ChatColor.RED + "Invalid command usage!");
 		    player.sendMessage(prefix + ChatColor.GRAY + "/sgift info|halt|set <Option> [true|false]");
 
-		} else if (args.length == 3 && args[0].equalsIgnoreCase("set") && plugin.getPerms(player, "sgift.set")) {
+		} else if (args.length >= 3 && args[0].equalsIgnoreCase("set") && plugin.getPerms(player, "sgift.set")) {
 		    if (args[1].equalsIgnoreCase("gift")) {
 			if (args[2].equalsIgnoreCase("true")) {
 			    if (!plugin.getConfig().getBoolean("Features.enable-gift")) {
@@ -246,6 +246,53 @@ public class sGiftCommand implements CommandExecutor {
 			    plugin.getConfig().set("Options.max-distance", 0);
 			    plugin.saveConfig();
 			    player.sendMessage(prefix + ChatColor.YELLOW + "Reset distance to 0");
+			} else {
+
+			    player.sendMessage(prefix + ChatColor.RED + "Please enter an valid number.");
+			}
+		    } else if (args[1].equalsIgnoreCase("allow-auto")) {
+			if (args[2].equalsIgnoreCase("gift")) {
+			    if (args[3].equalsIgnoreCase("true")) {
+				plugin.getConfig().set("Features.allow-auto.gift", true);
+				plugin.saveConfig();
+				player.sendMessage(prefix + ChatColor.YELLOW + "Enabling Auto-Features for Gifting.");
+			    } else if (args[3].equalsIgnoreCase("false")) {
+				plugin.getConfig().set("Features.allow-auto.gift", false);
+				plugin.saveConfig();
+				player.sendMessage(prefix + ChatColor.YELLOW + "Disabling Auto-Features for Gifting.");
+			    } else {
+				
+				player.sendMessage(prefix + ChatColor.RED + "Invalid command usage!");
+				player.sendMessage(prefix + ChatColor.GRAY + "/sgift info|halt|set <Option> [true|false]");
+			    }  
+			} else if (args[2].equalsIgnoreCase("trade")) {
+			    if (args[3].equalsIgnoreCase("true")) {
+				plugin.getConfig().set("Features.allow-auto.trade", true);
+				plugin.saveConfig();
+				player.sendMessage(prefix + ChatColor.YELLOW + "Enabling Auto-Features for Trading.");
+			    } else if (args[3].equalsIgnoreCase("false")) {
+				plugin.getConfig().set("Features.allow-auto.trade", false);
+				plugin.saveConfig();
+				player.sendMessage(prefix + ChatColor.YELLOW + "Disabling Auto-Features for Trading.");
+			    } else {
+				
+				player.sendMessage(prefix + ChatColor.RED + "Invalid command usage!");
+				player.sendMessage(prefix + ChatColor.GRAY + "/sgift info|halt|set <Option> [true|false]");
+			    }
+			} else if (args[2].equalsIgnoreCase("swap")) {
+			    if (args[3].equalsIgnoreCase("true")) {
+				plugin.getConfig().set("Features.allow-auto.swap", true);
+				plugin.saveConfig();
+				player.sendMessage(prefix + ChatColor.YELLOW + "Enabling Auto-Features for Swapping.");
+			    } else if (args[3].equalsIgnoreCase("false")) {
+				plugin.getConfig().set("Features.allow-auto.swap", false);
+				plugin.saveConfig();
+				player.sendMessage(prefix + ChatColor.YELLOW + "Disabling Auto-Features for Swapping.");
+			    } else {
+				
+				player.sendMessage(prefix + ChatColor.RED + "Invalid command usage!");
+				player.sendMessage(prefix + ChatColor.GRAY + "/sgift info|halt|set <Option> [true|false]");
+			    }
 			} else {
 
 			    player.sendMessage(prefix + ChatColor.RED + "Please enter an valid number.");
