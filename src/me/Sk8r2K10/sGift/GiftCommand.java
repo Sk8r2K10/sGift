@@ -375,7 +375,7 @@ public class GiftCommand implements CommandExecutor {
 				    if (plugin.rangeIsDisabled() || plugin.isWithinRange(VictimLoc, playerLoc)) {
 					if (amount != 0) {
 					    if (!plugin.itemsAreNull(Item)) {
-						if (!Victim.hasPermission("sgift.toggles.gift.deny")) {
+						if (!plugin.auto(Victim, "gift", "sgift.toggles.gift.deny")) {
 						    if (Item.getAmount() >= amount) {
 
 							Item.setAmount(amount);
@@ -399,7 +399,7 @@ public class GiftCommand implements CommandExecutor {
 							    Victim.sendMessage(prefix + ChatColor.YELLOW + "This Item is enchanted!");
 
 							}
-							if (Victim.hasPermission("sgift.toggles.gift.accept")) {
+							if (plugin.auto(Victim, "gift", "sgift.toggles.gift.auto")) {
 
 							    Gift gift = null;
 							    Sender Sender1 = null;
@@ -496,7 +496,7 @@ public class GiftCommand implements CommandExecutor {
 				if (plugin.rangeIsDisabled() || plugin.isWithinRange(VictimLoc, playerLoc)) {
 				    if (amount != 0) {
 					if (!plugin.itemsAreNull(Item)) {
-					    if (!Victim.hasPermission("sgift.toggles.gift.deny")) {
+					    if (!plugin.auto(Victim, "gift", "sgift.toggles.gift.deny")) {
 						if (new InventoryManager(player).contains(Item, true, true)) {
 
 						    plugin.gifts.add(new Gift(Victim, player, Item));
@@ -508,7 +508,7 @@ public class GiftCommand implements CommandExecutor {
 						    player.sendMessage(prefix + ChatColor.YELLOW + "Waiting for " + Victim.getName() + " to accept...");
 						    Victim.sendMessage(prefix + ChatColor.WHITE + "New Gift from " + ChatColor.YELLOW + player.getDisplayName() + ChatColor.WHITE + " of " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName());
 						    Victim.sendMessage(prefix + ChatColor.WHITE + "Do " + ChatColor.YELLOW + "/Gift accept" + ChatColor.WHITE + " to accept this Gift or " + ChatColor.YELLOW + "/Gift deny" + ChatColor.WHITE + " to deny this Gift!");
-						    if (Victim.hasPermission("sgift.toggles.gift.accept")) {
+						    if (plugin.auto(Victim, "gift", "sgift.toggles.gift.accept")) {
 
 							Gift gift = null;
 							Sender Sender1 = null;

@@ -411,7 +411,7 @@ public class SwapCommand implements CommandExecutor {
 						    ItemFromVictim = new ItemStack(ii2.getType(), amountFromVictim, ii2.getSubTypeId());
 
 						    if (!plugin.itemsAreNull(Item, ItemFromVictim)) {
-							if (!Victim.hasPermission("sgift.toggles.swap.deny")) {
+							if (!plugin.auto(Victim, "swap", "sgift.toggles.swap.deny")) {
 							    if (new InventoryManager(Victim).contains(ItemFromVictim, true, true)) {
 
 								plugin.swaps.add(new Swap(Victim, player, Item, ItemFromVictim));
@@ -435,7 +435,7 @@ public class SwapCommand implements CommandExecutor {
 								    player.sendMessage(Item.getEnchantments().toString());
 
 								}
-								if (Victim.hasPermission("sgift.toggles.swap.accept")) {
+								if ( plugin.auto(Victim, "swap", "sgift.toggles.swap.accept")) {
 
 								    Swap swap = null;
 								    Sender Sender1 = null;
@@ -556,7 +556,7 @@ public class SwapCommand implements CommandExecutor {
 						ItemFromVictim = new ItemStack(ii2.getType(), amountFromVictim, ii2.getSubTypeId());
 
 						if (Items.itemByStack(Item).getName() != null && Items.itemByStack(ItemFromVictim) != null) {
-						    if (!Victim.hasPermission("sgift.toggles.swap.deny")) {
+						    if (!plugin.auto(Victim, "swap", "sgift.toggles.swap.deny")) {
 							if (new InventoryManager(Victim).contains(ItemFromVictim, true, true)) {
 
 							    plugin.swaps.add(new Swap(Victim, player, Item, ItemFromVictim));
@@ -589,7 +589,7 @@ public class SwapCommand implements CommandExecutor {
 								player.sendMessage(prefix + ChatColor.RED + "The Item being requested is Enchanted!");
 
 							    }
-							    if (Victim.hasPermission("sgift.toggles.swap.accept")) {
+							    if (plugin.auto(Victim, "swap", "sgift.toggles.swap.accept")) {
 
 								Swap swap = null;
 								Sender Sender1 = null;

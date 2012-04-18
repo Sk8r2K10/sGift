@@ -416,7 +416,7 @@ public class TradeCommand implements CommandExecutor {
 						if (price != 0) {
 						    if (!plugin.itemsAreNull(Item)) {
 							if (Item.getAmount() >= amount) {
-							    if (!Victim.hasPermission("sgift.toggles.trade.deny")) {
+							    if (!plugin.auto(Victim, "trade", "sgift.toggles.trade.deny")) {
 								if (plugin.getEcon().getBalance(Victim.getName()) >= price) {
 								    Item.setAmount(amount);
 
@@ -440,7 +440,7 @@ public class TradeCommand implements CommandExecutor {
 									Victim.sendMessage(prefix + ChatColor.RED + "Warning! This item has " + (Item.getType().getMaxDurability() - Item.getDurability()) + " uses left out of a maximum of " + Item.getType().getMaxDurability() + " uses.");
 
 								    }
-								    if (Victim.hasPermission("sgift.toggles.trade.accept")) {
+								    if (plugin.auto(Victim, "trade", "sgift.toggles.trade.accept")) {
 
 									Trade trade = null;
 									Sender Sender1 = null;
@@ -553,7 +553,7 @@ public class TradeCommand implements CommandExecutor {
 					    if (price != 0) {
 						if (!plugin.itemsAreNull(Item)) {
 						    if (new InventoryManager(player).contains(Item, true, true)) {
-							if (!Victim.hasPermission("sgift.toggles.trade.deny")) {
+							if (!plugin.auto(Victim, "trade", "sgift.toggles.trade.deny")) {
 							    if (plugin.getEcon().getBalance(Victim.getName()) >= price) {
 
 								plugin.trades.add(new Trade(Victim, player, Item, price));
@@ -566,7 +566,7 @@ public class TradeCommand implements CommandExecutor {
 								Victim.sendMessage(prefix + ChatColor.WHITE + "New Trade from " + ChatColor.YELLOW + player.getDisplayName() + ChatColor.WHITE + " of " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + " " + plugin.getEcon().currencyNameSingular() + "(s)");
 								Victim.sendMessage(prefix + ChatColor.WHITE + "Do " + ChatColor.YELLOW + "/trade accept" + ChatColor.WHITE + " to accept this Trade or " + ChatColor.YELLOW + "/trade deny" + ChatColor.WHITE + " to deny this trade!");
 
-								if (Victim.hasPermission("sgift.toggles.trade.accept")) {
+								if (plugin.auto(Victim, "trade", "sgift.toggles.trade.accept")) {
 
 								    Trade trade = null;
 								    Sender Sender1 = null;

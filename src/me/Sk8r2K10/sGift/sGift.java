@@ -228,4 +228,46 @@ public class sGift extends JavaPlugin {
 
 	return false;
     }
+    
+    public boolean auto(Player Victim, String cmd, String perm) {
+	boolean autogift = this.getConfig().getBoolean("Features.allow-auto.gift");
+	boolean autotrade = this.getConfig().getBoolean("Features.allow-auto.trade");
+	boolean autoswap = this.getConfig().getBoolean("Features.allow-auto.swap");
+	
+	if (cmd.equalsIgnoreCase("gift")) {
+	    if (autogift) {
+		if (Victim.hasPermission(perm)) {
+		    return true;
+		} else {
+		    return false;
+		}
+	    } else {
+		
+		return false;
+	    }
+	} else if (cmd.equalsIgnoreCase("trade")) {
+	    if (autotrade) {
+		if (Victim.hasPermission(perm)) {
+		   return true; 
+		} else {
+		    return false;
+		}
+	    } else {
+		
+		return false;
+	    }
+	} else if (cmd.equalsIgnoreCase("swap")) {
+	    if (autoswap) {
+		if (Victim.hasPermission(perm)) {
+		   return true; 
+		} else {
+		    return false;
+		}
+	    } else {
+		
+		return false;
+	    }	    
+	}
+	return true;
+    }
 }
