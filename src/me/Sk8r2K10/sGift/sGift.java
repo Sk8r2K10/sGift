@@ -268,6 +268,17 @@ public class sGift extends JavaPlugin {
 		return false;
 	    }	    
 	}
-	return true;
+	return false;
+    }
+    
+    public boolean differentWorlds(Player player, Player Victim) {
+	if (this.getConfig().getBoolean("Options.allow-between-worlds")) {
+	    if (player.getWorld() != Victim.getWorld()) {
+		if (!player.hasPermission("sgift.override.world")) {
+		    return true;
+		}
+	    }
+	}
+	return false;
     }
 }

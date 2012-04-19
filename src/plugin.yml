@@ -152,4 +152,7 @@ permissions:
     sgift.toggles.swap.deny:
         description: Toggles Auto-Deny
         default: false
+    sgift.overrides.world:
+        description: Overrides the allow-between-worlds config node for that player
+        default: op
     
