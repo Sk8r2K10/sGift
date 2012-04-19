@@ -8,10 +8,11 @@
 
 # The "Features" section of options define if certain features are enabled or not.
 
-# The "Options" section is for definable characteristics of mechanisms in sGift
+# The "Options" section is for definable characteristics of mechanisms in sGift,
 # -> For options such as max-distance, Leave as 0 for infinite distance.
+# -> Make request-timeout 0 to disable Gift/Swap/Trade request timeouts. 
 
-# The "Help" section defines the strings shown to the player when using the help commands.
+# The "Help" section defines the strings shown to the player when using the help commands. Mainly for Multilingual support.
 # -> These **WONT** change the commands themselves.
 Features:
   enable-gift: true
@@ -23,8 +24,10 @@ Features:
     swap: false
   
 Options:
+  request-timeout: 0
   max-distance: 0
-
+  allow-between-worlds: true
+  
 Help:
   Gift:
     Gift: §a/gift <PlayerName> <ItemID> <Amount>§7 - Gifts a player a block
