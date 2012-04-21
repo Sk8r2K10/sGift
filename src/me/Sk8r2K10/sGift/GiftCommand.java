@@ -60,7 +60,7 @@ public class GiftCommand implements CommandExecutor {
 			    }
 
 			} else {
-			    
+
 			    player.sendMessage(prefix + ChatColor.RED + "Auto-Features are Disabled.");
 			}
 		    } else if (args[0].equalsIgnoreCase("auto-deny") && plugin.getPerms(player, "sgift.gift.autodeny")) {
@@ -77,7 +77,7 @@ public class GiftCommand implements CommandExecutor {
 				plugin.getPermissions().playerAdd(player, "-sgift.toggles.gift.deny");
 			    }
 			} else {
-			    
+
 			    player.sendMessage(prefix + ChatColor.RED + "Auto-Features are Disabled.");
 			}
 		    } else if (args[0].equalsIgnoreCase("help") && plugin.getPerms(player, "sgift.gift.help")) {
@@ -371,14 +371,138 @@ public class GiftCommand implements CommandExecutor {
 
 				    Location VictimLoc = Victim.getLocation();
 				    Location playerLoc = player.getLocation();
+				    if (!plugin.differentWorlds(player, Victim)) {
+					if (plugin.rangeIsDisabled() || plugin.isWithinRange(VictimLoc, playerLoc)) {
+					    if (amount != 0) {
+						if (!plugin.itemsAreNull(Item)) {
+						    if (!plugin.auto(Victim, "gift", "sgift.toggles.gift.deny")) {
+							if (Item.getAmount() >= amount) {
 
+							    Item.setAmount(amount);
+
+							    plugin.gifts.add(new Gift(Victim, player, Item));
+							    plugin.senders.add(new Sender(player));
+
+							    new InventoryManager(player).remove(Item);
+
+							    player.sendMessage(prefix + ChatColor.WHITE + "Now Gifting " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName() + ChatColor.WHITE + " with " + ChatColor.YELLOW + Victim.getName());
+							    player.sendMessage(prefix + ChatColor.YELLOW + "Waiting for " + Victim.getName() + " to accept...");
+							    Victim.sendMessage(prefix + ChatColor.WHITE + "New Gift from " + ChatColor.YELLOW + player.getDisplayName() + ChatColor.WHITE + " of " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName());
+							    Victim.sendMessage(prefix + ChatColor.WHITE + "Do " + ChatColor.YELLOW + "/Gift accept" + ChatColor.WHITE + " to accept this Gift or " + ChatColor.YELLOW + "/Gift deny" + ChatColor.WHITE + " to deny this Gift!");
+							    if (Item.getDurability() < Item.getType().getMaxDurability()) {
+
+								Victim.sendMessage(prefix + ChatColor.RED + "Warning! This item has " + (Item.getType().getMaxDurability() - Item.getDurability()) + " uses left out of a maximum of " + Item.getType().getMaxDurability() + " uses.");
+
+							    }
+							    if (Item.getEnchantments().size() > 0) {
+
+								Victim.sendMessage(prefix + ChatColor.YELLOW + "This Item is enchanted!");
+
+							    }
+							    if (plugin.auto(Victim, "gift", "sgift.toggles.gift.accept")) {
+
+								Gift gift = null;
+								Sender Sender1 = null;
+
+								for (Gift g : plugin.gifts) {
+
+								    if (g.Victim == Victim) {
+
+									gift = g;
+
+									for (Sender s : plugin.senders) {
+
+									    if (s.Sender == g.playerSender) {
+
+										Sender1 = s;
+									    }
+									}
+								    }
+								}
+
+								if (gift == null) {
+
+								    Victim.sendMessage(prefix + ChatColor.RED + "No Gifts to accept!");
+
+								} else {
+
+								    Player playerSendingItems = gift.playerSender;
+								    ItemStack items = gift.itemStack;
+
+								    if (Victim.getInventory().firstEmpty() == -1) {
+
+									Location playerloc = Victim.getLocation();
+									Victim.getWorld().dropItemNaturally(playerloc, items);
+									Victim.sendMessage(prefix + ChatColor.YELLOW + "Auto Accepting, Use /gift auto to toggle this on or off!");
+
+									Victim.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
+									playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + "!");
+									Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + "!");
+
+									log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName());
+
+									plugin.gifts.remove(gift);
+									plugin.senders.remove(Sender1);
+
+								    } else {
+
+									Victim.getInventory().addItem(items);
+									Victim.sendMessage(prefix + ChatColor.YELLOW + "Auto Accepting, Use /gift auto to toggle this on or off!");
+
+									playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + "!");
+									Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + "!");
+
+									log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName());
+
+									plugin.gifts.remove(gift);
+									plugin.senders.remove(Sender1);
+								    }
+								}
+							    }
+							} else {
+
+							    player.sendMessage(prefix + ChatColor.RED + "You do not have enough of that Item in your hand!");
+							}
+						    } else {
+
+							player.sendMessage(prefix + ChatColor.RED + "That player doesn't want to be Gifted!");
+						    }
+						} else {
+
+						    player.sendMessage(prefix + ChatColor.RED + "Items attempted to gift are currently unsupported.");
+						}
+					    } else {
+
+						player.sendMessage(prefix + ChatColor.RED + "Invalid amount!");
+					    }
+					} else {
+
+					    player.sendMessage(prefix + ChatColor.RED + "You are out of range with that player!");
+					    player.sendMessage(prefix + ChatColor.GRAY + "You must be within " + plugin.getConfig().getInt("Options.max-distance") + " blocks of each other.");
+					}
+				    } else {
+
+					player.sendMessage(prefix + ChatColor.RED + "You are not in the same world as that player!");
+					player.sendMessage(prefix + ChatColor.GRAY + "You must be in '" + Victim.getWorld().getName() + "' to Gift " + Victim.getName() + ".");
+				    }
+				} else {
+
+				    player.sendMessage(prefix + ChatColor.RED + "There's no Item in your Hand!");
+				}
+			    } else if (Items.itemByString(args[1]) != null) {
+
+				Item = new ItemStack(ii.getType(), amount, ii.getSubTypeId());
+
+				Victim = Bukkit.getServer().getPlayer(args[0]);
+
+				Location VictimLoc = Victim.getLocation();
+				Location playerLoc = player.getLocation();
+				if (!plugin.differentWorlds(player, Victim)) {
 				    if (plugin.rangeIsDisabled() || plugin.isWithinRange(VictimLoc, playerLoc)) {
 					if (amount != 0) {
 					    if (!plugin.itemsAreNull(Item)) {
 						if (!plugin.auto(Victim, "gift", "sgift.toggles.gift.deny")) {
-						    if (Item.getAmount() >= amount) {
-
-							Item.setAmount(amount);
+						    if (new InventoryManager(player).contains(Item, true, true)) {
 
 							plugin.gifts.add(new Gift(Victim, player, Item));
 							plugin.senders.add(new Sender(player));
@@ -389,17 +513,7 @@ public class GiftCommand implements CommandExecutor {
 							player.sendMessage(prefix + ChatColor.YELLOW + "Waiting for " + Victim.getName() + " to accept...");
 							Victim.sendMessage(prefix + ChatColor.WHITE + "New Gift from " + ChatColor.YELLOW + player.getDisplayName() + ChatColor.WHITE + " of " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName());
 							Victim.sendMessage(prefix + ChatColor.WHITE + "Do " + ChatColor.YELLOW + "/Gift accept" + ChatColor.WHITE + " to accept this Gift or " + ChatColor.YELLOW + "/Gift deny" + ChatColor.WHITE + " to deny this Gift!");
-							if (Item.getDurability() < Item.getType().getMaxDurability()) {
-
-							    Victim.sendMessage(prefix + ChatColor.RED + "Warning! This item has " + (Item.getType().getMaxDurability() - Item.getDurability()) + " uses left out of a maximum of " + Item.getType().getMaxDurability() + " uses.");
-
-							}
-							if (Item.getEnchantments().size() > 0) {
-
-							    Victim.sendMessage(prefix + ChatColor.YELLOW + "This Item is enchanted!");
-
-							}
-							if (plugin.auto(Victim, "gift", "sgift.toggles.gift.auto")) {
+							if (plugin.auto(Victim, "gift", "sgift.toggles.gift.accept")) {
 
 							    Gift gift = null;
 							    Sender Sender1 = null;
@@ -423,7 +537,6 @@ public class GiftCommand implements CommandExecutor {
 							    if (gift == null) {
 
 								Victim.sendMessage(prefix + ChatColor.RED + "No Gifts to accept!");
-
 							    } else {
 
 								Player playerSendingItems = gift.playerSender;
@@ -433,12 +546,11 @@ public class GiftCommand implements CommandExecutor {
 
 								    Location playerloc = Victim.getLocation();
 								    Victim.getWorld().dropItemNaturally(playerloc, items);
-								    Victim.sendMessage(prefix + ChatColor.YELLOW + "Auto Accepting, Use /gift auto to toggle this on or off!");
 
 								    Victim.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
+
 								    playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + "!");
 								    Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + "!");
-
 								    log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName());
 
 								    plugin.gifts.remove(gift);
@@ -447,11 +559,9 @@ public class GiftCommand implements CommandExecutor {
 								} else {
 
 								    Victim.getInventory().addItem(items);
-								    Victim.sendMessage(prefix + ChatColor.YELLOW + "Auto Accepting, Use /gift auto to toggle this on or off!");
 
 								    playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + "!");
 								    Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + "!");
-
 								    log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName());
 
 								    plugin.gifts.remove(gift);
@@ -460,8 +570,8 @@ public class GiftCommand implements CommandExecutor {
 							    }
 							}
 						    } else {
-
-							player.sendMessage(prefix + ChatColor.RED + "You do not have enough of that Item in your hand!");
+							player.sendMessage(prefix + ChatColor.RED + "You don't have enough " + Items.itemByStack(Item).getName() + ", or Item is partially Used/Enchanted!");
+							player.sendMessage(prefix + ChatColor.GRAY + "Check your Item ID's, For example, Orange wool would Be Orange_Wool.");
 						    }
 						} else {
 
@@ -473,151 +583,52 @@ public class GiftCommand implements CommandExecutor {
 					    }
 					} else {
 
-					    player.sendMessage(prefix + ChatColor.RED + "Invalid amount!");
+					    player.sendMessage(prefix + ChatColor.RED + "Amount specified is Invalid!");
 					}
 				    } else {
 
 					player.sendMessage(prefix + ChatColor.RED + "You are out of range with that player!");
 					player.sendMessage(prefix + ChatColor.GRAY + "You must be within " + plugin.getConfig().getInt("Options.max-distance") + " blocks of each other.");
 				    }
-				} else {
-
-				    player.sendMessage(prefix + ChatColor.RED + "There's no Item in your Hand!");
-				}
-			    } else if (Items.itemByString(args[1]) != null) {
-
-				Item = new ItemStack(ii.getType(), amount, ii.getSubTypeId());
-
-				Victim = Bukkit.getServer().getPlayer(args[0]);
-
-				Location VictimLoc = Victim.getLocation();
-				Location playerLoc = player.getLocation();
-
-				if (plugin.rangeIsDisabled() || plugin.isWithinRange(VictimLoc, playerLoc)) {
-				    if (amount != 0) {
-					if (!plugin.itemsAreNull(Item)) {
-					    if (!plugin.auto(Victim, "gift", "sgift.toggles.gift.deny")) {
-						if (new InventoryManager(player).contains(Item, true, true)) {
-
-						    plugin.gifts.add(new Gift(Victim, player, Item));
-						    plugin.senders.add(new Sender(player));
-
-						    new InventoryManager(player).remove(Item);
-
-						    player.sendMessage(prefix + ChatColor.WHITE + "Now Gifting " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName() + ChatColor.WHITE + " with " + ChatColor.YELLOW + Victim.getName());
-						    player.sendMessage(prefix + ChatColor.YELLOW + "Waiting for " + Victim.getName() + " to accept...");
-						    Victim.sendMessage(prefix + ChatColor.WHITE + "New Gift from " + ChatColor.YELLOW + player.getDisplayName() + ChatColor.WHITE + " of " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName());
-						    Victim.sendMessage(prefix + ChatColor.WHITE + "Do " + ChatColor.YELLOW + "/Gift accept" + ChatColor.WHITE + " to accept this Gift or " + ChatColor.YELLOW + "/Gift deny" + ChatColor.WHITE + " to deny this Gift!");
-						    if (plugin.auto(Victim, "gift", "sgift.toggles.gift.accept")) {
-
-							Gift gift = null;
-							Sender Sender1 = null;
-
-							for (Gift g : plugin.gifts) {
-
-							    if (g.Victim == Victim) {
-
-								gift = g;
-
-								for (Sender s : plugin.senders) {
-
-								    if (s.Sender == g.playerSender) {
-
-									Sender1 = s;
-								    }
-								}
-							    }
-							}
-
-							if (gift == null) {
-
-							    Victim.sendMessage(prefix + ChatColor.RED + "No Gifts to accept!");
-							} else {
-
-							    Player playerSendingItems = gift.playerSender;
-							    ItemStack items = gift.itemStack;
-
-							    if (Victim.getInventory().firstEmpty() == -1) {
-
-								Location playerloc = Victim.getLocation();
-								Victim.getWorld().dropItemNaturally(playerloc, items);
-
-								Victim.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
-
-								playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + "!");
-								Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + "!");
-								log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName());
-
-								plugin.gifts.remove(gift);
-								plugin.senders.remove(Sender1);
-
-							    } else {
-
-								Victim.getInventory().addItem(items);
-
-								playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + "!");
-								Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + "!");
-								log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName());
-
-								plugin.gifts.remove(gift);
-								plugin.senders.remove(Sender1);
-							    }
-							}
-						    }
-						} else {
-						    player.sendMessage(prefix + ChatColor.RED + "You don't have enough " + Items.itemByStack(Item).getName() + ", or Item is partially Used/Enchanted!");
-						    player.sendMessage(prefix + ChatColor.GRAY + "Check your Item ID's, For example, Orange wool would Be Orange_Wool.");
-						}
-					    } else {
-
-						player.sendMessage(prefix + ChatColor.RED + "That player doesn't want to be Gifted!");
-					    }
-					} else {
-
-					    player.sendMessage(prefix + ChatColor.RED + "Items attempted to gift are currently unsupported.");
-					}
-				    } else {
-
-					player.sendMessage(prefix + ChatColor.RED + "Amount specified is Invalid!");
-				    }
-				} else {
-
-				    player.sendMessage(prefix + ChatColor.RED + "You are out of range with that player!");
-				    player.sendMessage(prefix + ChatColor.GRAY + "You must be within " + plugin.getConfig().getInt("Options.max-distance") + " blocks of each other.");
-				}
 			    } else {
 
-				player.sendMessage(prefix + ChatColor.RED + "Material specified is Invalid!");
+				player.sendMessage(prefix + ChatColor.RED + "You are not in the same world as that player!");
+				player.sendMessage(prefix + ChatColor.GRAY + "You must be in '" + Victim.getWorld().getName() + "' to Gift " + Victim.getName() + ".");
 			    }
 			} else {
 
-			    player.sendMessage(prefix + ChatColor.RED + "Player not Online!");
+			    player.sendMessage(prefix + ChatColor.RED + "Material specified is Invalid!");
 			}
-
 		    } else {
 
-			player.sendMessage(prefix + ChatColor.RED + "You can't Gift yourself!");
+			player.sendMessage(prefix + ChatColor.RED + "Player not Online!");
 		    }
 
-		} else if (args.length == 0) {
-
-		    player.sendMessage(prefix + ChatColor.RED + "By Sk8r2K9. /gift help for more info.");
-
-		} else if (args.length >= 4) {
-
-		    player.sendMessage(prefix + ChatColor.RED + "Too many arguments!");
-		    player.sendMessage(prefix + ChatColor.GRAY + "Correct usage: /gift <Player> <Item> <Amount>");
-		}
-	    } else {
-		if (player != null) {
-
-		    player.sendMessage(prefix + "Gifting is currently disabled!");
 		} else {
 
-		    log.warning(logpre + "Don't send sGift commands through console!");
+		    player.sendMessage(prefix + ChatColor.RED + "You can't Gift yourself!");
 		}
+
+	    } else if (args.length == 0) {
+
+		player.sendMessage(prefix + ChatColor.RED + "By Sk8r2K9. /gift help for more info.");
+
+	    } else if (args.length >= 4) {
+
+		player.sendMessage(prefix + ChatColor.RED + "Too many arguments!");
+		player.sendMessage(prefix + ChatColor.GRAY + "Correct usage: /gift <Player> <Item> <Amount>");
+	    }
+	} else {
+	    if (player != null) {
+
+		player.sendMessage(prefix + "Gifting is currently disabled!");
+	    } else {
+
+		log.warning(logpre + "Don't send sGift commands through console!");
 	    }
 	}
-	return false;
+    }
+
+return false;
     }
 }

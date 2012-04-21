@@ -59,7 +59,7 @@ public class SwapCommand implements CommandExecutor {
 				plugin.getPermissions().playerAdd(player, "-sgift.toggles.swap.accept");
 			    }
 			} else {
-			    
+
 			    player.sendMessage(prefix + ChatColor.RED + "Auto-Features are Disabled.");
 			}
 		    } else if (args[0].equalsIgnoreCase("auto-deny") && plugin.getPerms(player, "sgift.swap.autodeny")) {
@@ -76,7 +76,7 @@ public class SwapCommand implements CommandExecutor {
 				plugin.getPermissions().playerAdd(player, "-sgift.toggles.swap.deny");
 			    }
 			} else {
-			    
+
 			    player.sendMessage(prefix + ChatColor.RED + "Auto-Features are Disabled.");
 			}
 		    } else if (args[0].equalsIgnoreCase("help") && plugin.getPerms(player, "sgift.swap.help")) {
@@ -405,12 +405,164 @@ public class SwapCommand implements CommandExecutor {
 					    Location VictimLoc = Victim.getLocation();
 					    Location playerLoc = player.getLocation();
 
+					    if (!plugin.differentWorlds(player, Victim)) {
+						if (plugin.rangeIsDisabled() || plugin.isWithinRange(VictimLoc, playerLoc)) {
+						    if (amountFromVictim != 0) {
+
+							ItemFromVictim = new ItemStack(ii2.getType(), amountFromVictim, ii2.getSubTypeId());
+
+							if (!plugin.itemsAreNull(Item, ItemFromVictim)) {
+							    if (!plugin.auto(Victim, "swap", "sgift.toggles.swap.deny")) {
+								if (new InventoryManager(Victim).contains(ItemFromVictim, true, true)) {
+
+								    plugin.swaps.add(new Swap(Victim, player, Item, ItemFromVictim));
+								    plugin.senders.add(new Sender(player));
+
+								    new InventoryManager(player).remove(Item);
+								    new InventoryManager(Victim).remove(ItemFromVictim);
+
+								    player.sendMessage(prefix + ChatColor.WHITE + "Now Swapping " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName() + ChatColor.WHITE + " for " + ChatColor.YELLOW + ItemFromVictim.getAmount() + " " + Items.itemByStack(ItemFromVictim).getName() + " with " + ChatColor.YELLOW + Victim.getName() + "!");
+								    player.sendMessage(prefix + ChatColor.YELLOW + "Waiting for " + Victim.getName() + " to accept...");
+								    Victim.sendMessage(prefix + ChatColor.WHITE + "New Swap Request from " + ChatColor.YELLOW + player.getDisplayName() + ChatColor.WHITE + " of " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName() + " for " + ItemFromVictim.getAmount() + " " + Items.itemByStack(ItemFromVictim).getName());
+								    Victim.sendMessage(prefix + ChatColor.WHITE + "Do " + ChatColor.YELLOW + "/swap accept" + ChatColor.WHITE + " to accept this Swap or " + ChatColor.YELLOW + "/swap deny" + ChatColor.WHITE + " to deny this Swap!");
+								    if (Item.getDurability() < Item.getType().getMaxDurability()) {
+
+									Victim.sendMessage(prefix + ChatColor.RED + "Warning! This item has " + (Item.getType().getMaxDurability() - Item.getDurability()) + " uses left out of a maximum of " + Item.getType().getMaxDurability() + " uses.");
+
+								    }
+								    if (Item.getEnchantments().size() > 0) {
+
+									Victim.sendMessage(prefix + ChatColor.YELLOW + "This Item is enchanted!");
+									player.sendMessage(Item.getEnchantments().toString());
+
+								    }
+								    if (plugin.auto(Victim, "swap", "sgift.toggles.swap.accept")) {
+
+									Swap swap = null;
+									Sender Sender1 = null;
+
+									for (Swap sw : plugin.swaps) {
+
+									    if (sw.Victim == Victim) {
+
+										swap = sw;
+
+										for (Sender s : plugin.senders) {
+
+										    if (s.Sender == sw.playerSender) {
+
+											Sender1 = s;
+										    }
+										}
+									    }
+									}
+
+									if (swap == null) {
+
+									    Victim.sendMessage(prefix + ChatColor.RED + "No Swaps to accept!");
+									} else {
+
+									    Player playerInitial = swap.playerSender;
+									    Victim = swap.Victim;
+									    ItemStack itemsFromSender = swap.itemSender;
+									    ItemStack itemsFromVictim = swap.itemVictim;
+
+									    player.sendMessage(prefix + ChatColor.YELLOW + "Other player Auto-Accepted!");
+									    Victim.sendMessage(prefix + ChatColor.YELLOW + "Auto-Accepted Swap request! use /swap auto to toggle this on or off.");
+
+									    if (Victim.getInventory().firstEmpty() == -1) {
+
+										Location playerloc = Victim.getLocation();
+										Victim.getWorld().dropItemNaturally(playerloc, itemsFromSender);
+
+										Victim.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
+										Victim.sendMessage(prefix + ChatColor.YELLOW + itemsFromSender.getAmount() + " " + Items.itemByStack(itemsFromSender).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerInitial.getName() + ChatColor.WHITE + " for " + ChatColor.YELLOW + itemsFromVictim.getAmount() + " " + Items.itemByStack(itemsFromVictim).getName() + ChatColor.WHITE + "!");
+
+
+
+									    } else {
+
+										Victim.getInventory().addItem(itemsFromSender);
+
+										Victim.sendMessage(prefix + ChatColor.YELLOW + itemsFromSender.getAmount() + " " + Items.itemByStack(itemsFromSender).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerInitial.getName() + ChatColor.WHITE + " for " + ChatColor.YELLOW + itemsFromVictim.getAmount() + " " + Items.itemByStack(itemsFromVictim).getName() + ChatColor.WHITE + "!");
+									    }
+									    if (playerInitial.getInventory().firstEmpty() == -1) {
+
+										Location playerloc = playerInitial.getLocation();
+										playerInitial.getWorld().dropItemNaturally(playerloc, itemsFromVictim);
+
+										player.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
+										player.sendMessage(prefix + ChatColor.YELLOW + itemsFromSender.getAmount() + " " + Items.itemByStack(itemsFromSender).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerInitial.getName() + ChatColor.WHITE + " for " + ChatColor.YELLOW + itemsFromVictim.getAmount() + " " + Items.itemByStack(itemsFromVictim).getName() + ChatColor.WHITE + "!");
+
+									    } else {
+
+										playerInitial.getInventory().addItem(itemsFromVictim);
+
+										playerInitial.sendMessage(prefix + ChatColor.YELLOW + itemsFromSender.getAmount() + " " + Items.itemByStack(itemsFromSender).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + " for " + ChatColor.YELLOW + itemsFromVictim.getAmount() + " " + Items.itemByStack(itemsFromVictim).getName() + ChatColor.WHITE + "!");
+									    }
+									    log.info(logpre + Victim.getDisplayName() + " recieved " + itemsFromSender.getAmount() + " " + Items.itemByStack(itemsFromSender).getName() + " from " + playerInitial.getName() + " for " + itemsFromVictim.getAmount() + " " + Items.itemByStack(itemsFromVictim).getName() + "!");
+
+									    plugin.swaps.remove(swap);
+									    plugin.senders.remove(Sender1);
+									}
+								    }
+								} else {
+
+								    player.sendMessage(prefix + ChatColor.RED + "Other player doesn't have enough of that Item!");
+								}
+							    } else {
+
+								player.sendMessage(prefix + ChatColor.RED + "That player doesn't want to Swap with you!");
+							    }
+							} else {
+
+							    player.sendMessage(prefix + ChatColor.RED + "Items attempting to swap are not currently supported.");
+							}
+						    } else {
+
+							player.sendMessage(prefix + ChatColor.RED + "Amount expected from other player is Invalid!");
+						    }
+						} else {
+
+						    player.sendMessage(prefix + ChatColor.RED + "You are out of range with that player!");
+						    player.sendMessage(prefix + ChatColor.GRAY + "You must be within " + plugin.getConfig().getInt("Options.max-distance") + " blocks of each other.");
+						}
+					    } else {
+						
+						player.sendMessage(prefix + ChatColor.RED + "You are not in the same world as that player!");
+						player.sendMessage(prefix + ChatColor.GRAY + "You must be in '" + Victim.getWorld().getName() + "' to Swap with " + Victim.getName() + ".");
+					    }
+					} else {
+
+					    player.sendMessage(prefix + ChatColor.RED + "You do not have enough of that Item in your hand!");
+					}
+				    } else {
+
+					player.sendMessage(prefix + ChatColor.RED + "Invalid amount!");
+				    }
+				} else {
+
+				    player.sendMessage(prefix + ChatColor.RED + "There's no Item in your Hand!");
+				}
+			    } else if (Items.itemByString(args[1]) != null) {
+
+				Item = new ItemStack(ii.getType(), amount, ii.getSubTypeId());
+
+				if (amount != 0) {
+				    if (new InventoryManager(player).contains(Item, true, true)) {
+
+					Victim = Bukkit.getServer().getPlayer(args[0]);
+
+					Location VictimLoc = Victim.getLocation();
+					Location playerLoc = player.getLocation();
+
+					if (!plugin.differentWorlds(player, Victim)) {
 					    if (plugin.rangeIsDisabled() || plugin.isWithinRange(VictimLoc, playerLoc)) {
 						if (amountFromVictim != 0) {
 
 						    ItemFromVictim = new ItemStack(ii2.getType(), amountFromVictim, ii2.getSubTypeId());
 
-						    if (!plugin.itemsAreNull(Item, ItemFromVictim)) {
+						    if (Items.itemByStack(Item).getName() != null && Items.itemByStack(ItemFromVictim) != null) {
 							if (!plugin.auto(Victim, "swap", "sgift.toggles.swap.deny")) {
 							    if (new InventoryManager(Victim).contains(ItemFromVictim, true, true)) {
 
@@ -422,7 +574,7 @@ public class SwapCommand implements CommandExecutor {
 
 								player.sendMessage(prefix + ChatColor.WHITE + "Now Swapping " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName() + ChatColor.WHITE + " for " + ChatColor.YELLOW + ItemFromVictim.getAmount() + " " + Items.itemByStack(ItemFromVictim).getName() + " with " + ChatColor.YELLOW + Victim.getName() + "!");
 								player.sendMessage(prefix + ChatColor.YELLOW + "Waiting for " + Victim.getName() + " to accept...");
-								Victim.sendMessage(prefix + ChatColor.WHITE + "New Swap Request from " + ChatColor.YELLOW + player.getDisplayName() + ChatColor.WHITE + " of " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName() + " for " + ItemFromVictim.getAmount() + " " + Items.itemByStack(ItemFromVictim).getName());
+								Victim.sendMessage(prefix + ChatColor.WHITE + "New Swap Request from " + ChatColor.YELLOW + player.getDisplayName() + ChatColor.WHITE + " of " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName() + " for " + ItemFromVictim.getAmount() + " " + Items.itemByStack(ItemFromVictim));
 								Victim.sendMessage(prefix + ChatColor.WHITE + "Do " + ChatColor.YELLOW + "/swap accept" + ChatColor.WHITE + " to accept this Swap or " + ChatColor.YELLOW + "/swap deny" + ChatColor.WHITE + " to deny this Swap!");
 								if (Item.getDurability() < Item.getType().getMaxDurability()) {
 
@@ -431,11 +583,20 @@ public class SwapCommand implements CommandExecutor {
 								}
 								if (Item.getEnchantments().size() > 0) {
 
-								    Victim.sendMessage(prefix + ChatColor.YELLOW + "This Item is enchanted!");
-								    player.sendMessage(Item.getEnchantments().toString());
+								    Victim.sendMessage(prefix + ChatColor.RED + "This Item is enchanted!");
 
 								}
-								if ( plugin.auto(Victim, "swap", "sgift.toggles.swap.accept")) {
+								if (ItemFromVictim.getDurability() < ItemFromVictim.getType().getMaxDurability()) {
+
+								    player.sendMessage(prefix + ChatColor.RED + "Warning! Item from other player has " + (ItemFromVictim.getType().getMaxDurability() - ItemFromVictim.getDurability()) + " uses left out of a maximum of " + ItemFromVictim.getType().getMaxDurability() + " uses.");
+
+								}
+								if (ItemFromVictim.getEnchantments().size() > 0) {
+
+								    player.sendMessage(prefix + ChatColor.RED + "The Item being requested is Enchanted!");
+
+								}
+								if (plugin.auto(Victim, "swap", "sgift.toggles.swap.accept")) {
 
 								    Swap swap = null;
 								    Sender Sender1 = null;
@@ -507,7 +668,7 @@ public class SwapCommand implements CommandExecutor {
 								}
 							    } else {
 
-								player.sendMessage(prefix + ChatColor.RED + "Other player doesn't have enough of that Item!");
+								player.sendMessage(prefix + ChatColor.RED + "Other player doesn't have enough of the Item you requested.");
 							    }
 							} else {
 
@@ -528,157 +689,8 @@ public class SwapCommand implements CommandExecutor {
 					    }
 					} else {
 
-					    player.sendMessage(prefix + ChatColor.RED + "You do not have enough of that Item in your hand!");
-					}
-				    } else {
-
-					player.sendMessage(prefix + ChatColor.RED + "Invalid amount!");
-				    }
-				} else {
-
-				    player.sendMessage(prefix + ChatColor.RED + "There's no Item in your Hand!");
-				}
-			    } else if (Items.itemByString(args[1]) != null) {
-
-				Item = new ItemStack(ii.getType(), amount, ii.getSubTypeId());
-
-				if (amount != 0) {
-				    if (new InventoryManager(player).contains(Item, true, true)) {
-
-					Victim = Bukkit.getServer().getPlayer(args[0]);
-
-					Location VictimLoc = Victim.getLocation();
-					Location playerLoc = player.getLocation();
-
-					if (plugin.rangeIsDisabled() || plugin.isWithinRange(VictimLoc, playerLoc)) {
-					    if (amountFromVictim != 0) {
-
-						ItemFromVictim = new ItemStack(ii2.getType(), amountFromVictim, ii2.getSubTypeId());
-
-						if (Items.itemByStack(Item).getName() != null && Items.itemByStack(ItemFromVictim) != null) {
-						    if (!plugin.auto(Victim, "swap", "sgift.toggles.swap.deny")) {
-							if (new InventoryManager(Victim).contains(ItemFromVictim, true, true)) {
-
-							    plugin.swaps.add(new Swap(Victim, player, Item, ItemFromVictim));
-							    plugin.senders.add(new Sender(player));
-
-							    new InventoryManager(player).remove(Item);
-							    new InventoryManager(Victim).remove(ItemFromVictim);
-
-							    player.sendMessage(prefix + ChatColor.WHITE + "Now Swapping " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName() + ChatColor.WHITE + " for " + ChatColor.YELLOW + ItemFromVictim.getAmount() + " " + Items.itemByStack(ItemFromVictim).getName() + " with " + ChatColor.YELLOW + Victim.getName() + "!");
-							    player.sendMessage(prefix + ChatColor.YELLOW + "Waiting for " + Victim.getName() + " to accept...");
-							    Victim.sendMessage(prefix + ChatColor.WHITE + "New Swap Request from " + ChatColor.YELLOW + player.getDisplayName() + ChatColor.WHITE + " of " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName() + " for " + ItemFromVictim.getAmount() + " " + Items.itemByStack(ItemFromVictim));
-							    Victim.sendMessage(prefix + ChatColor.WHITE + "Do " + ChatColor.YELLOW + "/swap accept" + ChatColor.WHITE + " to accept this Swap or " + ChatColor.YELLOW + "/swap deny" + ChatColor.WHITE + " to deny this Swap!");
-							    if (Item.getDurability() < Item.getType().getMaxDurability()) {
-
-								Victim.sendMessage(prefix + ChatColor.RED + "Warning! This item has " + (Item.getType().getMaxDurability() - Item.getDurability()) + " uses left out of a maximum of " + Item.getType().getMaxDurability() + " uses.");
-
-							    }
-							    if (Item.getEnchantments().size() > 0) {
-
-								Victim.sendMessage(prefix + ChatColor.RED + "This Item is enchanted!");
-
-							    }
-							    if (ItemFromVictim.getDurability() < ItemFromVictim.getType().getMaxDurability()) {
-
-								player.sendMessage(prefix + ChatColor.RED + "Warning! Item from other player has " + (ItemFromVictim.getType().getMaxDurability() - ItemFromVictim.getDurability()) + " uses left out of a maximum of " + ItemFromVictim.getType().getMaxDurability() + " uses.");
-
-							    }
-							    if (ItemFromVictim.getEnchantments().size() > 0) {
-
-								player.sendMessage(prefix + ChatColor.RED + "The Item being requested is Enchanted!");
-
-							    }
-							    if (plugin.auto(Victim, "swap", "sgift.toggles.swap.accept")) {
-
-								Swap swap = null;
-								Sender Sender1 = null;
-
-								for (Swap sw : plugin.swaps) {
-
-								    if (sw.Victim == Victim) {
-
-									swap = sw;
-
-									for (Sender s : plugin.senders) {
-
-									    if (s.Sender == sw.playerSender) {
-
-										Sender1 = s;
-									    }
-									}
-								    }
-								}
-
-								if (swap == null) {
-
-								    Victim.sendMessage(prefix + ChatColor.RED + "No Swaps to accept!");
-								} else {
-
-								    Player playerInitial = swap.playerSender;
-								    Victim = swap.Victim;
-								    ItemStack itemsFromSender = swap.itemSender;
-								    ItemStack itemsFromVictim = swap.itemVictim;
-
-								    player.sendMessage(prefix + ChatColor.YELLOW + "Other player Auto-Accepted!");
-								    Victim.sendMessage(prefix + ChatColor.YELLOW + "Auto-Accepted Swap request! use /swap auto to toggle this on or off.");
-
-								    if (Victim.getInventory().firstEmpty() == -1) {
-
-									Location playerloc = Victim.getLocation();
-									Victim.getWorld().dropItemNaturally(playerloc, itemsFromSender);
-
-									Victim.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
-									Victim.sendMessage(prefix + ChatColor.YELLOW + itemsFromSender.getAmount() + " " + Items.itemByStack(itemsFromSender).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerInitial.getName() + ChatColor.WHITE + " for " + ChatColor.YELLOW + itemsFromVictim.getAmount() + " " + Items.itemByStack(itemsFromVictim).getName() + ChatColor.WHITE + "!");
-
-
-
-								    } else {
-
-									Victim.getInventory().addItem(itemsFromSender);
-
-									Victim.sendMessage(prefix + ChatColor.YELLOW + itemsFromSender.getAmount() + " " + Items.itemByStack(itemsFromSender).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerInitial.getName() + ChatColor.WHITE + " for " + ChatColor.YELLOW + itemsFromVictim.getAmount() + " " + Items.itemByStack(itemsFromVictim).getName() + ChatColor.WHITE + "!");
-								    }
-								    if (playerInitial.getInventory().firstEmpty() == -1) {
-
-									Location playerloc = playerInitial.getLocation();
-									playerInitial.getWorld().dropItemNaturally(playerloc, itemsFromVictim);
-
-									player.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
-									player.sendMessage(prefix + ChatColor.YELLOW + itemsFromSender.getAmount() + " " + Items.itemByStack(itemsFromSender).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerInitial.getName() + ChatColor.WHITE + " for " + ChatColor.YELLOW + itemsFromVictim.getAmount() + " " + Items.itemByStack(itemsFromVictim).getName() + ChatColor.WHITE + "!");
-
-								    } else {
-
-									playerInitial.getInventory().addItem(itemsFromVictim);
-
-									playerInitial.sendMessage(prefix + ChatColor.YELLOW + itemsFromSender.getAmount() + " " + Items.itemByStack(itemsFromSender).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + " for " + ChatColor.YELLOW + itemsFromVictim.getAmount() + " " + Items.itemByStack(itemsFromVictim).getName() + ChatColor.WHITE + "!");
-								    }
-								    log.info(logpre + Victim.getDisplayName() + " recieved " + itemsFromSender.getAmount() + " " + Items.itemByStack(itemsFromSender).getName() + " from " + playerInitial.getName() + " for " + itemsFromVictim.getAmount() + " " + Items.itemByStack(itemsFromVictim).getName() + "!");
-
-								    plugin.swaps.remove(swap);
-								    plugin.senders.remove(Sender1);
-								}
-							    }
-							} else {
-
-							    player.sendMessage(prefix + ChatColor.RED + "Other player doesn't have enough of the Item you requested.");
-							}
-						    } else {
-
-							player.sendMessage(prefix + ChatColor.RED + "That player doesn't want to Swap with you!");
-						    }
-						} else {
-
-						    player.sendMessage(prefix + ChatColor.RED + "Items attempting to swap are not currently supported.");
-						}
-					    } else {
-
-						player.sendMessage(prefix + ChatColor.RED + "Amount expected from other player is Invalid!");
-					    }
-					} else {
-
-					    player.sendMessage(prefix + ChatColor.RED + "You are out of range with that player!");
-					    player.sendMessage(prefix + ChatColor.GRAY + "You must be within " + plugin.getConfig().getInt("Options.max-distance") + " blocks of each other.");
+					    player.sendMessage(prefix + ChatColor.RED + "You are not in the same world as that player!");
+					    player.sendMessage(prefix + ChatColor.GRAY + "You must be in '" + Victim.getWorld().getName() + "' to Swap with " + Victim.getName() + ".");
 					}
 				    } else {
 
