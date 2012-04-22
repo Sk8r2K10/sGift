@@ -424,8 +424,10 @@ public class TradeCommand implements CommandExecutor {
 							    
 									Trade ttrade = new Trade(Victim, player, Item, price, plugin.ID);
 									
+									long time = player.getWorld().getTime();
+									
 									plugin.trades.add(ttrade);
-									plugin.timeout.add(new Timeout(ttrade, player, plugin.ID));
+									plugin.timeout.add(new Timeout(ttrade, player, plugin.ID, time));
 									plugin.senders.add(new Sender(player));
 
 									new InventoryManager(player).remove(Item);
@@ -570,9 +572,11 @@ public class TradeCommand implements CommandExecutor {
 								    plugin.ID += 1; 
 							    
 								    Trade ttrade = new Trade(Victim, player, Item, price, plugin.ID);
+								    
+								    long time = player.getWorld().getTime();
 									
 								    plugin.trades.add(ttrade);
-								    plugin.timeout.add(new Timeout(ttrade, player, plugin.ID));
+								    plugin.timeout.add(new Timeout(ttrade, player, plugin.ID, time));
 								    plugin.senders.add(new Sender(player));
 
 								    new InventoryManager(player).remove(Item);

@@ -419,9 +419,11 @@ public class SwapCommand implements CommandExecutor {
 								    plugin.ID += 1; 
 							    
 								    Swap tswap = new Swap(Victim, player, Item, ItemFromVictim, ID);
+								    
+								    long time = player.getWorld().getTime();
 
 								    plugin.swaps.add(tswap);
-								    plugin.timeout.add(new Timeout(tswap, player, ID));
+								    plugin.timeout.add(new Timeout(tswap, player, ID, time));
 								    plugin.senders.add(new Sender(player));
 
 								    new InventoryManager(player).remove(Item);
@@ -575,9 +577,11 @@ public class SwapCommand implements CommandExecutor {
 								plugin.ID += 1; 
 							    
 								Swap tswap = new Swap(Victim, player, Item, ItemFromVictim, ID);
+								
+								long time = player.getWorld().getTime();
 
 								plugin.swaps.add(tswap);
-								plugin.timeout.add(new Timeout(tswap, player, ID));
+								plugin.timeout.add(new Timeout(tswap, player, ID, time));
 								plugin.senders.add(new Sender(player));
 
 								new InventoryManager(player).remove(Item);

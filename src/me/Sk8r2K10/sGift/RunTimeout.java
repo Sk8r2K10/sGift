@@ -2,8 +2,8 @@ package me.Sk8r2K10.sGift;
 
 import java.util.logging.Logger;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginDescriptionFile;
 
 public class RunTimeout implements Runnable {
 
@@ -18,34 +18,48 @@ public class RunTimeout implements Runnable {
     Gift gift = null;
     Trade trade = null;
     Swap swap = null;
+    
 
     @Override
     public void run() {
-		
+	long timeleft = plugin.getConfig().getLong("Options.request-timeout");
 	for (Gift g : plugin.gifts) {
 	    for (Timeout o : plugin.timeout) {
 
 		if (g.playerSender == o.player) {
 		    if (g.ID == o.ID) {
-
-			gift = g;
-			timeout = o;
+			if (g.playerSender.getWorld().getTime() == (o.time + (timeleft * 20))) {
+			    gift = g;
+			    timeout = o;
+			}
 		    }
 		}
 	    }
 	}
-	
+
 	if (gift != null) {
 	    Player player = gift.playerSender;
 	    Player victim = gift.Victim;
-	    
-	    new InventoryManager(player).addItem(gift.itemStack);
-	    
-	    player.sendMessage(errpre + "Gift timed out! Item's returned.");
-	    victim.sendMessage(errpre + "Gift timed out!");
-	    
-	    plugin.timeout.remove(timeout);
-	    plugin.gifts.remove(gift);
+
+	    if (player.getInventory().firstEmpty() == -1) {
+
+		Location playerloc = player.getLocation();
+		player.getWorld().dropItemNaturally(playerloc, gift.itemStack);
+
+		player.sendMessage(errpre + "Gift timed out! Item's returned.");
+		victim.sendMessage(errpre + "Gift timed out!");
+
+		plugin.timeout.remove(timeout);
+		plugin.gifts.remove(gift);
+	    } else {
+		
+		player.getInventory().addItem(gift.itemStack);
+		player.sendMessage(errpre + "Gift timed out! Item's returned.");
+		victim.sendMessage(errpre + "Gift timed out!");
+
+		plugin.timeout.remove(timeout);
+		plugin.gifts.remove(gift);
+	    }
 
 	} else {
 
@@ -61,12 +75,12 @@ public class RunTimeout implements Runnable {
 		    }
 		}
 	    }
-	    
+
 	    if (trade != null) {
-		Player player = trade.playerSender;			
-		
+		Player player = trade.playerSender;
+
 	    } else {
-		
+
 		for (Swap s : plugin.swaps) {
 		    for (Timeout o : plugin.timeout) {
 
@@ -80,14 +94,12 @@ public class RunTimeout implements Runnable {
 			}
 		    }
 		}
-		
+
 		if (swap != null) {
 		    Player player = swap.playerSender;
-		    
+
 		}
 	    }
 	}
     }
-
-    
 }

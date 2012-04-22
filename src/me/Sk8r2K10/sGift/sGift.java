@@ -309,4 +309,49 @@ public class sGift extends JavaPlugin {
 	getServer().getScheduler().cancelTask(task);
 	log.info(logpre + player.getName() + "'s " + type + " request to " + victim.getName() + " timed out.");
     }
+    
+    public boolean alreadyRequested(Player player, Player Victim, String type) {
+	if (type.equalsIgnoreCase("gift")) {
+
+	    for (Gift g : gifts) {
+
+		if (g.playerSender == player || g.playerSender == Victim) {
+
+		    return true;
+		}
+		if (g.Victim == Victim || g.Victim == player) {
+		    
+		    return true;
+
+		}
+	    }   
+	} else if (type.equalsIgnoreCase("trade")) {
+	    
+	    for (Trade t : trades) {
+		
+		if (t.playerSender == player || t.playerSender == Victim) {
+		    
+		    return true;
+		}
+		if (t.Victim == Victim || t.Victim == player) {
+		    
+		    return true;
+		}
+	    }
+	} else {
+	    
+	    for (Swap s : swaps) {
+		
+		if (s.playerSender == player || s.playerSender == Victim) {
+		    
+		    return true;
+		}
+		if (s.Victim == Victim || s.Victim == player) {
+		    
+		    return true;
+		}
+	    }
+	}
+	return false;
+    }
 }
