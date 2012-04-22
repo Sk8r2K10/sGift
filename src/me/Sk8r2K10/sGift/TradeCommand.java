@@ -420,7 +420,12 @@ public class TradeCommand implements CommandExecutor {
 								    if (plugin.getEcon().getBalance(Victim.getName()) >= price) {
 									Item.setAmount(amount);
 
-									plugin.trades.add(new Trade(Victim, player, Item, price));
+									plugin.ID += 1; 
+							    
+									Trade ttrade = new Trade(Victim, player, Item, price, plugin.ID);
+									
+									plugin.trades.add(ttrade);
+									plugin.timeout.add(new Timeout(ttrade, player, plugin.ID));
 									plugin.senders.add(new Sender(player));
 
 									new InventoryManager(player).remove(Item);
@@ -562,7 +567,12 @@ public class TradeCommand implements CommandExecutor {
 							    if (!plugin.auto(Victim, "trade", "sgift.toggles.trade.deny")) {
 								if (plugin.getEcon().getBalance(Victim.getName()) >= price) {
 
-								    plugin.trades.add(new Trade(Victim, player, Item, price));
+								    plugin.ID += 1; 
+							    
+								    Trade ttrade = new Trade(Victim, player, Item, price, plugin.ID);
+									
+								    plugin.trades.add(ttrade);
+								    plugin.timeout.add(new Timeout(ttrade, player, plugin.ID));
 								    plugin.senders.add(new Sender(player));
 
 								    new InventoryManager(player).remove(Item);

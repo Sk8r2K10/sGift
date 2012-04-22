@@ -19,14 +19,21 @@ public class sGift extends JavaPlugin {
     private final GiftCommand gift = new GiftCommand(this);
     private final sGiftCommand admin = new sGiftCommand(this);
     private final SwapCommand swap = new SwapCommand(this);
+    private final RunTimeout timer = new RunTimeout(this);
+    
     public static Economy econ = null;
     public static Permission perms = null;
     private static final Logger log = Logger.getLogger("Minecraft");
+    
     public ArrayList<Trade> trades = new ArrayList<Trade>();
     public ArrayList<Sender> senders = new ArrayList<Sender>();
     public ArrayList<Gift> gifts = new ArrayList<Gift>();
     public ArrayList<Swap> swaps = new ArrayList<Swap>();
-
+    public ArrayList<Timeout> timeout = new ArrayList<Timeout>();
+    
+    public int ID;
+    public int task = -1;
+    
     @Override
     public void onDisable() {
     }
@@ -285,5 +292,21 @@ public class sGift extends JavaPlugin {
 	} else {
 	  return false;  
 	}
+    }
+    
+    public void newTimeout() {
+	
+	long outtatime = this.getConfig().getInt("Options.request-timeout") * 20;
+	
+	task = this.getServer().getScheduler().scheduleSyncDelayedTask(this, timer, outtatime); 
+    }
+    
+    public void stop(Player player, Player victim, String type) {
+	
+	PluginDescriptionFile pdf = getDescription();
+	String logpre = "[" + pdf.getName() + " " + pdf.getVersion() + "] ";
+	
+	getServer().getScheduler().cancelTask(task);
+	log.info(logpre + player.getName() + "'s " + type + " request to " + victim.getName() + " timed out.");
     }
 }

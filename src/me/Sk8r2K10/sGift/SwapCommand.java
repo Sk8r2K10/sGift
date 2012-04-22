@@ -17,6 +17,7 @@ public class SwapCommand implements CommandExecutor {
     // Command: /swap <player> <item> <amount> <item2> <amount2>
 
     private sGift plugin;
+    private int ID;
     Player player = null;
     String prefix = ChatColor.WHITE + "[" + ChatColor.BLUE + "sGift" + ChatColor.WHITE + "] ";
     Logger log = Logger.getLogger("Minecraft");
@@ -414,8 +415,13 @@ public class SwapCommand implements CommandExecutor {
 							if (!plugin.itemsAreNull(Item, ItemFromVictim)) {
 							    if (!plugin.auto(Victim, "swap", "sgift.toggles.swap.deny")) {
 								if (new InventoryManager(Victim).contains(ItemFromVictim, true, true)) {
+								    
+								    plugin.ID += 1; 
+							    
+								    Swap tswap = new Swap(Victim, player, Item, ItemFromVictim, ID);
 
-								    plugin.swaps.add(new Swap(Victim, player, Item, ItemFromVictim));
+								    plugin.swaps.add(tswap);
+								    plugin.timeout.add(new Timeout(tswap, player, ID));
 								    plugin.senders.add(new Sender(player));
 
 								    new InventoryManager(player).remove(Item);
@@ -566,7 +572,12 @@ public class SwapCommand implements CommandExecutor {
 							if (!plugin.auto(Victim, "swap", "sgift.toggles.swap.deny")) {
 							    if (new InventoryManager(Victim).contains(ItemFromVictim, true, true)) {
 
-								plugin.swaps.add(new Swap(Victim, player, Item, ItemFromVictim));
+								plugin.ID += 1; 
+							    
+								Swap tswap = new Swap(Victim, player, Item, ItemFromVictim, ID);
+
+								plugin.swaps.add(tswap);
+								plugin.timeout.add(new Timeout(tswap, player, ID));
 								plugin.senders.add(new Sender(player));
 
 								new InventoryManager(player).remove(Item);

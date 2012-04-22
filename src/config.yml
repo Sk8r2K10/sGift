@@ -24,7 +24,7 @@ Features:
     swap: false
   
 Options:
-  request-timeout: 0
+  request-timeout: 60
   max-distance: 0
   allow-between-worlds: true
   
