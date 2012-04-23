@@ -660,10 +660,10 @@ public class GiftCommand implements CommandExecutor {
 		}
 	    } else {
 		if (player != null) {
-
+                      
 		    player.sendMessage(prefix + "Gifting is currently disabled!");
 		} else {
-
+                    
 		    log.warning(logpre + "Don't send sGift commands through console!");
 		}
 	    }

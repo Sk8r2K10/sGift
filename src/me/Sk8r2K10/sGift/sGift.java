@@ -229,7 +229,8 @@ public class sGift extends JavaPlugin {
 
 	} catch (NullPointerException e) {
 	    log.warning(logpre + "Vault is either out of date, Or not up to speed!");
-	    return true;
+	    log.severe(e.toString());
+            return true;
 	}
 
 	return false;
@@ -282,15 +283,10 @@ public class sGift extends JavaPlugin {
 	    if (!player.getWorld().getName().equalsIgnoreCase(Victim.getWorld().getName())) {
 		if (!player.hasPermission("sgift.override.world")) {
 		    return true;
-		} else {
-		    return false;
 		}
-	    } else {
-		return false;
 	    }
-	} else {
-	  return false;  
 	}
+        return false;
     }
     
     public void newTimeout(Player player, Player Victim, ItemStack Item) {
