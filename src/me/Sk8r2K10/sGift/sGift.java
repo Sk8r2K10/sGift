@@ -297,21 +297,21 @@ public class sGift extends JavaPlugin {
 	
 	long outtatime = this.getConfig().getInt("Options.request-timeout") * 20;
 	
-	this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(this, player, Victim, Item), outtatime); 
+	task = this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(this, player, Victim, Item), outtatime); 
     }
     
     public void newTimeout(Player player, Player Victim, ItemStack Item, int price) {
 	
 	long outtatime = this.getConfig().getInt("Options.request-timeout") * 20;
 	
-	this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(this, player, Victim, Item, price), outtatime); 
+	 task = this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(this, player, Victim, Item, price), outtatime); 
     }
     
     public void newTimeout(Player player, Player Victim, ItemStack Item, ItemStack ItemFromVictim) {
 	
 	long outtatime = this.getConfig().getInt("Options.request-timeout") * 20;
 	
-	this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(this, player, Victim, Item, ItemFromVictim), outtatime); 
+	task = this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(this, player, Victim, Item, ItemFromVictim), outtatime); 
     }
     
     public void stop(Player player, Player victim, String type) {
