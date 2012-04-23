@@ -29,8 +29,8 @@ public class RunTimeout implements Runnable {
 		if (g.playerSender == o.player) {
 		    if (g.ID == o.ID) {
 			if (g.playerSender.getWorld().getTime() == (o.time + (timeleft * 20))) {
-			    gift = g;
-			    timeout = o;
+		    gift = g;
+			 timeout = o;
 			}
 		    }
 		}
@@ -48,7 +48,7 @@ public class RunTimeout implements Runnable {
 
 		player.sendMessage(errpre + "Gift timed out! Item's returned.");
 		victim.sendMessage(errpre + "Gift timed out!");
-
+		
 		plugin.timeout.remove(timeout);
 		plugin.gifts.remove(gift);
 	    } else {
@@ -56,7 +56,7 @@ public class RunTimeout implements Runnable {
 		player.getInventory().addItem(gift.itemStack);
 		player.sendMessage(errpre + "Gift timed out! Item's returned.");
 		victim.sendMessage(errpre + "Gift timed out!");
-
+		
 		plugin.timeout.remove(timeout);
 		plugin.gifts.remove(gift);
 	    }

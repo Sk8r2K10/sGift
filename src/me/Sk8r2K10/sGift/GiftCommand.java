@@ -100,6 +100,7 @@ public class GiftCommand implements CommandExecutor {
 		    } else if (args[0].equalsIgnoreCase("accept") && plugin.getPerms(player, "sgift.gift.accept")) {
 
 			Gift gift = null;
+			Timeout time = null;
 			Sender Sender1 = null;
 
 			for (Gift g : plugin.gifts) {
@@ -110,9 +111,16 @@ public class GiftCommand implements CommandExecutor {
 
 				for (Sender s : plugin.senders) {
 
-				    if (s.Sender == g.playerSender) {
+				    if (s.Sender == gift.playerSender) {
 
 					Sender1 = s;
+				    }
+				}
+				for (Timeout o : plugin.timeout) {
+				    
+				    if (o.ID == gift.ID) {
+					
+					time = o;
 				    }
 				}
 			    }
@@ -137,7 +145,8 @@ public class GiftCommand implements CommandExecutor {
 				Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + "!");
 
 				log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName());
-
+				
+				plugin.timeout.remove(time);
 				plugin.gifts.remove(gift);
 				plugin.senders.remove(Sender1);
 
@@ -148,14 +157,16 @@ public class GiftCommand implements CommandExecutor {
 				Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + "!");
 
 				log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName());
+				
+				plugin.timeout.remove(time);
 				plugin.gifts.remove(gift);
 				plugin.senders.remove(Sender1);
 			    }
-			    plugin.stop(player, Victim, "Gift");
 			}
 		    } else if (args[0].equalsIgnoreCase("deny") && plugin.getPerms(player, "sgift.gift.deny")) {
 
 			Gift gift = null;
+			Timeout time = null;
 			Sender Sender1 = null;
 
 			for (Gift g : plugin.gifts) {
@@ -169,6 +180,13 @@ public class GiftCommand implements CommandExecutor {
 				    if (s.Sender == g.playerSender) {
 
 					Sender1 = s;
+				    }
+				}
+				for (Timeout o : plugin.timeout) {
+				    
+				    if (o.ID == gift.ID) {
+					
+					time = o;
 				    }
 				}
 			    }
@@ -195,7 +213,8 @@ public class GiftCommand implements CommandExecutor {
 				Victim.sendMessage(prefix + ChatColor.RED + "You denied " + playerSendingItems.getName() + "'s Gift!");
 
 				log.info(logpre + Victim.getDisplayName() + " denied " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName());
-
+				
+				plugin.timeout.remove(time);
 				plugin.gifts.remove(gift);
 				plugin.senders.remove(Sender1);
 
@@ -211,17 +230,19 @@ public class GiftCommand implements CommandExecutor {
 				Victim.sendMessage(prefix + ChatColor.RED + "You denied " + playerSendingItems.getName() + "'s Gift!");
 
 				log.info(logpre + Victim.getDisplayName() + " denied " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName());
-
+				
+				plugin.timeout.remove(time);
 				plugin.gifts.remove(gift);
 				plugin.senders.remove(Sender1);
 			    }
-			    plugin.stop(player, Victim, "Gift");
+			    
 			}
 
 		    } else if (args[0].equalsIgnoreCase("stop") && plugin.getPerms(player, "sgift.sgift")) {
 			while (plugin.gifts.size() > 0) {
 
 			    Gift gift = null;
+			    Timeout time = null;
 			    Sender Sender1 = null;
 
 			    for (Gift g : plugin.gifts) {
@@ -236,6 +257,13 @@ public class GiftCommand implements CommandExecutor {
 					    Sender1 = s;
 					}
 				    }
+				    for (Timeout o : plugin.timeout) {
+				    
+				    if (o.ID == gift.ID) {
+					
+					time = o;
+				    }
+				}
 				}
 			    }
 
@@ -258,7 +286,8 @@ public class GiftCommand implements CommandExecutor {
 				    playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.RED + " has been returned to you.");
 				    Victim.sendMessage(prefix + ChatColor.RED + "Admin cancelled your Gift.");
 				    log.info(logpre + "stopped a gift of " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName());
-
+				    
+				    plugin.timeout.remove(time);
 				    plugin.gifts.remove(gift);
 				    plugin.senders.remove(Sender1);
 
@@ -271,11 +300,12 @@ public class GiftCommand implements CommandExecutor {
 				    Victim.sendMessage(prefix + ChatColor.RED + "Admin cancelled your Gift.");
 
 				    log.info(logpre + "stopped a gift of " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName());
-
+				    
+				    plugin.timeout.remove(time);
 				    plugin.gifts.remove(gift);
 				    plugin.senders.remove(Sender1);
 				}
-				plugin.stop(player, Victim, "Gift");
+				
 			    }
 			}
 			player.sendMessage(prefix + ChatColor.GREEN + "Cancelled all Gifts safely.");
@@ -283,6 +313,7 @@ public class GiftCommand implements CommandExecutor {
 		    } else if (args[0].equalsIgnoreCase("cancel") && plugin.getPerms(player, "sgift.gift.cancel")) {
 
 			Gift gift = null;
+			Timeout time = null;
 			Sender Sender1 = null;
 
 			for (Gift g : plugin.gifts) {
@@ -301,6 +332,14 @@ public class GiftCommand implements CommandExecutor {
 			    }
 
 			}
+			
+			for (Timeout o : plugin.timeout) {
+				    
+				    if (o.ID == gift.ID) {
+					
+					time = o;
+				    }
+				}
 
 			if (gift == null) {
 
@@ -321,7 +360,8 @@ public class GiftCommand implements CommandExecutor {
 				playerSendingItems.sendMessage(prefix + ChatColor.RED + "Cancelled gift!");
 				playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.RED + " Has been returned to you.");
 				Victim.sendMessage(prefix + ChatColor.YELLOW + playerSendingItems.getName() + ChatColor.RED + " Cancelled the Gift!");
-
+				
+				plugin.timeout.remove(time);
 				plugin.senders.remove(Sender1);
 				plugin.gifts.remove(gift);
 
@@ -332,11 +372,12 @@ public class GiftCommand implements CommandExecutor {
 				playerSendingItems.sendMessage(prefix + ChatColor.RED + "Cancelled gift!");
 				playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.RED + " Has been returned to you.");
 				Victim.sendMessage(prefix + ChatColor.YELLOW + playerSendingItems.getName() + ChatColor.RED + " Cancelled the Gift!");
-
+				
+				plugin.timeout.remove(time);
 				plugin.senders.remove(Sender1);
 				plugin.gifts.remove(gift);
 			    }
-			    plugin.stop(player, Victim, "Gift");
+			    
 			}
 		    } else if (Bukkit.getServer().getPlayer(args[0]) == null) {
 
@@ -417,7 +458,8 @@ public class GiftCommand implements CommandExecutor {
 
 								}
 								if (plugin.auto(Victim, "gift", "sgift.toggles.gift.accept")) {
-
+								    
+								    Timeout out = null;
 								    Gift gift = null;
 								    Sender Sender1 = null;
 
@@ -432,6 +474,13 @@ public class GiftCommand implements CommandExecutor {
 										if (s.Sender == g.playerSender) {
 
 										    Sender1 = s;
+										}
+									    }
+									    for (Timeout o : plugin.timeout) {
+				    
+										if (o.ID == gift.ID) {
+					
+										    out = o;
 										}
 									    }
 									}
@@ -457,7 +506,8 @@ public class GiftCommand implements CommandExecutor {
 									    Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + "!");
 
 									    log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName());
-
+									    
+									    plugin.timeout.remove(out);
 									    plugin.gifts.remove(gift);
 									    plugin.senders.remove(Sender1);
 
@@ -470,12 +520,12 @@ public class GiftCommand implements CommandExecutor {
 									    Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + "!");
 
 									    log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName());
-
+									    
+									    plugin.timeout.remove(out);
 									    plugin.gifts.remove(gift);
 									    plugin.senders.remove(Sender1);
 									}
 								    }
-								    plugin.stop(player, Victim, "Gift");
 								}
 							    } else {
 
@@ -551,6 +601,7 @@ public class GiftCommand implements CommandExecutor {
 							    if (plugin.auto(Victim, "gift", "sgift.toggles.gift.accept")) {
 
 								Gift gift = null;
+								Timeout out = null;
 								Sender Sender1 = null;
 
 								for (Gift g : plugin.gifts) {
@@ -564,6 +615,13 @@ public class GiftCommand implements CommandExecutor {
 									    if (s.Sender == g.playerSender) {
 
 										Sender1 = s;
+									    }
+									}
+									for (Timeout o : plugin.timeout) {
+				    
+									    if (o.ID == gift.ID) {
+					
+										out = o;
 									    }
 									}
 								    }
@@ -587,7 +645,8 @@ public class GiftCommand implements CommandExecutor {
 									playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + "!");
 									Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + "!");
 									log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName());
-
+									
+									plugin.timeout.remove(out);
 									plugin.gifts.remove(gift);
 									plugin.senders.remove(Sender1);
 
@@ -598,12 +657,12 @@ public class GiftCommand implements CommandExecutor {
 									playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + "!");
 									Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + "!");
 									log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName());
-
+									
+									plugin.timeout.remove(out);
 									plugin.gifts.remove(gift);
 									plugin.senders.remove(Sender1);
 								    }
 								}
-								plugin.stop(player, Victim, "Gift");
 							    }
 							} else {
 							    player.sendMessage(prefix + ChatColor.RED + "You don't have enough " + Items.itemByStack(Item).getName() + ", or Item is partially Used/Enchanted!");
