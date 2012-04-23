@@ -19,20 +19,17 @@ public class sGift extends JavaPlugin {
     private final GiftCommand gift = new GiftCommand(this);
     private final sGiftCommand admin = new sGiftCommand(this);
     private final SwapCommand swap = new SwapCommand(this);
-    
     public static Economy econ = null;
     public static Permission perms = null;
     private static final Logger log = Logger.getLogger("Minecraft");
-    
     public ArrayList<Trade> trades = new ArrayList<Trade>();
     public ArrayList<Sender> senders = new ArrayList<Sender>();
     public ArrayList<Gift> gifts = new ArrayList<Gift>();
     public ArrayList<Swap> swaps = new ArrayList<Swap>();
     public ArrayList<Timeout> timeout = new ArrayList<Timeout>();
-    
     public int ID;
     public int task = -1;
-    
+
     @Override
     public void onDisable() {
     }
@@ -230,17 +227,17 @@ public class sGift extends JavaPlugin {
 	} catch (NullPointerException e) {
 	    log.warning(logpre + "Vault is either out of date, Or not up to speed!");
 	    log.severe(e.toString());
-            return true;
+	    return true;
 	}
 
 	return false;
     }
-    
+
     public boolean auto(Player Victim, String cmd, String perm) {
 	boolean autogift = this.getConfig().getBoolean("Features.allow-auto.gift");
 	boolean autotrade = this.getConfig().getBoolean("Features.allow-auto.trade");
 	boolean autoswap = this.getConfig().getBoolean("Features.allow-auto.swap");
-	
+
 	if (cmd.equalsIgnoreCase("gift")) {
 	    if (autogift) {
 		if (Victim.hasPermission(perm)) {
@@ -249,35 +246,35 @@ public class sGift extends JavaPlugin {
 		    return false;
 		}
 	    } else {
-		
+
 		return false;
 	    }
 	} else if (cmd.equalsIgnoreCase("trade")) {
 	    if (autotrade) {
 		if (Victim.hasPermission(perm)) {
-		   return true; 
+		    return true;
 		} else {
 		    return false;
 		}
 	    } else {
-		
+
 		return false;
 	    }
 	} else if (cmd.equalsIgnoreCase("swap")) {
 	    if (autoswap) {
 		if (Victim.hasPermission(perm)) {
-		   return true; 
+		    return true;
 		} else {
 		    return false;
 		}
 	    } else {
-		
+
 		return false;
-	    }	    
+	    }
 	}
 	return false;
     }
-    
+
     public boolean differentWorlds(Player player, Player Victim) {
 	if (!this.getConfig().getBoolean("Options.allow-between-worlds")) {
 	    if (!player.getWorld().getName().equalsIgnoreCase(Victim.getWorld().getName())) {
@@ -286,79 +283,83 @@ public class sGift extends JavaPlugin {
 		}
 	    }
 	}
-        return false;
+	return false;
     }
-    
+
     public void newTimeout(Player player, Player Victim, ItemStack Item) {
-	
+
 	long outtatime = this.getConfig().getInt("Options.request-timeout") * 20;
-	
-	task = this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(this, player, Victim, Item), outtatime); 
+
+	task = this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(this, player, Victim, Item), outtatime);
     }
-    
+
     public void newTimeout(Player player, Player Victim, ItemStack Item, int price) {
-	
+
 	long outtatime = this.getConfig().getInt("Options.request-timeout") * 20;
-	
-	 task = this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(this, player, Victim, Item, price), outtatime); 
+
+	task = this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(this, player, Victim, Item, price), outtatime);
     }
-    
+
     public void newTimeout(Player player, Player Victim, ItemStack Item, ItemStack ItemFromVictim) {
-	
+
 	long outtatime = this.getConfig().getInt("Options.request-timeout") * 20;
-	
-	task = this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(this, player, Victim, Item, ItemFromVictim), outtatime); 
+
+	task = this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(this, player, Victim, Item, ItemFromVictim), outtatime);
     }
-    
+
     public void stop(Player player, Player victim, String type) {
-	
+
 	PluginDescriptionFile pdf = getDescription();
 	String logpre = "[" + pdf.getName() + " " + pdf.getVersion() + "] ";
-	
+
 	getServer().getScheduler().cancelTask(task);
 	log.info(logpre + player.getName() + "'s " + type + " request to " + victim.getName() + " timed out.");
     }
-    
-    public boolean alreadyRequested(Player player, Player Victim, String type) {
-	if (type.equalsIgnoreCase("gift")) {
 
-	    for (Gift g : gifts) {
+    public boolean alreadyRequested(Player player, Player Victim) {
+	
+	String errpre = "[" + ChatColor.RED + "sGift" + ChatColor.WHITE + "] " + ChatColor.RED;
+	
+	for (Gift g : gifts) {
 
-		if (g.playerSender == player || g.playerSender == Victim) {
-
-		    return true;
-		}
-		if (g.Victim == Victim || g.Victim == player) {
-		    
-		    return true;
-
-		}
-	    }   
-	} else if (type.equalsIgnoreCase("trade")) {
-	    
-	    for (Trade t : trades) {
+	    if (g.playerSender == player || g.Victim == player) {
+		player.sendMessage(errpre + "You are already Involved in a Gift!");
 		
-		if (t.playerSender == player || t.playerSender == Victim) {
-		    
-		    return true;
-		}
-		if (t.Victim == Victim || t.Victim == player) {
-		    
-		    return true;
-		}
+		return true;
 	    }
-	} else {
-	    
-	    for (Swap s : swaps) {
+	    if (g.Victim == Victim || g.playerSender == Victim) {
+		player.sendMessage(errpre + "Player is already Involved in a Gift!");
 		
-		if (s.playerSender == player || s.playerSender == Victim) {
-		    
-		    return true;
-		}
-		if (s.Victim == Victim || s.Victim == player) {
-		    
-		    return true;
-		}
+		return true;
+
+	    }
+	}
+
+	for (Trade t : trades) {
+
+	    if (t.playerSender == player || t.Victim == player) {
+		player.sendMessage(errpre + "You are already Involved in a Trade!");
+				
+		return true;
+	    }
+	    if (t.Victim == Victim || t.playerSender == Victim) {
+		player.sendMessage(errpre + "Player is already Involved in a Trade!");
+		
+		return true;
+	    }
+	}
+
+	for (Swap s : swaps) {
+
+	    if (s.playerSender == player || s.Victim == player) {
+		player.sendMessage(errpre + "You are already Involved in a Swap!");
+		
+		return true;
+	    }
+	    if (s.Victim == Victim || s.playerSender == Victim) {
+		player.sendMessage(errpre + "Player is already Involved in a Swap!");
+		
+		return true;
 	    }
 	}
 	return false;

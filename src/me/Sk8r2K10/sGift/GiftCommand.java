@@ -416,7 +416,7 @@ public class GiftCommand implements CommandExecutor {
 
 				    Location VictimLoc = Victim.getLocation();
 				    Location playerLoc = player.getLocation();
-				    if (!plugin.alreadyRequested(player, Victim, "gift")) {
+				    if (!plugin.alreadyRequested(player, Victim)) {
 					if (!plugin.differentWorlds(player, Victim)) {
 					    if (plugin.rangeIsDisabled() || plugin.isWithinRange(VictimLoc, playerLoc)) {
 						if (amount != 0) {
@@ -431,8 +431,6 @@ public class GiftCommand implements CommandExecutor {
 								Gift tgift = new Gift(Victim, player, Item, plugin.ID);
 
 								long time = player.getWorld().getTime();
-
-								player.sendMessage("" + time);
 
 								plugin.gifts.add(tgift);
 								plugin.timeout.add(new Timeout(tgift, player, plugin.ID, time));
@@ -553,9 +551,6 @@ public class GiftCommand implements CommandExecutor {
 					    player.sendMessage(prefix + ChatColor.RED + "You are not in the same world as that player!");
 					    player.sendMessage(prefix + ChatColor.GRAY + "You must be in '" + Victim.getWorld().getName() + "' to Gift " + Victim.getName() + ".");
 					}
-				    } else {
-					
-					player.sendMessage(prefix + ChatColor.RED + "You, or the target player, is already Giftng/Being Gifted.");
 				    }
 				} else {
 
@@ -570,7 +565,7 @@ public class GiftCommand implements CommandExecutor {
 				Location VictimLoc = Victim.getLocation();
 				Location playerLoc = player.getLocation();
 
-				if (!plugin.alreadyRequested(player, Victim, "gift")) {
+				if (!plugin.alreadyRequested(player, Victim)) {
 				    if (!plugin.differentWorlds(player, Victim)) {
 					if (plugin.rangeIsDisabled() || plugin.isWithinRange(VictimLoc, playerLoc)) {
 					    if (amount != 0) {
@@ -583,7 +578,6 @@ public class GiftCommand implements CommandExecutor {
 							    Gift tgift = new Gift(Victim, player, Item, plugin.ID);
 
 							    long time = player.getWorld().getTime();
-							    player.sendMessage("" + time);
 
 							    plugin.gifts.add(tgift);
 							    plugin.timeout.add(new Timeout(tgift, player, plugin.ID, time));
@@ -690,9 +684,6 @@ public class GiftCommand implements CommandExecutor {
 					player.sendMessage(prefix + ChatColor.RED + "You are not in the same world as that player!");
 					player.sendMessage(prefix + ChatColor.GRAY + "You must be in '" + Victim.getWorld().getName() + "' to Gift " + Victim.getName() + ".");
 				    }
-				} else {
-				    
-				    player.sendMessage(prefix + ChatColor.RED + "You, or the target player, is already Giftng/Being Gifted.");
 				}
 			    } else {
 

@@ -18,26 +18,26 @@ public class RunTimeout implements Runnable {
     String errpre = "[" + ChatColor.RED + "sGift" + ChatColor.WHITE + "] " + ChatColor.RED;
 
     public RunTimeout(sGift instance, Player player, Player Victim, ItemStack Item) {
-        plugin = instance;
-        item = Item;
-        victim = Victim;
-        Player = player;
+	plugin = instance;
+	item = Item;
+	victim = Victim;
+	Player = player;
     }
 
     public RunTimeout(sGift instance, Player player, Player Victim, ItemStack Item, int price) {
-        plugin = instance;
-        item = Item;
-        victim = Victim;
-        Player = player;
-        Price = price;
+	plugin = instance;
+	item = Item;
+	victim = Victim;
+	Player = player;
+	Price = price;
     }
 
     public RunTimeout(sGift instance, Player player, Player Victim, ItemStack Item, ItemStack ItemFromVictim) {
-        plugin = instance;
-        item = Item;
-        victim = Victim;
-        Player = player;
-        vItem = ItemFromVictim;
+	plugin = instance;
+	item = Item;
+	victim = Victim;
+	Player = player;
+	vItem = ItemFromVictim;
     }
     Timeout timeout = null;
     Gift gift = null;
@@ -46,91 +46,152 @@ public class RunTimeout implements Runnable {
 
     @Override
     public void run() {
-        long timeleft = plugin.getConfig().getLong("Options.request-timeout");
+	long timeleft = plugin.getConfig().getLong("Options.request-timeout");
 
-        if (timeleft != 0) {
-            for (Gift g : plugin.gifts) {
-                for (Timeout o : plugin.timeout) {
+	if (timeleft != 0) {
+	    for (Gift g : plugin.gifts) {
+		for (Timeout o : plugin.timeout) {
 
-                    if (g.playerSender == Player) {
-                        if (g.Victim == victim) {
-                            if (g.playerSender.getWorld().getTime() >= (o.time + (timeleft * 20))) {
-                                if (g.itemStack == item) {
-                                    gift = g;
-                                    timeout = o;
-                                }
+		    if (g.playerSender == Player) {
+			if (g.Victim == victim) {
+			    if (g.playerSender.getWorld().getTime() >= (o.time + (timeleft * 20))) {
+				if (g.itemStack == item) {
+				    gift = g;
+				    timeout = o;
+				}
 
-                            }
-                        }
-                    }
-                }
-            }
+			    }
+			}
+		    }
+		}
+	    }
 
-            if (gift != null) {
-                Player player = gift.playerSender;
-                Player Victim = gift.Victim;
+	    if (gift != null) {
+		Player player = gift.playerSender;
+		Player Victim = gift.Victim;
 
-                if (player.getInventory().firstEmpty() == -1) {
+		if (player.getInventory().firstEmpty() == -1) {
 
-                    Location playerloc = player.getLocation();
-                    player.getWorld().dropItemNaturally(playerloc, gift.itemStack);
+		    Location playerloc = player.getLocation();
+		    player.getWorld().dropItemNaturally(playerloc, gift.itemStack);
 
-                    player.sendMessage(errpre + "Gift timed out! Item's returned.");
-                    Victim.sendMessage(errpre + "Gift timed out!");
+		    player.sendMessage(errpre + "Gift timed out! Items returned.");
+		    Victim.sendMessage(errpre + "Gift timed out!");
 
-                    plugin.timeout.remove(timeout);
-                    plugin.gifts.remove(gift);
-                } else {
+		    plugin.timeout.remove(timeout);
+		    plugin.gifts.remove(gift);
+		} else {
 
-                    player.getInventory().addItem(gift.itemStack);
-                    player.sendMessage(errpre + "Gift timed out! Item's returned.");
-                    victim.sendMessage(errpre + "Gift timed out!");
+		    player.getInventory().addItem(gift.itemStack);
+		    player.sendMessage(errpre + "Gift timed out! Items returned.");
+		    victim.sendMessage(errpre + "Gift timed out!");
 
-                    plugin.timeout.remove(timeout);
-                    plugin.gifts.remove(gift);
-                }
+		    plugin.timeout.remove(timeout);
+		    plugin.gifts.remove(gift);
+		}
 
-            } else {
+	    } else {
 
-                for (Trade t : plugin.trades) {
-                    for (Timeout o : plugin.timeout) {
+		for (Trade t : plugin.trades) {
+		    for (Timeout o : plugin.timeout) {
 
-                        if (t.playerSender == o.player) {
-                            if (t.ID == o.ID) {
+			if (t.playerSender == Player) {
+			    if (t.Victim == victim) {
+				if (t.playerSender.getWorld().getTime() >= (o.time + (timeleft * 20))) {
+				    if (t.itemStack == item) {
+					if (t.price == Price) {
 
-                                trade = t;
-                                timeout = o;
-                            }
-                        }
-                    }
-                }
+					    trade = t;
+					    timeout = o;
+					}
+				    }
 
-                if (trade != null) {
-                    Player player = trade.playerSender;
+				}
+			    }
+			}
+		    }
+		}
 
-                } else {
+		if (trade != null) {
+		    Player player = trade.playerSender;
+		    Player Victim = trade.Victim;
 
-                    for (Swap s : plugin.swaps) {
-                        for (Timeout o : plugin.timeout) {
+		    if (player.getInventory().firstEmpty() == -1) {
 
-                            if (s.playerSender == o.player) {
-                                if (s.ID == o.ID) {
+			Location playerloc = player.getLocation();
+			player.getWorld().dropItemNaturally(playerloc, trade.itemStack);
 
-                                    swap = s;
-                                    timeout = o;
-                                }
+			player.sendMessage(errpre + "Trade timed out! Items returned.");
+			Victim.sendMessage(errpre + "Trade timed out!");
 
-                            }
-                        }
-                    }
+			plugin.timeout.remove(timeout);
+			plugin.trades.remove(trade);
+		    } else {
 
-                    if (swap != null) {
-                        Player player = swap.playerSender;
+			player.getInventory().addItem(trade.itemStack);
+			player.sendMessage(errpre + "Trade timed out! Items returned.");
+			victim.sendMessage(errpre + "Trade timed out!");
 
-                    }
-                }
-            }
-        }
+			plugin.timeout.remove(timeout);
+			plugin.trades.remove(trade);
+		    }
+
+		} else {
+
+		    for (Swap s : plugin.swaps) {
+			for (Timeout o : plugin.timeout) {
+
+			    if (s.playerSender == Player) {
+				if (s.Victim == victim) {
+				    if (s.playerSender.getWorld().getTime() >= (o.time + (timeleft * 20))) {
+					if (s.itemSender == item) {
+					    if (s.itemVictim == vItem) {
+
+						swap = s;
+						timeout = o;
+					    }
+					}
+
+				    }
+				}
+			    }
+			}
+		    }
+
+		    if (swap != null) {
+			Player player = swap.playerSender;
+			Player Victim = swap.Victim;
+
+			if (player.getInventory().firstEmpty() == -1) {
+
+			    Location playerloc = player.getLocation();
+			    player.getWorld().dropItemNaturally(playerloc, swap.itemSender);
+
+			    player.sendMessage(errpre + "Swap timed out! Items returned.");
+			    
+			} else {
+
+			    player.getInventory().addItem(swap.itemSender);
+			    player.sendMessage(errpre + "Swap timed out! Items returned.");
+
+			}
+			if (Victim.getInventory().firstEmpty() == -1) {
+			    
+			    Location vicloc = Victim.getLocation();
+			    victim.getWorld().dropItemNaturally(vicloc, swap.itemVictim);
+			    
+			    Victim.sendMessage(errpre + "Swap timed out! Items returned.");
+			    
+			} else {
+			    
+			    Victim.getInventory().addItem(swap.itemVictim);
+			    Victim.sendMessage(errpre + "Swap timed out! Items returned.");
+			}
+			plugin.timeout.remove(timeout);
+			plugin.swaps.remove(swap);
+		    }
+		}
+	    }
+	}
     }
 }
-
