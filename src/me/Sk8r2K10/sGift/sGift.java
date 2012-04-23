@@ -19,7 +19,6 @@ public class sGift extends JavaPlugin {
     private final GiftCommand gift = new GiftCommand(this);
     private final sGiftCommand admin = new sGiftCommand(this);
     private final SwapCommand swap = new SwapCommand(this);
-    private final RunTimeout timer = new RunTimeout(this);
     
     public static Economy econ = null;
     public static Permission perms = null;
@@ -294,11 +293,25 @@ public class sGift extends JavaPlugin {
 	}
     }
     
-    public void newTimeout() {
+    public void newTimeout(Player player, Player Victim, ItemStack Item) {
 	
 	long outtatime = this.getConfig().getInt("Options.request-timeout") * 20;
 	
-	task = this.getServer().getScheduler().scheduleSyncDelayedTask(this, timer, outtatime); 
+	this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(this, player, Victim, Item), outtatime); 
+    }
+    
+    public void newTimeout(Player player, Player Victim, ItemStack Item, int price) {
+	
+	long outtatime = this.getConfig().getInt("Options.request-timeout") * 20;
+	
+	this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(this, player, Victim, Item, price), outtatime); 
+    }
+    
+    public void newTimeout(Player player, Player Victim, ItemStack Item, ItemStack ItemFromVictim) {
+	
+	long outtatime = this.getConfig().getInt("Options.request-timeout") * 20;
+	
+	this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(this, player, Victim, Item, ItemFromVictim), outtatime); 
     }
     
     public void stop(Player player, Player victim, String type) {

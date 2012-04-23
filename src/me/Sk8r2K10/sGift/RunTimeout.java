@@ -4,15 +4,40 @@ import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class RunTimeout implements Runnable {
 
     private sGift plugin;
+    private Player Player;
+    private Player victim;
+    private ItemStack item;
+    private int Price;
+    private ItemStack vItem;
     Logger log = Logger.getLogger("Minecraft");
     String errpre = "[" + ChatColor.RED + "sGift" + ChatColor.WHITE + "] " + ChatColor.RED;
 
-    public RunTimeout(sGift instance) {
+    public RunTimeout(sGift instance, Player player, Player Victim, ItemStack Item) {
 	plugin = instance;
+        item = Item;
+        victim = Victim;
+        Player = player;        
+    }
+    
+    public RunTimeout(sGift instance, Player player, Player Victim, ItemStack Item, int price) {
+        plugin = instance;
+        item = Item;
+        victim = Victim;
+        Player = player;
+        Price = price;
+    }
+    
+    public RunTimeout(sGift instance, Player player, Player Victim, ItemStack Item, ItemStack ItemFromVictim) {
+        plugin = instance;
+        item = Item;
+        victim = Victim;
+        Player = player;
+        vItem = ItemFromVictim;
     }
     Timeout timeout = null;
     Gift gift = null;
@@ -26,11 +51,14 @@ public class RunTimeout implements Runnable {
 	for (Gift g : plugin.gifts) {
 	    for (Timeout o : plugin.timeout) {
 
-		if (g.playerSender == o.player) {
-		    if (g.ID == o.ID) {
-			if (g.playerSender.getWorld().getTime() == (o.time + (timeleft * 20))) {
-			    gift = g;
-			    timeout = o;
+		if (g.playerSender == Player) {
+		    if (g.Victim == victim) {
+			if (g.playerSender.getWorld().getTime() >= (o.time + (timeleft * 20))) {
+                            if (g.itemStack == item) {
+                                gift = g;
+                                timeout = o;
+                            }
+			    
 			}
 		    }
 		}
@@ -39,7 +67,7 @@ public class RunTimeout implements Runnable {
 
 	if (gift != null) {
 	    Player player = gift.playerSender;
-	    Player victim = gift.Victim;
+	    Player Victim = gift.Victim;
 
 	    if (player.getInventory().firstEmpty() == -1) {
 
@@ -47,7 +75,7 @@ public class RunTimeout implements Runnable {
 		player.getWorld().dropItemNaturally(playerloc, gift.itemStack);
 
 		player.sendMessage(errpre + "Gift timed out! Item's returned.");
-		victim.sendMessage(errpre + "Gift timed out!");
+		Victim.sendMessage(errpre + "Gift timed out!");
 
 		plugin.timeout.remove(timeout);
 		plugin.gifts.remove(gift);
