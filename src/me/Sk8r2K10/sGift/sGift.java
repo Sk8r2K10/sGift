@@ -19,14 +19,17 @@ public class sGift extends JavaPlugin {
     private final GiftCommand gift = new GiftCommand(this);
     private final sGiftCommand admin = new sGiftCommand(this);
     private final SwapCommand swap = new SwapCommand(this);
+    
     public static Economy econ = null;
     public static Permission perms = null;
     private static final Logger log = Logger.getLogger("Minecraft");
+    
     public ArrayList<Trade> trades = new ArrayList<Trade>();
     public ArrayList<Sender> senders = new ArrayList<Sender>();
     public ArrayList<Gift> gifts = new ArrayList<Gift>();
     public ArrayList<Swap> swaps = new ArrayList<Swap>();
     public ArrayList<Timeout> timeout = new ArrayList<Timeout>();
+    
     public int ID;
     public int task = -1;
 
