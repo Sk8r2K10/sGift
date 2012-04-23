@@ -445,7 +445,7 @@ public class GiftCommand implements CommandExecutor {
 								Victim.sendMessage(prefix + ChatColor.WHITE + "New Gift from " + ChatColor.YELLOW + player.getDisplayName() + ChatColor.WHITE + " of " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName());
 								Victim.sendMessage(prefix + ChatColor.WHITE + "Do " + ChatColor.YELLOW + "/Gift accept" + ChatColor.WHITE + " to accept this Gift or " + ChatColor.YELLOW + "/Gift deny" + ChatColor.WHITE + " to deny this Gift!");
 
-								plugin.newTimeout();
+								plugin.newTimeout(player, Victim, Item);
 
 								if (Item.getDurability() < Item.getType().getMaxDurability()) {
 
@@ -596,7 +596,7 @@ public class GiftCommand implements CommandExecutor {
 							    Victim.sendMessage(prefix + ChatColor.WHITE + "New Gift from " + ChatColor.YELLOW + player.getDisplayName() + ChatColor.WHITE + " of " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName());
 							    Victim.sendMessage(prefix + ChatColor.WHITE + "Do " + ChatColor.YELLOW + "/Gift accept" + ChatColor.WHITE + " to accept this Gift or " + ChatColor.YELLOW + "/Gift deny" + ChatColor.WHITE + " to deny this Gift!");
 
-							    plugin.newTimeout();
+							    plugin.newTimeout(player, Victim, Item);
 
 							    if (plugin.auto(Victim, "gift", "sgift.toggles.gift.accept")) {
 
@@ -719,10 +719,10 @@ public class GiftCommand implements CommandExecutor {
 		}
 	    } else {
 		if (player != null) {
-
+                      
 		    player.sendMessage(prefix + "Gifting is currently disabled!");
 		} else {
-
+                    
 		    log.warning(logpre + "Don't send sGift commands through console!");
 		}
 	    }
