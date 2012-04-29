@@ -594,7 +594,9 @@ public class TradeCommand implements CommandExecutor {
 						    } else {
 
 							player.sendMessage(prefix + ChatColor.RED + "Invalid amount!");
-							player.sendMessage(prefix + ChatColor.GRAY + "Amount could be too large.");
+							if (maxAmount != 0) {
+							    player.sendMessage(prefix + ChatColor.GRAY + "Amount is too large! Max is: " + maxAmount);
+							}
 						    }
 						} else {
 
@@ -747,7 +749,9 @@ public class TradeCommand implements CommandExecutor {
 						} else {
 
 						    player.sendMessage(prefix + ChatColor.RED + "Invalid amount!");
-						    player.sendMessage(prefix + ChatColor.GRAY + "Amount could be too large.");
+						    if (maxAmount != 0) {
+							player.sendMessage(prefix + ChatColor.GRAY + "Amount is too large! Max is: " + maxAmount);
+						    }
 						}
 					    } else {
 
