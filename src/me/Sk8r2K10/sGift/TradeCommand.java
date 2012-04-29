@@ -37,7 +37,9 @@ public class TradeCommand implements CommandExecutor {
 	}
 
 	if (commandLabel.equalsIgnoreCase("trade") && plugin.getPerms(player, "sgift.trade.trade")) {
-
+	    
+	    int maxAmount = plugin.getConfig().getInt("Options.max-amount");
+	    
 	    PluginDescriptionFile pdf = plugin.getDescription();
 	    String logpre = "[" + pdf.getName() + " " + pdf.getVersion() + "] ";
 
@@ -453,7 +455,7 @@ public class TradeCommand implements CommandExecutor {
 					if (!plugin.alreadyRequested(player, Victim)) {
 					    if (!plugin.differentWorlds(player, Victim)) {
 						if (plugin.rangeIsDisabled() || plugin.isWithinRange(VictimLoc, playerLoc)) {
-						    if (amount != 0) {
+						    if (amount != 0 && ((maxAmount >= amount) || (maxAmount == 0))) {
 							if (price != 0) {
 							    if (!plugin.itemsAreNull(Item)) {
 								if (Item.getAmount() >= amount) {
@@ -592,6 +594,7 @@ public class TradeCommand implements CommandExecutor {
 						    } else {
 
 							player.sendMessage(prefix + ChatColor.RED + "Invalid amount!");
+							player.sendMessage(prefix + ChatColor.GRAY + "Amount could be too large.");
 						    }
 						} else {
 
@@ -618,7 +621,7 @@ public class TradeCommand implements CommandExecutor {
 				    if (!plugin.alreadyRequested(player, Victim)) {
 					if (!plugin.differentWorlds(player, Victim)) {
 					    if (plugin.rangeIsDisabled() || plugin.isWithinRange(VictimLoc, playerLoc)) {
-						if (amount != 0) {
+						if (amount != 0 && ((maxAmount >= amount) || (maxAmount == 0))) {
 						    if (price != 0) {
 							if (!plugin.itemsAreNull(Item)) {
 							    if (new InventoryManager(player).contains(Item, true, true)) {
@@ -743,7 +746,8 @@ public class TradeCommand implements CommandExecutor {
 
 						} else {
 
-						    player.sendMessage(prefix + ChatColor.RED + "Amount specified is Invalid!");
+						    player.sendMessage(prefix + ChatColor.RED + "Invalid amount!");
+						    player.sendMessage(prefix + ChatColor.GRAY + "Amount could be too large.");
 						}
 					    } else {
 

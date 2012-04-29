@@ -26,7 +26,9 @@ public class GiftCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-
+	
+	int maxAmount = plugin.getConfig().getInt("Options.max-amount");
+	
 	if (sender instanceof Player) {
 
 	    player = (Player) sender;
@@ -419,7 +421,7 @@ public class GiftCommand implements CommandExecutor {
 				    if (!plugin.alreadyRequested(player, Victim)) {
 					if (!plugin.differentWorlds(player, Victim)) {
 					    if (plugin.rangeIsDisabled() || plugin.isWithinRange(VictimLoc, playerLoc)) {
-						if (amount != 0) {
+						if (amount != 0 && ((maxAmount >= amount)||(maxAmount == 0)))  {
 						    if (!plugin.itemsAreNull(Item)) {
 							if (!plugin.auto(Victim, "gift", "sgift.toggles.gift.deny")) {
 							    if (Item.getAmount() >= amount) {
@@ -540,6 +542,7 @@ public class GiftCommand implements CommandExecutor {
 						} else {
 
 						    player.sendMessage(prefix + ChatColor.RED + "Invalid amount!");
+						    player.sendMessage(prefix + ChatColor.GRAY + "Amount could be too large.");
 						}
 					    } else {
 
@@ -568,7 +571,7 @@ public class GiftCommand implements CommandExecutor {
 				if (!plugin.alreadyRequested(player, Victim)) {
 				    if (!plugin.differentWorlds(player, Victim)) {
 					if (plugin.rangeIsDisabled() || plugin.isWithinRange(VictimLoc, playerLoc)) {
-					    if (amount != 0) {
+					    if (amount != 0 && ((maxAmount >= amount) || (maxAmount == 0))) {
 						if (!plugin.itemsAreNull(Item)) {
 						    if (!plugin.auto(Victim, "gift", "sgift.toggles.gift.deny")) {
 							if (new InventoryManager(player).contains(Item, true, true)) {
@@ -672,7 +675,8 @@ public class GiftCommand implements CommandExecutor {
 						}
 					    } else {
 
-						player.sendMessage(prefix + ChatColor.RED + "Amount specified is Invalid!");
+						player.sendMessage(prefix + ChatColor.RED + "Invalid amount!");
+						player.sendMessage(prefix + ChatColor.GRAY + "Amount could be too large.");
 					    }
 					} else {
 

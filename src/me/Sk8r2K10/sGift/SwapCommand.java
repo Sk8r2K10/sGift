@@ -28,7 +28,9 @@ public class SwapCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-
+	
+	int maxAmount = plugin.getConfig().getInt("Options.max-amount");
+	
 	PluginDescriptionFile pdf = plugin.getDescription();
 	String logpre = "[" + pdf.getName() + " " + pdf.getVersion() + "] ";
 
@@ -434,7 +436,7 @@ public class SwapCommand implements CommandExecutor {
 
 				    Item = player.getItemInHand().clone();
 
-				    if (amount != 0) {
+				    if (amount != 0 && ((maxAmount >= amount) || (maxAmount == 0))) {
 					if (Item.getAmount() >= amount) {
 
 					    Victim = Bukkit.getServer().getPlayer(args[0]);
@@ -446,7 +448,7 @@ public class SwapCommand implements CommandExecutor {
 					    if (!plugin.alreadyRequested(player, Victim)) {
 						if (!plugin.differentWorlds(player, Victim)) {
 						    if (plugin.rangeIsDisabled() || plugin.isWithinRange(VictimLoc, playerLoc)) {
-							if (amountFromVictim != 0) {
+							if (amountFromVictim != 0 && ((maxAmount >= amountFromVictim) || (maxAmount == 0))) {
 
 							    ItemFromVictim = new ItemStack(ii2.getType(), amountFromVictim, ii2.getSubTypeId());
 
@@ -578,6 +580,7 @@ public class SwapCommand implements CommandExecutor {
 							} else {
 
 							    player.sendMessage(prefix + ChatColor.RED + "Amount expected from other player is Invalid!");
+							    player.sendMessage(prefix + ChatColor.GRAY + "Amount could be too large.");
 							}
 						    } else {
 
@@ -597,6 +600,7 @@ public class SwapCommand implements CommandExecutor {
 				    } else {
 
 					player.sendMessage(prefix + ChatColor.RED + "Invalid amount!");
+					player.sendMessage(prefix + ChatColor.GRAY + "Amount could be too large.");
 				    }
 				} else {
 
@@ -606,7 +610,7 @@ public class SwapCommand implements CommandExecutor {
 
 				Item = new ItemStack(ii.getType(), amount, ii.getSubTypeId());
 
-				if (amount != 0) {
+				if (amount != 0 && ((maxAmount >= amount) || (maxAmount == 0))) {
 				    if (new InventoryManager(player).contains(Item, true, true)) {
 
 					Victim = Bukkit.getServer().getPlayer(args[0]);
@@ -617,7 +621,7 @@ public class SwapCommand implements CommandExecutor {
 					if (!plugin.alreadyRequested(player, Victim)) {
 					    if (!plugin.differentWorlds(player, Victim)) {
 						if (plugin.rangeIsDisabled() || plugin.isWithinRange(VictimLoc, playerLoc)) {
-						    if (amountFromVictim != 0) {
+						    if (amountFromVictim != 0 && ((maxAmount >= amountFromVictim) || (maxAmount == 0))) {
 
 							ItemFromVictim = new ItemStack(ii2.getType(), amountFromVictim, ii2.getSubTypeId());
 
@@ -759,6 +763,7 @@ public class SwapCommand implements CommandExecutor {
 						    } else {
 
 							player.sendMessage(prefix + ChatColor.RED + "Amount expected from other player is Invalid!");
+							player.sendMessage(prefix + ChatColor.GRAY + "Amount could be too large.");
 						    }
 						} else {
 
@@ -777,7 +782,8 @@ public class SwapCommand implements CommandExecutor {
 				    }
 				} else {
 
-				    player.sendMessage(prefix + ChatColor.RED + "Amount specified is Invalid!");
+				    player.sendMessage(prefix + ChatColor.RED + "Invalid amount!");
+				    player.sendMessage(prefix + ChatColor.GRAY + "Amount could be too large.");
 				}
 			    } else {
 
