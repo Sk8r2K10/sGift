@@ -6,6 +6,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.item.Items;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -32,6 +33,7 @@ public class sGift extends JavaPlugin {
     
     public int ID;
     public int task = -1;
+    private GameMode GameMode;
 
     @Override
     public void onDisable() {
@@ -361,6 +363,21 @@ public class sGift extends JavaPlugin {
 	    }
 	    if (s.Victim == Victim || s.playerSender == Victim) {
 		player.sendMessage(errpre + "Player is already Involved in a Swap!");
+		
+		return true;
+	    }
+	}
+	return false;
+    }
+    
+    public boolean inCreative(Player player, Player Victim) {
+	if (this.getConfig().getBoolean("Options.allow-creative")) {
+	    
+	    if (player.getGameMode() == GameMode.CREATIVE) {
+		
+		return true;
+	    }
+	    if (Victim.getGameMode() == GameMode.CREATIVE) {
 		
 		return true;
 	    }
