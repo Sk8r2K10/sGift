@@ -375,6 +375,10 @@ public class sGift extends JavaPlugin {
 	    
 	    String errpre = "[" + ChatColor.RED + "sGift" + ChatColor.WHITE + "] " + ChatColor.RED;
 	    
+	    if (player.hasPermission("sgift.overrides.creative")) {
+		
+		return false;
+	    }
 	    if (player.getGameMode() == GameMode.CREATIVE) {
 		player.sendMessage(errpre + "You cannot exchange items in Creative mode!");
 		return true;

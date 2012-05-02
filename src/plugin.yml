@@ -155,4 +155,9 @@ permissions:
     sgift.overrides.world:
         description: Overrides the allow-between-worlds config node for that player
         default: op
-    
+    sgift.overrides.creative:
+        description: Overrides the allow-creative config node for that player
+        default: op
+    sgift.overrides.max:
+        description: Overrides the max-amount config node for that player
+        default: op

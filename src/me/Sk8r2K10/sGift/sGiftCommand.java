@@ -44,15 +44,21 @@ public class sGiftCommand implements CommandExecutor {
 			String info1 = Boolean.toString(plugin.getConfig().getBoolean("Features.enable-gift"));
 			String info2 = Boolean.toString(plugin.getConfig().getBoolean("Features.enable-trade"));
 			String info3 = Boolean.toString(plugin.getConfig().getBoolean("Features.enable-swap"));
-			String distinfo = Integer.toString(plugin.getConfig().getInt("Options.max-distance"));
-
-
+			String info4 = Boolean.toString(plugin.getConfig().getBoolean("Options.allow-creative"));
+			String info5 = Boolean.toString(plugin.getConfig().getBoolean("Options.allow-between-worlds"));
+			String info6 = Integer.toString(plugin.getConfig().getInt("Options.max-distance"));
+			String info7 = Integer.toString(plugin.getConfig().getInt("Options.max-amount"));
+			String info8 = Integer.toString(plugin.getConfig().getInt("Options.request-timeout"));
 
 			player.sendMessage(ChatColor.DARK_RED + "-----------------[" + ChatColor.RED + "sGift - Information" + ChatColor.DARK_RED + "]------------------");
 			player.sendMessage(ChatColor.RED + "Gift: " + ChatColor.AQUA + info1);
 			player.sendMessage(ChatColor.RED + "Trade: " + ChatColor.AQUA + info2);
 			player.sendMessage(ChatColor.RED + "Swap: " + ChatColor.AQUA + info3);
-			player.sendMessage(ChatColor.RED + "Max-Distance: " + ChatColor.AQUA + distinfo);
+			player.sendMessage(ChatColor.RED + "Allow-Creative: " + ChatColor.AQUA + info4);
+			player.sendMessage(ChatColor.RED + "Allow-Between-Worlds: " + ChatColor.AQUA + info5);
+			player.sendMessage(ChatColor.RED + "Max-Distance: " + ChatColor.AQUA + info6);	
+			player.sendMessage(ChatColor.RED + "Max-Amount: " + ChatColor.AQUA + info7);
+			player.sendMessage(ChatColor.RED + "Request-Timeout: " + ChatColor.AQUA + info8);
 
 			StringBuilder senderList = new StringBuilder();
 

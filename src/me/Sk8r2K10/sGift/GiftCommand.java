@@ -421,7 +421,7 @@ public class GiftCommand implements CommandExecutor {
 					if (!plugin.alreadyRequested(player, Victim)) {
 					    if (!plugin.differentWorlds(player, Victim)) {
 						if (plugin.rangeIsDisabled() || plugin.isWithinRange(VictimLoc, playerLoc)) {
-						    if (amount != 0 && ((maxAmount >= amount) || (maxAmount == 0))) {
+						    if (amount != 0 && (((maxAmount >= amount) || (maxAmount == 0)) || player.hasPermission("sgift.overrides.max"))) {
 							if (!plugin.itemsAreNull(Item)) {
 							    if (!plugin.auto(Victim, "gift", "sgift.toggles.gift.deny")) {
 								if (Item.getAmount() >= amount) {
@@ -573,7 +573,7 @@ public class GiftCommand implements CommandExecutor {
 				    if (!plugin.alreadyRequested(player, Victim)) {
 					if (!plugin.differentWorlds(player, Victim)) {
 					    if (plugin.rangeIsDisabled() || plugin.isWithinRange(VictimLoc, playerLoc)) {
-						if (amount != 0 && ((maxAmount >= amount) || (maxAmount == 0))) {
+						if (amount != 0 && (((maxAmount >= amount) || (maxAmount == 0)) || player.hasPermission("sgift.overrides.max"))) {
 						    if (!plugin.itemsAreNull(Item)) {
 							if (!plugin.auto(Victim, "gift", "sgift.toggles.gift.deny")) {
 							    if (new InventoryManager(player).contains(Item, true, true)) {
