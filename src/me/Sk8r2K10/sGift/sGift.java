@@ -371,14 +371,16 @@ public class sGift extends JavaPlugin {
     }
     
     public boolean inCreative(Player player, Player Victim) {
-	if (this.getConfig().getBoolean("Options.allow-creative")) {
+	if (!this.getConfig().getBoolean("Options.allow-creative")) {
+	    
+	    String errpre = "[" + ChatColor.RED + "sGift" + ChatColor.WHITE + "] " + ChatColor.RED;
 	    
 	    if (player.getGameMode() == GameMode.CREATIVE) {
-		
+		player.sendMessage(errpre + "You cannot exchange items in Creative mode!");
 		return true;
 	    }
 	    if (Victim.getGameMode() == GameMode.CREATIVE) {
-		
+		player.sendMessage(errpre + "The target player is in creative mode, They don't need your items!");
 		return true;
 	    }
 	}
