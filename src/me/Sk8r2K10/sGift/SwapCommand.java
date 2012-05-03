@@ -458,12 +458,12 @@ public class SwapCommand implements CommandExecutor {
 
 									    plugin.ID += 1;
 
-									    Swap tswap = new Swap(Victim, player, Item, ItemFromVictim, ID);
+									    Swap tswap = new Swap(Victim, player, Item, ItemFromVictim, plugin.ID);
 
 									    long time = player.getWorld().getTime();
 
 									    plugin.swaps.add(tswap);
-									    plugin.timeout.add(new Timeout(tswap, player, ID, time));
+									    plugin.timeout.add(new Timeout(tswap, player, plugin.ID, time));
 									    plugin.senders.add(new Sender(player));
 
 									    new InventoryManager(player).remove(Item);
@@ -629,18 +629,18 @@ public class SwapCommand implements CommandExecutor {
 
 							    ItemFromVictim = new ItemStack(ii2.getType(), amountFromVictim, ii2.getSubTypeId());
 
-							    if (Items.itemByStack(Item).getName() != null && Items.itemByStack(ItemFromVictim) != null) {
+							    if (!plugin.itemsAreNull(Item, ItemFromVictim)) {
 								if (!plugin.auto(Victim, "swap", "sgift.toggles.swap.deny")) {
 								    if (new InventoryManager(Victim).contains(ItemFromVictim, true, true)) {
 
 									plugin.ID += 1;
 
-									Swap tswap = new Swap(Victim, player, Item, ItemFromVictim, ID);
+									Swap tswap = new Swap(Victim, player, Item, ItemFromVictim, plugin.ID);
 
 									long time = player.getWorld().getTime();
 
 									plugin.swaps.add(tswap);
-									plugin.timeout.add(new Timeout(tswap, player, ID, time));
+									plugin.timeout.add(new Timeout(tswap, player, plugin.ID, time));
 									plugin.senders.add(new Sender(player));
 
 									new InventoryManager(player).remove(Item);
