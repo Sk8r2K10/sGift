@@ -390,4 +390,15 @@ public class sGift extends JavaPlugin {
 	}
 	return false;
     }
+    
+    public boolean getHand(Player player, ItemStack Item) {
+	
+	try {
+	    Item.setAmount(1);
+	    
+	    return true;
+	} catch (NullPointerException e) {
+	    return false;
+	}
+    }
 }
