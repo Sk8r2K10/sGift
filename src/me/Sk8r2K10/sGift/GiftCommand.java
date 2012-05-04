@@ -336,14 +336,21 @@ public class GiftCommand implements CommandExecutor {
 			}
 
 			for (Timeout o : plugin.timeout) {
-
-			    if (o.ID == gift.ID) {
+			    try {
+				if (o.ID == gift.ID) {
 
 				time = o;
 			    }
+				
+			    } catch (NullPointerException e) {
+				log.info(logpre + "Nag Sk8r2K9 to fix this! (Some strange bug!(Nothing should be affected, Just silly code))");
+				player.sendMessage(prefix + ChatColor.RED + "No Gifts to cancel!");
+				log.severe(e.toString());
+				return true;
+			    }
 			}
 
-			if (gift == null) {
+			if (gift == null || time == null) {
 
 			    player.sendMessage(prefix + ChatColor.RED + "No Gifts to cancel!");
 			} else {

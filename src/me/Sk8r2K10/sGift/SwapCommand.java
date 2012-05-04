@@ -276,11 +276,12 @@ public class SwapCommand implements CommandExecutor {
 
 					    time = o;
 					}
+
 				    }
 				}
 			    }
 
-			    if (swap == null) {
+			    if (swap == null || time == null) {
 
 				player.sendMessage(prefix + ChatColor.RED + "No Swaps to stop!");
 			    } else {
@@ -318,6 +319,29 @@ public class SwapCommand implements CommandExecutor {
 				    plugin.swaps.remove(swap);
 				    plugin.senders.remove(Sender1);
 				}
+				if (Victim.getInventory().firstEmpty() == -1) {
+
+				    Location playerloc = Victim.getLocation();
+
+				    Victim.getWorld().dropItemNaturally(playerloc, itemsFromVictim);
+				    Victim.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
+				    Victim.sendMessage(prefix + ChatColor.RED + "Cancelled Swap!");
+				    Victim.sendMessage(prefix + ChatColor.YELLOW + itemsFromSender.getAmount() + " " + Items.itemByStack(itemsFromSender).getName() + ChatColor.RED + " Has been returned to you.");
+
+				    plugin.timeout.remove(time);
+				    plugin.senders.remove(Sender1);
+				    plugin.swaps.remove(swap);
+
+				} else {
+
+				    Victim.getInventory().addItem(itemsFromVictim);
+				    Victim.sendMessage(prefix + ChatColor.RED + "Cancelled Swap!");
+				    Victim.sendMessage(prefix + ChatColor.YELLOW + itemsFromSender.getAmount() + " " + Items.itemByStack(itemsFromSender).getName() + ChatColor.RED + " Has been returned to you.");
+
+				    plugin.timeout.remove(time);
+				    plugin.senders.remove(Sender1);
+				    plugin.swaps.remove(swap);
+				}
 			    }
 			}
 			player.sendMessage(prefix + ChatColor.GREEN + "Cancelled all Swaps safely.");
@@ -345,10 +369,16 @@ public class SwapCommand implements CommandExecutor {
 
 			}
 			for (Timeout o : plugin.timeout) {
+			    try {
+				if (o.ID == swap.ID) {
 
-			    if (o.ID == swap.ID) {
-
-				time = o;
+				    time = o;
+				}
+			    } catch (NullPointerException e) {
+				log.info(logpre + "Nag Sk8r2K9 to fix this! (Nothing should be affected, Just silly code)");
+				player.sendMessage(prefix + ChatColor.RED + "No Swaps to cancel!");
+				log.severe(e.toString());
+				return true;
 			    }
 			}
 
@@ -382,6 +412,29 @@ public class SwapCommand implements CommandExecutor {
 				playerSendingItems.sendMessage(prefix + ChatColor.RED + "Cancelled Swap!");
 				playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + itemsFromSender.getAmount() + " " + Items.itemByStack(itemsFromSender).getName() + ChatColor.RED + " Has been returned to you.");
 				Victim.sendMessage(prefix + ChatColor.YELLOW + playerSendingItems.getName() + ChatColor.RED + " Cancelled the Swap!");
+
+				plugin.timeout.remove(time);
+				plugin.senders.remove(Sender1);
+				plugin.swaps.remove(swap);
+			    }
+			    if (Victim.getInventory().firstEmpty() == -1) {
+
+				Location playerloc = Victim.getLocation();
+
+				Victim.getWorld().dropItemNaturally(playerloc, itemsFromVictim);
+				Victim.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
+				Victim.sendMessage(prefix + ChatColor.RED + "Cancelled Swap!");
+				Victim.sendMessage(prefix + ChatColor.YELLOW + itemsFromVictim.getAmount() + " " + Items.itemByStack(itemsFromVictim).getName() + ChatColor.RED + " Has been returned to you.");
+
+				plugin.timeout.remove(time);
+				plugin.senders.remove(Sender1);
+				plugin.swaps.remove(swap);
+
+			    } else {
+
+				Victim.getInventory().addItem(itemsFromVictim);
+				Victim.sendMessage(prefix + ChatColor.RED + "Cancelled Swap!");
+				Victim.sendMessage(prefix + ChatColor.YELLOW + itemsFromVictim.getAmount() + " " + Items.itemByStack(itemsFromVictim).getName() + ChatColor.RED + " Has been returned to you.");
 
 				plugin.timeout.remove(time);
 				plugin.senders.remove(Sender1);

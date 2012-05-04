@@ -288,6 +288,7 @@ public class TradeCommand implements CommandExecutor {
 
 						time = o;
 					    }
+
 					}
 				    }
 				}
@@ -360,10 +361,16 @@ public class TradeCommand implements CommandExecutor {
 			    }
 
 			    for (Timeout o : plugin.timeout) {
+				try {
+				    if (o.ID == trade.ID) {
 
-				if (o.ID == trade.ID) {
-
-				    time = o;
+					time = o;
+				    }
+				} catch (NullPointerException e) {
+				    log.info(logpre + "Nag Sk8r2K9 to fix this! (Some strange bug!(Nothing should be affected, Just silly code))");
+				    player.sendMessage(prefix + ChatColor.RED + "No Trades to cancel!");
+				    log.severe(e.toString());
+				    return true;
 				}
 			    }
 
@@ -446,11 +453,11 @@ public class TradeCommand implements CommandExecutor {
 
 				    if (args[1].equalsIgnoreCase("hand")) {
 					if (plugin.getHand(player, player.getItemInHand().clone())) {
-					    
+
 					    Item = player.getItemInHand().clone();
-					    
+
 					    Item.setAmount(amount);
-					    
+
 					    Location VictimLoc = Victim.getLocation();
 					    Location playerLoc = player.getLocation();
 
