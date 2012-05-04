@@ -500,7 +500,7 @@ public class SwapCommand implements CommandExecutor {
 
 					if (new InventoryManager(Victim).contains(ItemFromVictim, true, true)) {
 
-					    new StartExchange(plugin, player, playerLoc, Victim, VictimLoc, Item, ItemFromVictim, amount, amountFromVictim, true).start();
+					    new Exchange(plugin, player, playerLoc, Victim, VictimLoc, Item, ItemFromVictim, amount, amountFromVictim, true).start();
 
 					} else {
 
@@ -523,7 +523,7 @@ public class SwapCommand implements CommandExecutor {
 
 					if (new InventoryManager(Victim).contains(ItemFromVictim, true, true)) {
 
-					    new StartExchange(plugin, player, playerLoc, Victim, VictimLoc, Item, ItemFromVictim, amount, amountFromVictim, false).start();
+					    new Exchange(plugin, player, playerLoc, Victim, VictimLoc, Item, ItemFromVictim, amount, amountFromVictim, false).start();
 
 					} else {
 

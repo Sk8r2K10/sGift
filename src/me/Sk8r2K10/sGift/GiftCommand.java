@@ -429,7 +429,7 @@ public class GiftCommand implements CommandExecutor {
 					Location VictimLoc = Victim.getLocation();
 					Location playerLoc = player.getLocation();
 					
-					new StartExchange(plugin, player, playerLoc, Victim, VictimLoc, Item, amount, true).start();
+					new Exchange(plugin, player, playerLoc, Victim, VictimLoc, Item, amount, true).start();
 					
 				    } else {
 
@@ -444,7 +444,7 @@ public class GiftCommand implements CommandExecutor {
 				    Location VictimLoc = Victim.getLocation();
 				    Location playerLoc = player.getLocation();
 				    
-				    new StartExchange(plugin, player, playerLoc, Victim, VictimLoc, Item, amount, false).start();
+				    new Exchange(plugin, player, playerLoc, Victim, VictimLoc, Item, amount, false).start();
 
 				} else {
 

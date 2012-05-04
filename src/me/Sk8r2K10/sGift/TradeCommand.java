@@ -461,7 +461,7 @@ public class TradeCommand implements CommandExecutor {
 					    Location VictimLoc = Victim.getLocation();
 					    Location playerLoc = player.getLocation();
 
-					    new StartExchange(plugin, player, playerLoc, Victim, VictimLoc, Item, amount, price, true).start();
+					    new Exchange(plugin, player, playerLoc, Victim, VictimLoc, Item, amount, price, true).start();
 					} else {
 
 					    player.sendMessage(prefix + ChatColor.RED + "There's no Item in your Hand!");
@@ -473,7 +473,7 @@ public class TradeCommand implements CommandExecutor {
 					Location VictimLoc = Victim.getLocation();
 					Location playerLoc = player.getLocation();
 
-					new StartExchange(plugin, player, playerLoc, Victim, VictimLoc, Item, amount, price, false).start();
+					new Exchange(plugin, player, playerLoc, Victim, VictimLoc, Item, amount, price, false).start();
 				    } else {
 
 					player.sendMessage(prefix + ChatColor.RED + "Material specified is Invalid!");

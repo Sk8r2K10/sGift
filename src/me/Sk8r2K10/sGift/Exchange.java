@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 
-public class StartExchange {
+public class Exchange {
 
     private String errpre = "[" + ChatColor.RED + "sGift" + ChatColor.WHITE + "] " + ChatColor.RED;
     private sGift plugin;
@@ -23,12 +23,12 @@ public class StartExchange {
     private int price;
     private boolean hand;
 
-    public StartExchange(sGift instance) {
+    public Exchange(sGift instance) {
 
 	plugin = instance;
     }
 
-    public StartExchange(sGift instance, Player Player, Location PlayerLoc, Player victim, Location victimLoc, ItemStack item, int Amount, boolean Hand) {
+    public Exchange(sGift instance, Player Player, Location PlayerLoc, Player victim, Location victimLoc, ItemStack item, int Amount, boolean Hand) {
 
 	player = Player;
 	playerLoc = PlayerLoc;
@@ -45,7 +45,7 @@ public class StartExchange {
 
     }
 
-    public StartExchange(sGift instance, Player Player, Location PlayerLoc, Player victim, Location victimLoc, ItemStack item, int Amount, int Price, boolean Hand) {
+    public Exchange(sGift instance, Player Player, Location PlayerLoc, Player victim, Location victimLoc, ItemStack item, int Amount, int Price, boolean Hand) {
 
 	player = Player;
 	playerLoc = PlayerLoc;
@@ -61,7 +61,7 @@ public class StartExchange {
 
     }
 
-    public StartExchange(sGift instance, Player Player, Location PlayerLoc, Player victim, Location victimLoc, ItemStack item, ItemStack vItem, int Amount, int vAmount, boolean Hand) {
+    public Exchange(sGift instance, Player Player, Location PlayerLoc, Player victim, Location victimLoc, ItemStack item, ItemStack vItem, int Amount, int vAmount, boolean Hand) {
 
 	player = Player;
 	playerLoc = PlayerLoc;
