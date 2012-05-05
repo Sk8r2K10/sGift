@@ -233,8 +233,8 @@ public class SwapCommand implements CommandExecutor {
 		    player.sendMessage(prefix + ChatColor.GRAY + "Correct usage: /swap <Player> <Item> <Amount> <Item_From_Player> <Amount>");
 		} else if (args.length == 0) {
 
-		    player.sendMessage(prefix + ChatColor.RED + "Too Few arguments!");
-		    player.sendMessage(prefix + ChatColor.GRAY + "Correct usage: /swap <Player> <Item> <Amount> <Item_From_Player> <Amount>");
+		    
+		    player.sendMessage(prefix + ChatColor.RED + "By Sk8r2K9. /swap help for more info.");
 		} else {
 
 		    player.sendMessage(prefix + ChatColor.RED + "Invalid command usage.");
