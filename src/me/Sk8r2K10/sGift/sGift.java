@@ -2,10 +2,13 @@ package me.Sk8r2K10.sGift;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
+import lib.PatPeter.SQLibrary.MySQL;
+import lib.PatPeter.SQLibrary.SQLite;
 import me.Sk8r2K10.sGift.Commands.GiftCommand;
 import me.Sk8r2K10.sGift.Commands.SwapCommand;
 import me.Sk8r2K10.sGift.Commands.TradeCommand;
 import me.Sk8r2K10.sGift.Commands.sGiftCommand;
+import me.Sk8r2K10.sGift.util.SQLDataHandler;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.item.Items;
 import net.milkbowl.vault.permission.Permission;
@@ -19,7 +22,11 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class sGift extends JavaPlugin {
-
+    
+    public SQLite SQLt;
+    public MySQL MSQL;
+    public SQLDataHandler SQL = new SQLDataHandler(this);
+    
     private final TradeCommand trade = new TradeCommand(this);
     private final GiftCommand gift = new GiftCommand(this);
     private final sGiftCommand admin = new sGiftCommand(this);
@@ -37,10 +44,16 @@ public class sGift extends JavaPlugin {
     
     public int ID;
     public int task = -1;
-    private GameMode GameMode;
+    private GameMode GameMode;    
+    private String logpre;
 
     @Override
     public void onDisable() {
+	
+	if (SQLt != null) {
+	    
+	    SQLt.close(); 
+	} 
     }
 
     @Override
@@ -51,7 +64,7 @@ public class sGift extends JavaPlugin {
 	getCommand("swap").setExecutor(swap);
 
 	PluginDescriptionFile pdf = getDescription();
-	String logpre = "[" + pdf.getName() + " " + pdf.getVersion() + "] ";
+	logpre = "[" + pdf.getName() + " " + pdf.getVersion() + "] ";
 
 	if (getServer().getPluginManager().getPlugin("Vault") != null) {
 
@@ -66,9 +79,7 @@ public class sGift extends JavaPlugin {
 	    } else if (getConfig().getBoolean("Features.enable-trade")) {
 
 		log.info(logpre + "Economy plugin " + econ.getName() + " has been found.");
-
 	    }
-
 	} else {
 
 	    log.severe(logpre + "Vault not found! Disabling plugin.");
@@ -85,11 +96,46 @@ public class sGift extends JavaPlugin {
 
 	    getServer().getPluginManager().disablePlugin(this);
 	}
-
+	if (this.getConfig().getBoolean("Features.use-sql.sqlite")) {
+	    
+	    loadSQLt();
+	    
+	    if (!SQLt.checkConnection()) {
+		
+		log.severe(logpre + "Could not connect to SQLite, Please check you have SQLite available!");
+		this.getConfig().set("Options.use-sql.sqlite", false);		
+	    }
+	}
 	getConfig().options().copyDefaults(true);
 	saveConfig();
     }
-
+    
+    public void loadSQLt() {
+	
+	SQLt = new SQLite(log, "sGift", "Exchanges", this.getDataFolder().getPath());
+	
+	SQLt.open();
+	log.info(logpre + "SQLite Connection established.");
+	
+	String Gift = "CREATE TABLE IF NOT EXISTS `Gift` (`ID` int AUTO_INCREMENT, `player` VARCHAR(30) NOT NULL, `Victim` VARCHAR(30) NOT NULL, `Item` VARCHAR(255) NOT NULL, `amount` int NOT NULL, PRIMARY KEY(`ID`))";
+	String Trade = "CREATE TABLE IF NOT EXISTS `Trade` (`ID` int AUTO_INCREMENT, `player` VARCHAR(30) NOT NULL, `Victim` VARCHAR(30) NOT NULL, `Item` VARCHAR(255) NOT NULL, `amount` int NOT NULL, `price` int NOT NULL, PRIMARY KEY(`ID`))";
+	String Swap = "CREATE TABLE IF NOT EXISTS `Swap` (`ID` int AUTO_INCREMENT, `player` VARCHAR(30) NOT NULL, `Victim` VARCHAR(30) NOT NULL, `Item` VARCHAR(255) NOT NULL, `amount` int NOT NULL, `ItemFromVictim` VARCHAR(255) NOT NULL, `amountfromVictim` int NOT NULL, PRIMARY KEY(`ID`))";
+	String Sender = "CREATE TABLE IF NOT EXISTS `Swap` (`ID` int AUTO_INCREMENT, `player` VARCHAR(30) NOT NULL, PRIMARY KEY(`ID`))";
+	
+	SQLt.createTable(Gift);
+	SQLt.createTable(Trade);
+	SQLt.createTable(Swap);
+	SQLt.createTable(Sender);
+	
+	log.info(logpre + "SQLite is initialised.");
+    }
+    
+    public void loadMSQL() {
+	
+	// Do later
+	
+    }
+    
     public boolean setupEconomy() {
 	if (this.getConfig().getBoolean("Features.enable-trade")) {
 	    if (getServer().getPluginManager().getPlugin("Vault") == null) {

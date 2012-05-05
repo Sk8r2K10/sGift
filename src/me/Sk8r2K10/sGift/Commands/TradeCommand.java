@@ -28,7 +28,7 @@ public class TradeCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-
+	
 	if (sender instanceof Player) {
 
 	    player = (Player) sender;

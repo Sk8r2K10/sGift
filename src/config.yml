@@ -14,6 +14,8 @@
 # The "Help" section defines the strings shown to the player when using the help commands. Mainly for Multilingual support.
 # -> These **WONT** change the commands themselves.
 Features:
+  use-sql:
+    sqlite: true
   enable-gift: true
   enable-trade: true
   enable-swap: true
