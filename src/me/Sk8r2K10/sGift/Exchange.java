@@ -676,7 +676,6 @@ public class Exchange {
 
 		    Sender1 = s;
 		}
-
 	    }
 	    for (Timeout o : plugin.timeout) {
 		try {
@@ -688,7 +687,7 @@ public class Exchange {
 		    log.info(logpre + "Nag Sk8r2K9 to fix this! (Nothing should be affected, Just silly code)");
 		    player.sendMessage(prefix + ChatColor.RED + "No Swaps to cancel!");
 		    log.severe(e.toString());
-		    return;
+		    break;
 		}
 	    }
 
@@ -1004,8 +1003,6 @@ public class Exchange {
 
 	String prefix = ChatColor.WHITE + "[" + ChatColor.RED + "sGift" + ChatColor.WHITE + "] ";
 
-	final int total = plugin.gifts.size() + plugin.swaps.size() + plugin.trades.size();
-
 	if (Gift) {
 
 	    player.sendMessage(prefix + ChatColor.GREEN + "Stopped " + plugin.gifts.size() + " Gifts.");
@@ -1033,7 +1030,6 @@ public class Exchange {
 		this.cancel(false, false, true);
 	    }
 	}
-	player.sendMessage(prefix + total + ChatColor.YELLOW + " Item Exchanges stopped.");
     }
 
     public void deny(boolean Gift, boolean Trade, boolean Swap) {
