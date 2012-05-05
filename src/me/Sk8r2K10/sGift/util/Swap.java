@@ -1,4 +1,4 @@
-package me.Sk8r2K10.sGift;
+package me.Sk8r2K10.sGift.util;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

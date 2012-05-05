@@ -1,6 +1,7 @@
-package me.Sk8r2K10.sGift;
+package me.Sk8r2K10.sGift.util;
 
 import java.util.logging.Logger;
+import me.Sk8r2K10.sGift.sGift;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

@@ -1,6 +1,8 @@
-package me.Sk8r2K10.sGift;
+package me.Sk8r2K10.sGift.util;
 
 import java.util.logging.Logger;
+import me.Sk8r2K10.sGift.InventoryManager;
+import me.Sk8r2K10.sGift.sGift;
 import net.milkbowl.vault.item.Items;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

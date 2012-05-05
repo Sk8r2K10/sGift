@@ -1,5 +1,8 @@
-package me.Sk8r2K10.sGift;
+package me.Sk8r2K10.sGift.util;
 
+import me.Sk8r2K10.sGift.util.Trade;
+import me.Sk8r2K10.sGift.util.Gift;
+import me.Sk8r2K10.sGift.util.Swap;
 import org.bukkit.entity.Player;
 
 public class Timeout {

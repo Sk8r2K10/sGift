@@ -1,6 +1,8 @@
-package me.Sk8r2K10.sGift;
+package me.Sk8r2K10.sGift.Commands;
 
 import java.util.logging.Logger;
+import me.Sk8r2K10.sGift.sGift;
+import me.Sk8r2K10.sGift.util.Sender;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

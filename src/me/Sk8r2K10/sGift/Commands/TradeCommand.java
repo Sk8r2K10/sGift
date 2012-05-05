@@ -1,6 +1,8 @@
-package me.Sk8r2K10.sGift;
+package me.Sk8r2K10.sGift.Commands;
 
 import java.util.logging.Logger;
+import me.Sk8r2K10.sGift.sGift;
+import me.Sk8r2K10.sGift.util.Exchange;
 import net.milkbowl.vault.item.ItemInfo;
 import net.milkbowl.vault.item.Items;
 import org.bukkit.Bukkit;
