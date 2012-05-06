@@ -85,7 +85,7 @@ public class RunTimeout implements Runnable {
 					Player gvictim = plugin.getServer().getPlayer(result.getString("Victim"));
 					ItemStack gitem = Items.itemByName(result.getString("Item")).toStack();
 					int gAmount = result.getInt("amount");
-					
+					// Might need these later
 					result.close();
 					
 					gitem.setAmount(gAmount);
@@ -108,7 +108,7 @@ public class RunTimeout implements Runnable {
 						ItemStack titem = Items.itemByName(result.getString("Item")).toStack();
 						int tAmount = result.getInt("amount");
 						int tPrice = result.getInt("price");
-						
+						// Might need these later
 						result.close();
 						
 						titem.setAmount(tAmount);
@@ -133,7 +133,7 @@ public class RunTimeout implements Runnable {
 							ItemStack svItem = Items.itemByName(result.getString("ItemFromVictim")).toStack();
 							int sAmount = result.getInt("amount");
 							int svAmount = result.getInt("amountFromVictim");
-							
+							// Might need these later
 							result.close();
 							
 							sitem.setAmount(Amount);
@@ -153,9 +153,7 @@ public class RunTimeout implements Runnable {
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}
-			
-			
+			}	
 		} else {
 			if (timeleft != 0) {
 				for (Gift g : plugin.gifts) {

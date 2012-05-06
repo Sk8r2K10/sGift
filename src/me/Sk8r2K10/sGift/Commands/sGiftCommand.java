@@ -261,10 +261,12 @@ public class sGiftCommand implements CommandExecutor {
 					} else if (args[1].equalsIgnoreCase("allow-auto")) {
 						if (args[2].equalsIgnoreCase("gift")) {
 							if (args[3].equalsIgnoreCase("true")) {
+								
 								plugin.getConfig().set("Features.allow-auto.gift", true);
 								plugin.saveConfig();
 								player.sendMessage(prefix + ChatColor.YELLOW + "Enabling Auto-Features for Gifting.");
 							} else if (args[3].equalsIgnoreCase("false")) {
+								
 								plugin.getConfig().set("Features.allow-auto.gift", false);
 								plugin.saveConfig();
 								player.sendMessage(prefix + ChatColor.YELLOW + "Disabling Auto-Features for Gifting.");
@@ -275,10 +277,12 @@ public class sGiftCommand implements CommandExecutor {
 							}
 						} else if (args[2].equalsIgnoreCase("trade")) {
 							if (args[3].equalsIgnoreCase("true")) {
+								
 								plugin.getConfig().set("Features.allow-auto.trade", true);
 								plugin.saveConfig();
 								player.sendMessage(prefix + ChatColor.YELLOW + "Enabling Auto-Features for Trading.");
 							} else if (args[3].equalsIgnoreCase("false")) {
+								
 								plugin.getConfig().set("Features.allow-auto.trade", false);
 								plugin.saveConfig();
 								player.sendMessage(prefix + ChatColor.YELLOW + "Disabling Auto-Features for Trading.");
@@ -289,10 +293,12 @@ public class sGiftCommand implements CommandExecutor {
 							}
 						} else if (args[2].equalsIgnoreCase("swap")) {
 							if (args[3].equalsIgnoreCase("true")) {
+								
 								plugin.getConfig().set("Features.allow-auto.swap", true);
 								plugin.saveConfig();
 								player.sendMessage(prefix + ChatColor.YELLOW + "Enabling Auto-Features for Swapping.");
 							} else if (args[3].equalsIgnoreCase("false")) {
+								
 								plugin.getConfig().set("Features.allow-auto.swap", false);
 								plugin.saveConfig();
 								player.sendMessage(prefix + ChatColor.YELLOW + "Disabling Auto-Features for Swapping.");

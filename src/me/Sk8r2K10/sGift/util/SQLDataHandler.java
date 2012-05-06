@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import me.Sk8r2K10.sGift.sGift;
 import net.milkbowl.vault.item.Items;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,6 +13,15 @@ public class SQLDataHandler {
 
 	private String errpre = "[" + ChatColor.RED + "sGift" + ChatColor.WHITE + "] " + ChatColor.RED;
 	private sGift plugin;
+	private Player player;
+	private Player Victim;
+	private Location playerLoc;
+	private Location VictimLoc;
+	private ItemStack Item;
+	private ItemStack ItemFromVictim;
+	private int amount;
+	private int amountFromVictim;
+	private int price;
 
 	public SQLDataHandler(sGift instance) {
 
@@ -180,5 +190,107 @@ public class SQLDataHandler {
 		plugin.SQLt.query(query);
 
 		return true;
+	}
+	
+	public ResultSet giftEmpty() {
+		
+		String query = "SELECT * FROM `Gift` WHERE `player` = player";
+		ResultSet result = plugin.SQLt.query(query);
+		
+		return result;
+	}
+	
+	public ResultSet tradeEmpty() {
+		
+		String query = "SELECT * FROM `Trade` WHERE `player` = player";
+		ResultSet result = plugin.SQLt.query(query);
+		
+		return result;
+	}
+	
+	public ResultSet swapEmpty() {
+		
+		String query = "SELECT * FROM `Swap` WHERE `player` = player";
+		ResultSet result = plugin.SQLt.query(query);
+		
+		return result;
+	}
+	
+	public void emptyGift() {
+		try {
+		
+			ResultSet result = this.giftEmpty();
+		
+		if (result == null) {
+			
+			return;
+		}
+		
+			player = plugin.getServer().getPlayer(result.getString("player"));
+			Victim = plugin.getServer().getPlayer(result.getString("Victim"));
+			Item = Items.itemByName(result.getString("Item")).toStack();
+			amount = result.getInt("amount");
+			playerLoc = player.getLocation();
+			VictimLoc = Victim.getLocation();
+		
+			result.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+				
+		new Exchange(plugin, player, playerLoc, Victim, VictimLoc, Item, amount, false).cancel(true, false, false);
+	}
+	
+	public void emptyTrade() {
+		try {
+		
+			ResultSet result = this.giftEmpty();
+		
+		if (result == null) {
+			
+			return;
+		}
+		
+			player = plugin.getServer().getPlayer(result.getString("player"));
+			Victim = plugin.getServer().getPlayer(result.getString("Victim"));
+			Item = Items.itemByName(result.getString("Item")).toStack();
+			amount = result.getInt("amount");
+			price = result.getInt("price");
+			playerLoc = player.getLocation();
+			VictimLoc = Victim.getLocation();
+		
+			result.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		new Exchange(plugin, player, playerLoc, Victim, VictimLoc, Item, amount, price, false).cancel(false, true, false);
+	}
+	
+	public void emptySwap() {
+		try {
+		
+			ResultSet result = this.giftEmpty();
+		
+		if (result == null) {
+			
+			return;
+		}
+		
+			player = plugin.getServer().getPlayer(result.getString("player"));
+			Victim = plugin.getServer().getPlayer(result.getString("Victim"));
+			Item = Items.itemByName(result.getString("Item")).toStack();
+			amount = result.getInt("amount");
+			ItemFromVictim = Items.itemByName(result.getString("ItemFromVictim")).toStack();
+			amountFromVictim = result.getInt("amountFromVictim");
+			playerLoc = player.getLocation();
+			VictimLoc = Victim.getLocation();
+		
+			result.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		new Exchange(plugin, player, playerLoc, Victim, VictimLoc, Item, ItemFromVictim, amount, amountFromVictim, false).cancel(false, false, true);	
 	}
 }

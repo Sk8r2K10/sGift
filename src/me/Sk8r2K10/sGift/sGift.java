@@ -30,6 +30,7 @@ public class sGift extends JavaPlugin {
 	private final GiftCommand gift = new GiftCommand(this);
 	private final sGiftCommand admin = new sGiftCommand(this);
 	private final SwapCommand swap = new SwapCommand(this);
+	public final Exchange exc = new Exchange(this);
 	public static Economy econ = null;
 	public static Permission perms = null;
 	private static final Logger log = Logger.getLogger("Minecraft");
@@ -44,7 +45,6 @@ public class sGift extends JavaPlugin {
 	public int task = -1;
 	private GameMode GameMode;
 	private String logpre;
-	private final Exchange exc = new Exchange(this);
 
 	@Override
 	public void onDisable() {
