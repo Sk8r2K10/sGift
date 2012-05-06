@@ -181,7 +181,7 @@ public class Exchange {
 				Victim.sendMessage(prefix + ChatColor.WHITE + "New Gift from " + ChatColor.YELLOW + player.getDisplayName() + ChatColor.WHITE + " of " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName());
 				Victim.sendMessage(prefix + ChatColor.WHITE + "Do " + ChatColor.YELLOW + "/Gift accept" + ChatColor.WHITE + " to accept this Gift or " + ChatColor.YELLOW + "/Gift deny" + ChatColor.WHITE + " to deny this Gift!");
 
-				plugin.newTimeout(player, Victim, Item);
+				plugin.newTimeout(player, Victim, Item, amount);
 
 				if (Item.getDurability() < Item.getType().getMaxDurability()) {
 
@@ -204,18 +204,19 @@ public class Exchange {
 
 							ResultSet result = plugin.SQLite.scanGift(player);
 
-							if (result == null) {
+							if (!result.next()) {
 
 								player.sendMessage(prefix + ChatColor.RED + "No Gifts to deny!");
 								return;
 							}
-							while (result.next()) {
 
-								player = plugin.getServer().getPlayer(result.getString("player"));
-								Victim = plugin.getServer().getPlayer(result.getString("Victim"));
-								Item = Items.itemByName(result.getString("Item")).toStack();
-								amount = result.getInt("amount");
-							}
+							player = plugin.getServer().getPlayer(result.getString("player"));
+							Victim = plugin.getServer().getPlayer(result.getString("Victim"));
+							Item = Items.itemByName(result.getString("Item")).toStack();
+							amount = result.getInt("amount");
+							
+							result.close();
+							
 							Item.setAmount(amount);
 
 							this.giveGift(player, Victim, Item);
@@ -287,7 +288,7 @@ public class Exchange {
 				if (plugin.getConfig().getBoolean("Options.use-sql.sqlite")) {
 					try {
 
-						plugin.SQLite.addGift(player, Victim, Item, amount);
+						plugin.SQLite.addTrade(player, Victim, Item, amount, price);
 						plugin.SQLite.addSender(player);
 					} catch (SQLException e) {
 
@@ -308,7 +309,7 @@ public class Exchange {
 				Victim.sendMessage(prefix + ChatColor.WHITE + "New Trade from " + ChatColor.YELLOW + player.getDisplayName() + ChatColor.WHITE + " of " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + " " + plugin.getEcon().currencyNameSingular() + "(s)");
 				Victim.sendMessage(prefix + ChatColor.WHITE + "Do " + ChatColor.YELLOW + "/trade accept" + ChatColor.WHITE + " to accept this Trade or " + ChatColor.YELLOW + "/trade deny" + ChatColor.WHITE + " to deny this trade!");
 
-				plugin.newTimeout(player, Victim, Item, price);
+				plugin.newTimeout(player, Victim, Item, price, amount);
 
 				if (Item.getEnchantments().size() > 0) {
 
@@ -330,19 +331,20 @@ public class Exchange {
 						try {
 							ResultSet result = plugin.SQLite.scanTrade(Victim);
 
-							if (result == null) {
+							if (!result.next()) {
 
 								player.sendMessage(prefix + ChatColor.RED + "No Trades to deny!");
 								return;
 							}
-							while (result.next()) {
 
-								player = plugin.getServer().getPlayer(result.getString("player"));
-								Victim = plugin.getServer().getPlayer(result.getString("Victim"));
-								Item = Items.itemByName(result.getString("Item")).toStack();
-								amount = result.getInt("amount");
-								price = result.getInt("price");
-							}
+							player = plugin.getServer().getPlayer(result.getString("player"));
+							Victim = plugin.getServer().getPlayer(result.getString("Victim"));
+							Item = Items.itemByName(result.getString("Item")).toStack();
+							amount = result.getInt("amount");
+							price = result.getInt("price");
+							
+							result.close();
+							
 							Item.setAmount(amount);
 
 							this.giveTrade(player, Victim, Item, price);
@@ -403,131 +405,130 @@ public class Exchange {
 
 		if (ItemFromVictim != null && price == -1) {
 			if (!Victim.hasPermission("sgift.toggles.swap.deny")) {
-				if (new InventoryManager(Victim).contains(ItemFromVictim, true, true)) {
-					String prefix = ChatColor.WHITE + "[" + ChatColor.BLUE + "sGift" + ChatColor.WHITE + "] ";
+				String prefix = ChatColor.WHITE + "[" + ChatColor.BLUE + "sGift" + ChatColor.WHITE + "] ";
 
-					plugin.ID += 1;
+				plugin.ID += 1;
 
-					Swap tswap = new Swap(Victim, player, Item, ItemFromVictim, plugin.ID);
+				Swap tswap = new Swap(Victim, player, Item, ItemFromVictim, plugin.ID);
 
-					long time = player.getWorld().getTime();
+				long time = player.getWorld().getTime();
+
+				if (plugin.getConfig().getBoolean("Options.use-sql.sqlite")) {
+					try {
+
+						plugin.SQLite.addSwap(player, Victim, Item, amount, ItemFromVictim, amountFromVictim);
+						plugin.SQLite.addSender(player);
+					} catch (SQLException e) {
+
+						e.printStackTrace();
+					}
+
+				} else {
+
+					plugin.swaps.add(tswap);
+					plugin.senders.add(new Sender(player));
+				}
+
+				plugin.timeout.add(new Timeout(tswap, player, plugin.ID, time));
+
+				new InventoryManager(player).remove(Item);
+				new InventoryManager(Victim).remove(ItemFromVictim);
+
+				player.sendMessage(prefix + ChatColor.WHITE + "Now Swapping " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName() + ChatColor.WHITE + " for " + ChatColor.YELLOW + ItemFromVictim.getAmount() + " " + Items.itemByStack(ItemFromVictim).getName() + " with " + ChatColor.YELLOW + Victim.getName() + "!");
+				player.sendMessage(prefix + ChatColor.YELLOW + "Waiting for " + Victim.getName() + " to accept...");
+				Victim.sendMessage(prefix + ChatColor.WHITE + "New Swap Request from " + ChatColor.YELLOW + player.getDisplayName() + ChatColor.WHITE + " of " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName() + " for " + ItemFromVictim.getAmount() + " " + Items.itemByStack(ItemFromVictim).getName());
+				Victim.sendMessage(prefix + ChatColor.WHITE + "Do " + ChatColor.YELLOW + "/swap accept" + ChatColor.WHITE + " to accept this Swap or " + ChatColor.YELLOW + "/swap deny" + ChatColor.WHITE + " to deny this Swap!");
+
+				plugin.newTimeout(player, Victim, Item, ItemFromVictim, amount, amountFromVictim);
+
+				if (Item.getDurability() < Item.getType().getMaxDurability()) {
+
+					Victim.sendMessage(prefix + ChatColor.RED + "Warning! This item has " + (Item.getType().getMaxDurability() - Item.getDurability()) + " uses left out of a maximum of " + Item.getType().getMaxDurability() + " uses.");
+
+				}
+				if (Item.getEnchantments().size() > 0) {
+
+					Victim.sendMessage(prefix + ChatColor.YELLOW + "This Item is enchanted!");
+					player.sendMessage(Item.getEnchantments().toString());
+
+				}
+				if (plugin.auto(Victim, "swap", "sgift.toggles.swap.accept")) {
+
+					Swap swap = null;
+					Timeout out = null;
+					Sender Sender1 = null;
 
 					if (plugin.getConfig().getBoolean("Options.use-sql.sqlite")) {
 						try {
 
-							plugin.SQLite.addSwap(player, Victim, Item, amount, ItemFromVictim, amountFromVictim);
-							plugin.SQLite.addSender(player);
+							ResultSet result = plugin.SQLite.scanSwap(Victim);
+
+							if (!result.next()) {
+
+								player.sendMessage(prefix + ChatColor.RED + "No Swaps to deny!");
+								return;
+							}
+
+							player = plugin.getServer().getPlayer(result.getString("player"));
+							Victim = plugin.getServer().getPlayer(result.getString("Victim"));
+							Item = Items.itemByName(result.getString("Item")).toStack();
+							amount = result.getInt("amount");
+							ItemFromVictim = Items.itemByName(result.getString("ItemFromVictim")).toStack();
+							amountFromVictim = result.getInt("amountFromVictim");
+
+							result.close();
+
+							Item.setAmount(amount);
+							ItemFromVictim.setAmount(amountFromVictim);
+
+							this.giveSwap(player, Victim, Item, ItemFromVictim);
+
+							plugin.SQLite.removeSwap(player, Victim, Item, amount, ItemFromVictim, amountFromVictim);
+							plugin.SQLite.removeSender(player);
 						} catch (SQLException e) {
 
 							e.printStackTrace();
 						}
-
 					} else {
 
-						plugin.swaps.add(tswap);
-						plugin.senders.add(new Sender(player));
-					}
+						for (Swap sw : plugin.swaps) {
 
-					plugin.timeout.add(new Timeout(tswap, player, plugin.ID, time));
+							if (sw.Victim == Victim) {
 
-					new InventoryManager(player).remove(Item);
-					new InventoryManager(Victim).remove(ItemFromVictim);
+								swap = sw;
 
-					player.sendMessage(prefix + ChatColor.WHITE + "Now Swapping " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName() + ChatColor.WHITE + " for " + ChatColor.YELLOW + ItemFromVictim.getAmount() + " " + Items.itemByStack(ItemFromVictim).getName() + " with " + ChatColor.YELLOW + Victim.getName() + "!");
-					player.sendMessage(prefix + ChatColor.YELLOW + "Waiting for " + Victim.getName() + " to accept...");
-					Victim.sendMessage(prefix + ChatColor.WHITE + "New Swap Request from " + ChatColor.YELLOW + player.getDisplayName() + ChatColor.WHITE + " of " + ChatColor.YELLOW + Item.getAmount() + " " + Items.itemByStack(Item).getName() + " for " + ItemFromVictim.getAmount() + " " + Items.itemByStack(ItemFromVictim).getName());
-					Victim.sendMessage(prefix + ChatColor.WHITE + "Do " + ChatColor.YELLOW + "/swap accept" + ChatColor.WHITE + " to accept this Swap or " + ChatColor.YELLOW + "/swap deny" + ChatColor.WHITE + " to deny this Swap!");
+								for (Sender s : plugin.senders) {
 
-					plugin.newTimeout(player, Victim, Item, ItemFromVictim);
+									if (s.Sender == sw.playerSender) {
 
-					if (Item.getDurability() < Item.getType().getMaxDurability()) {
-
-						Victim.sendMessage(prefix + ChatColor.RED + "Warning! This item has " + (Item.getType().getMaxDurability() - Item.getDurability()) + " uses left out of a maximum of " + Item.getType().getMaxDurability() + " uses.");
-
-					}
-					if (Item.getEnchantments().size() > 0) {
-
-						Victim.sendMessage(prefix + ChatColor.YELLOW + "This Item is enchanted!");
-						player.sendMessage(Item.getEnchantments().toString());
-
-					}
-					if (plugin.auto(Victim, "swap", "sgift.toggles.swap.accept")) {
-
-						Swap swap = null;
-						Timeout out = null;
-						Sender Sender1 = null;
-
-						if (plugin.getConfig().getBoolean("Options.use-sql.sqlite")) {
-							try {
-
-								ResultSet result = plugin.SQLite.scanSwap(Victim);
-
-								if (result == null) {
-
-									player.sendMessage(prefix + ChatColor.RED + "No Swaps to deny!");
-									return;
-								}
-								while (result.next()) {
-
-									player = plugin.getServer().getPlayer(result.getString("player"));
-									Victim = plugin.getServer().getPlayer(result.getString("Victim"));
-									Item = Items.itemByName(result.getString("Item")).toStack();
-									amount = result.getInt("amount");
-									ItemFromVictim = Items.itemByName(result.getString("ItemFromVictim")).toStack();
-									amountFromVictim = result.getInt("amountFromVictim");
-								}
-								Item.setAmount(amount);
-								ItemFromVictim.setAmount(amountFromVictim);
-
-								this.giveSwap(player, Victim, Item, ItemFromVictim);
-
-								plugin.SQLite.removeSwap(player, Victim, Item, amount, ItemFromVictim, amountFromVictim);
-								plugin.SQLite.removeSender(player);
-							} catch (SQLException e) {
-
-								e.printStackTrace();
-							}
-						} else {
-
-							for (Swap sw : plugin.swaps) {
-
-								if (sw.Victim == Victim) {
-
-									swap = sw;
-
-									for (Sender s : plugin.senders) {
-
-										if (s.Sender == sw.playerSender) {
-
-											Sender1 = s;
-										}
+										Sender1 = s;
 									}
-									for (Timeout o : plugin.timeout) {
+								}
+								for (Timeout o : plugin.timeout) {
 
-										if (o.ID == swap.ID) {
+									if (o.ID == swap.ID) {
 
-											out = o;
-										}
+										out = o;
 									}
 								}
 							}
 						}
+					}
 
-						if (swap == null) {
+					if (swap == null) {
 
-							Victim.sendMessage(prefix + ChatColor.RED + "No Swaps to accept!");
-						} else {
+						Victim.sendMessage(prefix + ChatColor.RED + "No Swaps to accept!");
+					} else {
 
-							Player playerInitial = swap.playerSender;
-							Victim = swap.Victim;
-							ItemStack itemsFromSender = swap.itemSender;
-							ItemStack itemsFromVictim = swap.itemVictim;
+						Player playerInitial = swap.playerSender;
+						Victim = swap.Victim;
+						ItemStack itemsFromSender = swap.itemSender;
+						ItemStack itemsFromVictim = swap.itemVictim;
 
-							this.giveSwap(playerInitial, Victim, itemsFromSender, itemsFromVictim);
-							plugin.timeout.remove(out);
-							plugin.swaps.remove(swap);
-							plugin.senders.remove(Sender1);
-						}
+						this.giveSwap(playerInitial, Victim, itemsFromSender, itemsFromVictim);
+						plugin.timeout.remove(out);
+						plugin.swaps.remove(swap);
+						plugin.senders.remove(Sender1);
 					}
 				}
 			} else {
@@ -895,7 +896,7 @@ public class Exchange {
 
 			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite")) {
 				try {
-					ResultSet result = plugin.SQLite.scanTrade(Victim);
+					ResultSet result = plugin.SQLite.scanTrade(player);
 
 					if (!result.next()) {
 
@@ -985,11 +986,11 @@ public class Exchange {
 
 			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite")) {
 				try {
-					ResultSet result = plugin.SQLite.scanSwap(Victim);
+					ResultSet result = plugin.SQLite.scanSwap(player);
 
 					if (!result.next()) {
 
-						player.sendMessage(prefix + ChatColor.RED + "No Swaps to deny!");
+						player.sendMessage(prefix + ChatColor.RED + "No Swaps to accept!");
 						return;
 					}
 
@@ -999,15 +1000,15 @@ public class Exchange {
 					amount = result.getInt("amount");
 					ItemFromVictim = Items.itemByName(result.getString("ItemFromVictim")).toStack();
 					amountFromVictim = result.getInt("amountFromVictim");
-
+					
+					result.close();
+					
 					Item.setAmount(amount);
 					ItemFromVictim.setAmount(amountFromVictim);
 
-					result.close();
+					this.giveSwap(player, Victim, Item, ItemFromVictim);
 
-					this.returnSwap(player, Victim, Item, ItemFromVictim);
-
-					plugin.SQLite.removeSwap(player, Victim, Item, amount, ItemFromVictim, amount);
+					plugin.SQLite.removeSwap(player, Victim, Item, amount, ItemFromVictim, amountFromVictim);
 					plugin.SQLite.removeSender(player);
 				} catch (SQLException e) {
 
@@ -1283,7 +1284,7 @@ public class Exchange {
 
 					this.returnSwap(player, Victim, Item, ItemFromVictim);
 
-					plugin.SQLite.removeSwap(player, Victim, Item, amount, ItemFromVictim, amount);
+					plugin.SQLite.removeSwap(player, Victim, Item, amount, ItemFromVictim, amountFromVictim);
 					plugin.SQLite.removeSender(player);
 				} catch (SQLException e) {
 
@@ -1374,16 +1375,16 @@ public class Exchange {
 			playerSendingItems.getWorld().dropItemNaturally(playerloc, items);
 
 			playerSendingItems.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
-			playerSendingItems.sendMessage(prefix + ChatColor.RED + "Cancelled gift!");
+			playerSendingItems.sendMessage(prefix + ChatColor.RED + "Gift Ended.");
 			playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.RED + " Has been returned to you.");
-			Victim.sendMessage(prefix + ChatColor.RED + "Cancelled Gift!");
+			Victim.sendMessage(prefix + ChatColor.RED + "Gift Ended.");
 		} else {
 
 			playerSendingItems.getInventory().addItem(items);
 
-			playerSendingItems.sendMessage(prefix + ChatColor.RED + "Cancelled gift!");
+			playerSendingItems.sendMessage(prefix + ChatColor.RED + "Gift Ended.");
 			playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.RED + " Has been returned to you.");
-			Victim.sendMessage(prefix + ChatColor.RED + "Cancelled Gift!");
+			Victim.sendMessage(prefix + ChatColor.RED + "Gift Ended.");
 		}
 	}
 
@@ -1442,17 +1443,17 @@ public class Exchange {
 
 			playerSendingItems.getWorld().dropItemNaturally(playerloc, items);
 			playerSendingItems.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
-			playerSendingItems.sendMessage(prefix + ChatColor.RED + "Cancelled trade!");
+			playerSendingItems.sendMessage(prefix + ChatColor.RED + "Trade Ended.");
 
 			playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.RED + " Has been returned to you.");
-			Victim.sendMessage(prefix + ChatColor.RED + "Cancelled Trade!");
+			Victim.sendMessage(prefix + ChatColor.RED + "Trade Ended.");
 		} else {
 			playerSendingItems.getInventory().addItem(items);
 
-			playerSendingItems.sendMessage(prefix + ChatColor.RED + "Cancelled trade!");
+			playerSendingItems.sendMessage(prefix + ChatColor.RED + "Trade Ended.");
 
 			playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.RED + " Has been returned to you.");
-			Victim.sendMessage(prefix + ChatColor.RED + "Cancelled Trade!");
+			Victim.sendMessage(prefix + ChatColor.RED + "Trade Ended.");
 		}
 	}
 
@@ -1500,15 +1501,13 @@ public class Exchange {
 
 			playerSendingItems.getWorld().dropItemNaturally(playerloc, itemsFromSender);
 			playerSendingItems.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
-			playerSendingItems.sendMessage(prefix + ChatColor.RED + "Cancelled Swap!");
+			playerSendingItems.sendMessage(prefix + ChatColor.RED + "Swap Ended.");
 			playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + itemsFromSender.getAmount() + " " + Items.itemByStack(itemsFromSender).getName() + ChatColor.RED + " Has been returned to you.");
-			Victim.sendMessage(prefix + ChatColor.RED + " Cancelled Swap!");
 		} else {
 
 			playerSendingItems.getInventory().addItem(itemsFromSender);
-			playerSendingItems.sendMessage(prefix + ChatColor.RED + "Cancelled Swap!");
+			playerSendingItems.sendMessage(prefix + ChatColor.RED + "Swap Ended.");
 			playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + itemsFromSender.getAmount() + " " + Items.itemByStack(itemsFromSender).getName() + ChatColor.RED + " Has been returned to you.");
-			Victim.sendMessage(prefix + ChatColor.RED + "Cancelled Swap!");
 		}
 		if (Victim.getInventory().firstEmpty() == -1) {
 
@@ -1516,12 +1515,12 @@ public class Exchange {
 
 			Victim.getWorld().dropItemNaturally(playerloc, itemsFromVictim);
 			Victim.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
-			Victim.sendMessage(prefix + ChatColor.RED + "Cancelled Swap!");
+			Victim.sendMessage(prefix + ChatColor.RED + "Swap Ended.");
 			Victim.sendMessage(prefix + ChatColor.YELLOW + itemsFromVictim.getAmount() + " " + Items.itemByStack(itemsFromVictim).getName() + ChatColor.RED + " Has been returned to you.");
 		} else {
 
 			Victim.getInventory().addItem(itemsFromVictim);
-			Victim.sendMessage(prefix + ChatColor.RED + "Cancelled Swap!");
+			Victim.sendMessage(prefix + ChatColor.RED + "Swap Ended.");
 			Victim.sendMessage(prefix + ChatColor.YELLOW + itemsFromVictim.getAmount() + " " + Items.itemByStack(itemsFromVictim).getName() + ChatColor.RED + " Has been returned to you.");
 		}
 	}

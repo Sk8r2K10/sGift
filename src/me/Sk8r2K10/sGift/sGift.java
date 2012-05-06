@@ -8,7 +8,7 @@ import me.Sk8r2K10.sGift.Commands.GiftCommand;
 import me.Sk8r2K10.sGift.Commands.SwapCommand;
 import me.Sk8r2K10.sGift.Commands.TradeCommand;
 import me.Sk8r2K10.sGift.Commands.sGiftCommand;
-import me.Sk8r2K10.sGift.util.SQLDataHandler;
+import me.Sk8r2K10.sGift.util.*;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.item.Items;
 import net.milkbowl.vault.permission.Permission;
@@ -33,15 +33,18 @@ public class sGift extends JavaPlugin {
 	public static Economy econ = null;
 	public static Permission perms = null;
 	private static final Logger log = Logger.getLogger("Minecraft");
-	public ArrayList<me.Sk8r2K10.sGift.util.Trade> trades = new ArrayList<me.Sk8r2K10.sGift.util.Trade>();
-	public ArrayList<me.Sk8r2K10.sGift.util.Sender> senders = new ArrayList<me.Sk8r2K10.sGift.util.Sender>();
-	public ArrayList<me.Sk8r2K10.sGift.util.Gift> gifts = new ArrayList<me.Sk8r2K10.sGift.util.Gift>();
-	public ArrayList<me.Sk8r2K10.sGift.util.Swap> swaps = new ArrayList<me.Sk8r2K10.sGift.util.Swap>();
-	public ArrayList<me.Sk8r2K10.sGift.util.Timeout> timeout = new ArrayList<me.Sk8r2K10.sGift.util.Timeout>();
+	
+	public ArrayList<Trade> trades = new ArrayList<Trade>();
+	public ArrayList<Sender> senders = new ArrayList<Sender>();
+	public ArrayList<Gift> gifts = new ArrayList<Gift>();
+	public ArrayList<Swap> swaps = new ArrayList<Swap>();
+	public ArrayList<Timeout> timeout = new ArrayList<Timeout>();
+	
 	public int ID;
 	public int task = -1;
 	private GameMode GameMode;
 	private String logpre;
+	private final Exchange exc = new Exchange(this);
 
 	@Override
 	public void onDisable() {
@@ -336,25 +339,25 @@ public class sGift extends JavaPlugin {
 		return false;
 	}
 
-	public void newTimeout(Player player, Player Victim, ItemStack Item) {
+	public void newTimeout(Player player, Player Victim, ItemStack Item, int amount) {
 
 		long outtatime = this.getConfig().getInt("Options.request-timeout") * 20;
 
-		task = this.getServer().getScheduler().scheduleSyncDelayedTask(this, new me.Sk8r2K10.sGift.util.RunTimeout(this, player, Victim, Item), outtatime);
+		task = this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(exc, this, player, Victim, Item, amount), outtatime);
 	}
 
-	public void newTimeout(Player player, Player Victim, ItemStack Item, int price) {
+	public void newTimeout(Player player, Player Victim, ItemStack Item, int price, int amount) {
 
 		long outtatime = this.getConfig().getInt("Options.request-timeout") * 20;
 
-		task = this.getServer().getScheduler().scheduleSyncDelayedTask(this, new me.Sk8r2K10.sGift.util.RunTimeout(this, player, Victim, Item, price), outtatime);
+		task = this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(exc, this, player, Victim, Item, price, amount), outtatime);
 	}
 
-	public void newTimeout(Player player, Player Victim, ItemStack Item, ItemStack ItemFromVictim) {
+	public void newTimeout(Player player, Player Victim, ItemStack Item, ItemStack ItemFromVictim, int amount, int amountFromVictim) {
 
 		long outtatime = this.getConfig().getInt("Options.request-timeout") * 20;
 
-		task = this.getServer().getScheduler().scheduleSyncDelayedTask(this, new me.Sk8r2K10.sGift.util.RunTimeout(this, player, Victim, Item, ItemFromVictim), outtatime);
+		task = this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(exc, this, player, Victim, Item, ItemFromVictim, amount, amountFromVictim), outtatime);
 	}
 
 	public void stop(Player player, Player victim, String type) {
@@ -370,7 +373,7 @@ public class sGift extends JavaPlugin {
 
 		String errpre = "[" + ChatColor.RED + "sGift" + ChatColor.WHITE + "] " + ChatColor.RED;
 
-		for (me.Sk8r2K10.sGift.util.Gift g : gifts) {
+		for (Gift g : gifts) {
 
 			if (g.playerSender == player || g.Victim == player) {
 				player.sendMessage(errpre + "You are already Involved in a Gift!");
@@ -385,7 +388,7 @@ public class sGift extends JavaPlugin {
 			}
 		}
 
-		for (me.Sk8r2K10.sGift.util.Trade t : this.trades) {
+		for (Trade t : this.trades) {
 
 			if (t.playerSender == player || t.Victim == player) {
 				player.sendMessage(errpre + "You are already Involved in a Trade!");
@@ -399,7 +402,7 @@ public class sGift extends JavaPlugin {
 			}
 		}
 
-		for (me.Sk8r2K10.sGift.util.Swap s : swaps) {
+		for (Swap s : swaps) {
 
 			if (s.playerSender == player || s.Victim == player) {
 				player.sendMessage(errpre + "You are already Involved in a Swap!");

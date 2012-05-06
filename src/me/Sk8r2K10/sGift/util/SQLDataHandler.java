@@ -33,17 +33,17 @@ public class SQLDataHandler {
 	public ResultSet scanGift(Player player) throws SQLException {
 
 		String Player = player.getName();
-		
+
 		String query = "SELECT * FROM `Gift` WHERE `Victim` = '" + Player + "'";
 		ResultSet result = plugin.SQLt.query(query);
 
 		return result;
 	}
-	
+
 	public ResultSet scanGiftforCancel(Player player) throws SQLException {
-		
+
 		String Player = player.getName();
-		
+
 		String query = "SELECT * FROM `Gift` WHERE `player` = '" + Player + "'";
 		ResultSet result = plugin.SQLt.query(query);
 
@@ -80,20 +80,20 @@ public class SQLDataHandler {
 
 		String query = "SELECT * FROM `Trade` WHERE `Victim` = '" + Player + "'";
 		ResultSet result = plugin.SQLt.query(query);
-			
+
 		return result;
 	}
-	
+
 	public ResultSet scanTradeforCancel(Player player) throws SQLException {
 
 		String Player = player.getName();
 
 		String query = "SELECT * FROM `Trade` WHERE `player` = '" + Player + "'";
 		ResultSet result = plugin.SQLt.query(query);
-			
+
 		return result;
 	}
-	
+
 	public boolean removeTrade(Player player, Player Victim, ItemStack Item, int amount, int price) throws SQLException {
 
 		String Player = player.getName();
@@ -125,17 +125,17 @@ public class SQLDataHandler {
 
 		String query = "SELECT * FROM `Swap` WHERE `Victim` = '" + Player + "'";
 		ResultSet result = plugin.SQLt.query(query);
-		
+
 		return result;
 	}
-	
+
 	public ResultSet scanSwapforCancel(Player player) throws SQLException {
 
 		String Player = player.getName();
 
 		String query = "SELECT * FROM `Swap` WHERE `player` = '" + Player + "'";
 		ResultSet result = plugin.SQLt.query(query);
-		
+
 		return result;
 	}
 
@@ -168,7 +168,7 @@ public class SQLDataHandler {
 
 		String query = "SELECT * FROM `Sender` WHERE `player` = '" + Player + "'";
 		ResultSet result = plugin.SQLt.query(query);
-		
+
 		return result;
 	}
 
