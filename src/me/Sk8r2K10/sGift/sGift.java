@@ -12,10 +12,12 @@ import me.Sk8r2K10.sGift.util.*;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.item.Items;
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventPriority;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -61,7 +63,9 @@ public class sGift extends JavaPlugin {
 		getCommand("trade").setExecutor(trade);
 		getCommand("sgift").setExecutor(admin);
 		getCommand("swap").setExecutor(swap);
-
+		
+		//this.getServer().getPluginManager().registerEvents(new LeaveEventHandler(this), this);
+		
 		PluginDescriptionFile pdf = getDescription();
 		logpre = "[" + pdf.getName() + " " + pdf.getVersion() + "] ";
 
