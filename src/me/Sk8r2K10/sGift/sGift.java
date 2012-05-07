@@ -1,5 +1,7 @@
 package me.Sk8r2K10.sGift;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import lib.PatPeter.SQLibrary.MySQL;
@@ -12,12 +14,10 @@ import me.Sk8r2K10.sGift.util.*;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.item.Items;
 import net.milkbowl.vault.permission.Permission;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventPriority;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -27,7 +27,7 @@ public class sGift extends JavaPlugin {
 
 	public SQLite SQLt;
 	public MySQL MSQL;
-	public SQLDataHandler SQLite = new SQLDataHandler(this);
+	public SQLDataHandler SQL = new SQLDataHandler(this);
 	private final TradeCommand trade = new TradeCommand(this);
 	private final GiftCommand gift = new GiftCommand(this);
 	private final sGiftCommand admin = new sGiftCommand(this);
@@ -46,7 +46,13 @@ public class sGift extends JavaPlugin {
 	public int ID;
 	public int task = -1;
 	private GameMode GameMode;
+	private ResultSet result;
 	private String logpre;
+	private String host;
+	private String port;
+	private String user;
+	private String pass;
+	public String db;
 
 	@Override
 	public void onDisable() {
@@ -111,12 +117,21 @@ public class sGift extends JavaPlugin {
 				log.severe(logpre + "Could not connect to SQLite, Please check you have SQLite available!");
 				this.getConfig().set("Options.use-sql.sqlite", false);
 			}
+		} else if (this.getConfig().getBoolean("Options.use-sql.mysql.use")) {
+			
+			loadMSQL();
+			
+			if (!MSQL.checkConnection()) {
+				
+				log.severe(logpre + "Could not connect to SQLite, Please check you have SQLite available!");
+				this.getConfig().set("Options.use-sql.mysql.use", false);
+			}	
 		}
 	}
 
 	public void loadSQLt() {
 
-		SQLt = new SQLite(log, "sGift", "Exchanges", this.getDataFolder().getPath());
+		SQLt = new SQLite(log, "[sGift]", "Exchanges", this.getDataFolder().getPath());
 
 		SQLt.open();
 		log.info(logpre + "SQLite Connection established.");
@@ -125,17 +140,43 @@ public class sGift extends JavaPlugin {
 		String Trade = "CREATE TABLE IF NOT EXISTS `Trade` (`ID` int AUTO_INCREMENT, `player` VARCHAR(30) NOT NULL, `Victim` VARCHAR(30) NOT NULL, `Item` VARCHAR(255) NOT NULL, `amount` int NOT NULL, `price` int NOT NULL, PRIMARY KEY(`ID`))";
 		String Swap = "CREATE TABLE IF NOT EXISTS `Swap` (`ID` int AUTO_INCREMENT, `player` VARCHAR(30) NOT NULL, `Victim` VARCHAR(30) NOT NULL, `Item` VARCHAR(255) NOT NULL, `amount` int NOT NULL, `ItemFromVictim` VARCHAR(255) NOT NULL, `amountfromVictim` int NOT NULL, PRIMARY KEY(`ID`))";
 		String Sender = "CREATE TABLE IF NOT EXISTS `Sender` (`ID` int AUTO_INCREMENT, `player` VARCHAR(30) NOT NULL, PRIMARY KEY(`ID`))";
+		String Stranded = "CREATE TABLE IF NOT EXISTS `Sender` (`ID` int AUTO_INCREMENT, `player` VARCHAR(30) NOT NULL, `Item` VARCHAR(255) NOT NULL, PRIMARY KEY(`ID`))";
 
 		SQLt.createTable(Gift);
 		SQLt.createTable(Trade);
 		SQLt.createTable(Swap);
 		SQLt.createTable(Sender);
+		SQLt.createTable(Stranded);
 
 		log.info(logpre + "SQLite is initialised.");
 	}
 
 	public void loadMSQL() {
-		// Do later
+		
+		host = this.getConfig().getString("Options.use-sql.mysql.host");
+		port = this.getConfig().getString("Options.use-sql.mysql.port");
+		user = this.getConfig().getString("Options.use-sql.mysql.user");
+		pass = this.getConfig().getString("Options.use-sql.mysql.pass");
+		db = this.getConfig().getString("Options.use-sql.mysql.dbname");
+		
+		MSQL = new MySQL(log, "[sGift]", host, port, db, user, pass);
+		
+		MSQL.open();
+		log.info(logpre + "MySQL Connection established.");
+		
+		String Gift = "CREATE TABLE IF NOT EXISTS `" + db + "`.`Gift` (`ID` int AUTO_INCREMENT, `player` VARCHAR(30) NOT NULL, `Victim` VARCHAR(30) NOT NULL, `Item` VARCHAR(255) NOT NULL, `amount` int NOT NULL, PRIMARY KEY(`ID`))";
+		String Trade = "CREATE TABLE IF NOT EXISTS `" + db + "`.`Trade` (`ID` int AUTO_INCREMENT, `player` VARCHAR(30) NOT NULL, `Victim` VARCHAR(30) NOT NULL, `Item` VARCHAR(255) NOT NULL, `amount` int NOT NULL, `price` int NOT NULL, PRIMARY KEY(`ID`))";
+		String Swap = "CREATE TABLE IF NOT EXISTS `" + db + "`.`Swap` (`ID` int AUTO_INCREMENT, `player` VARCHAR(30) NOT NULL, `Victim` VARCHAR(30) NOT NULL, `Item` VARCHAR(255) NOT NULL, `amount` int NOT NULL, `ItemFromVictim` VARCHAR(255) NOT NULL, `amountfromVictim` int NOT NULL, PRIMARY KEY(`ID`))";
+		String Sender = "CREATE TABLE IF NOT EXISTS `" + db + "`.`Sender` (`ID` int AUTO_INCREMENT, `player` VARCHAR(30) NOT NULL, PRIMARY KEY(`ID`))";
+		String Stranded = "CREATE TABLE IF NOT EXISTS `" + db + "`.`Sender` (`ID` int AUTO_INCREMENT, `player` VARCHAR(30) NOT NULL, `Item` VARCHAR(255) NOT NULL, PRIMARY KEY(`ID`))";
+
+		MSQL.createTable(Gift);
+		MSQL.createTable(Trade);
+		MSQL.createTable(Swap);
+		MSQL.createTable(Sender);
+		MSQL.checkTable(Stranded);
+		
+		log.info(logpre + "MySQL is initialised.");
 	}
 
 	public boolean setupEconomy() {
@@ -376,47 +417,91 @@ public class sGift extends JavaPlugin {
 	public boolean alreadyRequested(Player player, Player Victim) {
 
 		String errpre = "[" + ChatColor.RED + "sGift" + ChatColor.WHITE + "] " + ChatColor.RED;
+	
+		if (this.getConfig().getBoolean("Options.use-sql.sqlite") || this.getConfig().getBoolean("Options.use-sql.mysql.use")) {
+			try {
 
-		for (Gift g : gifts) {
+				result = SQL.scanGift(player);
 
-			if (g.playerSender == player || g.Victim == player) {
-				player.sendMessage(errpre + "You are already Involved in a Gift!");
-
-				return true;
+				if (result.next()) {
+					player.sendMessage(errpre + "You are already Involved in a Gift!");
+					player.sendMessage(errpre + ChatColor.GRAY + "Accept or deny this Gift to make a new one!");
+					result.close();
+					return true;
+				}
+				result.close();
+				
+				result = SQL.scanTrade(player);
+				
+				if (result.next()) {
+					player.sendMessage(errpre + "You are already Involved in a Trade!");
+					player.sendMessage(errpre + ChatColor.GRAY + "Accept or deny this Trade to make a new one!");
+					result.close();
+					return true;
+				}
+				result.close();
+				
+				result = SQL.scanSwap(player);
+				
+				if (result.next()) {
+					player.sendMessage(errpre + "You are already Involved in a Swap!");
+					player.sendMessage(errpre + ChatColor.GRAY + "Accept or deny this Swap to make a new one!");
+					result.close();
+					return true;
+				}
+				result.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-			if (g.Victim == Victim || g.playerSender == Victim) {
-				player.sendMessage(errpre + "Player is already Involved in a Gift!");
 
-				return true;
+		} else {
+			for (Gift g : gifts) {
 
+				if (g.playerSender == player || g.Victim == player) {
+					player.sendMessage(errpre + "You are already Involved in a Gift!");
+					player.sendMessage(errpre + ChatColor.GRAY + "Accept or deny this Gift to make a new one!");
+					
+					return true;
+				}
+				if (g.Victim == Victim || g.playerSender == Victim) {
+					player.sendMessage(errpre + "Player is already Involved in a Gift!");
+					player.sendMessage(errpre + ChatColor.GRAY + "Accept or deny this Gift to make a new one!");
+					
+					return true;
+
+				}
 			}
-		}
 
-		for (Trade t : this.trades) {
+			for (Trade t : this.trades) {
 
-			if (t.playerSender == player || t.Victim == player) {
-				player.sendMessage(errpre + "You are already Involved in a Trade!");
-
-				return true;
+				if (t.playerSender == player || t.Victim == player) {
+					player.sendMessage(errpre + "You are already Involved in a Trade!");
+					player.sendMessage(errpre + ChatColor.GRAY + "Accept or deny this Trade to make a new one!");
+					
+					return true;
+				}
+				if (t.Victim == Victim || t.playerSender == Victim) {
+					player.sendMessage(errpre + "Player is already Involved in a Trade!");
+					player.sendMessage(errpre + ChatColor.GRAY + "Accept or deny this Trade to make a new one!");
+					
+					return true;
+				}
 			}
-			if (t.Victim == Victim || t.playerSender == Victim) {
-				player.sendMessage(errpre + "Player is already Involved in a Trade!");
 
-				return true;
-			}
-		}
+			for (Swap s : swaps) {
 
-		for (Swap s : swaps) {
-
-			if (s.playerSender == player || s.Victim == player) {
-				player.sendMessage(errpre + "You are already Involved in a Swap!");
-
-				return true;
-			}
-			if (s.Victim == Victim || s.playerSender == Victim) {
-				player.sendMessage(errpre + "Player is already Involved in a Swap!");
-
-				return true;
+				if (s.playerSender == player || s.Victim == player) {
+					player.sendMessage(errpre + "You are already Involved in a Swap!");
+					player.sendMessage(errpre + ChatColor.GRAY + "Accept or deny this Swap to make a new one!");
+					
+					return true;
+				}
+				if (s.Victim == Victim || s.playerSender == Victim) {
+					player.sendMessage(errpre + "Player is already Involved in a Swap!");
+					player.sendMessage(errpre + ChatColor.GRAY + "Accept or deny this Swap to make a new one!");
+					
+					return true;
+				}
 			}
 		}
 		return false;

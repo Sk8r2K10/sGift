@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import me.Sk8r2K10.sGift.InventoryManager;
 import me.Sk8r2K10.sGift.sGift;
 import net.milkbowl.vault.item.Items;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -155,11 +156,11 @@ public class Exchange {
 
 				long time = player.getWorld().getTime();
 
-				if (plugin.getConfig().getBoolean("Options.use-sql.sqlite")) {
+				if (plugin.getConfig().getBoolean("Options.use-sql.sqlite") || plugin.getConfig().getBoolean("Options.use-sql.mysql.use")) {
 					try {
 
-						plugin.SQLite.addGift(player, Victim, Item, amount);
-						plugin.SQLite.addSender(player);
+						plugin.SQL.addGift(player, Victim, Item, amount);
+						plugin.SQL.addSender(player);
 					} catch (SQLException e) {
 
 						e.printStackTrace();
@@ -199,10 +200,10 @@ public class Exchange {
 					Gift gift = null;
 					Sender Sender1 = null;
 
-					if (plugin.getConfig().getBoolean("Options.use-sql.sqlite")) {
+					if (plugin.getConfig().getBoolean("Options.use-sql.sqlite") || plugin.getConfig().getBoolean("Options.use-sql.mysql.use")) {
 						try {
 
-							ResultSet result = plugin.SQLite.scanGift(player);
+							ResultSet result = plugin.SQL.scanGift(player);
 
 							if (!result.next()) {
 
@@ -221,8 +222,8 @@ public class Exchange {
 
 							this.giveGift(player, Victim, Item);
 
-							plugin.SQLite.removeGift(player, Victim, Item, amount);
-							plugin.SQLite.removeSender(player);
+							plugin.SQL.removeGift(player, Victim, Item, amount);
+							plugin.SQL.removeSender(player);
 						} catch (SQLException e) {
 
 							e.printStackTrace();
@@ -285,11 +286,12 @@ public class Exchange {
 
 				long time = player.getWorld().getTime();
 
-				if (plugin.getConfig().getBoolean("Options.use-sql.sqlite")) {
+				if (plugin.getConfig().getBoolean("Options.use-sql.sqlite") || plugin.getConfig().getBoolean("Options.use-sql.mysql.use")) {
 					try {
 
-						plugin.SQLite.addTrade(player, Victim, Item, amount, price);
-						plugin.SQLite.addSender(player);
+						plugin.SQL.addTrade(player, Victim, Item, amount, price);
+						plugin.SQL.addSender(player);
+						plugin.SQL.addSender(Victim);
 					} catch (SQLException e) {
 
 						e.printStackTrace();
@@ -327,9 +329,9 @@ public class Exchange {
 					Timeout out = null;
 					Sender Sender1 = null;
 
-					if (plugin.getConfig().getBoolean("Options.use-sql.sqlite")) {
+					if (plugin.getConfig().getBoolean("Options.use-sql.sqlite") || plugin.getConfig().getBoolean("Options.use-sql.mysql.use")) {
 						try {
-							ResultSet result = plugin.SQLite.scanTrade(Victim);
+							ResultSet result = plugin.SQL.scanTrade(Victim);
 
 							if (!result.next()) {
 
@@ -349,8 +351,8 @@ public class Exchange {
 
 							this.giveTrade(player, Victim, Item, price);
 
-							plugin.SQLite.removeTrade(player, Victim, Item, amount, price);
-							plugin.SQLite.removeSender(player);
+							plugin.SQL.removeTrade(player, Victim, Item, amount, price);
+							plugin.SQL.removeSender(player);
 						} catch (SQLException e) {
 
 							e.printStackTrace();
@@ -413,11 +415,11 @@ public class Exchange {
 
 				long time = player.getWorld().getTime();
 
-				if (plugin.getConfig().getBoolean("Options.use-sql.sqlite")) {
+				if (plugin.getConfig().getBoolean("Options.use-sql.sqlite") || plugin.getConfig().getBoolean("Options.use-sql.mysql.use")) {
 					try {
 
-						plugin.SQLite.addSwap(player, Victim, Item, amount, ItemFromVictim, amountFromVictim);
-						plugin.SQLite.addSender(player);
+						plugin.SQL.addSwap(player, Victim, Item, amount, ItemFromVictim, amountFromVictim);
+						plugin.SQL.addSender(player);
 					} catch (SQLException e) {
 
 						e.printStackTrace();
@@ -458,10 +460,10 @@ public class Exchange {
 					Timeout out = null;
 					Sender Sender1 = null;
 
-					if (plugin.getConfig().getBoolean("Options.use-sql.sqlite")) {
+					if (plugin.getConfig().getBoolean("Options.use-sql.sqlite") || plugin.getConfig().getBoolean("Options.use-sql.mysql.use")) {
 						try {
 
-							ResultSet result = plugin.SQLite.scanSwap(Victim);
+							ResultSet result = plugin.SQL.scanSwap(Victim);
 
 							if (!result.next()) {
 
@@ -483,8 +485,8 @@ public class Exchange {
 
 							this.giveSwap(player, Victim, Item, ItemFromVictim);
 
-							plugin.SQLite.removeSwap(player, Victim, Item, amount, ItemFromVictim, amountFromVictim);
-							plugin.SQLite.removeSender(player);
+							plugin.SQL.removeSwap(player, Victim, Item, amount, ItemFromVictim, amountFromVictim);
+							plugin.SQL.removeSender(player);
 						} catch (SQLException e) {
 
 							e.printStackTrace();
@@ -551,10 +553,10 @@ public class Exchange {
 			Timeout time = null;
 			Sender Sender1 = null;
 
-			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite")) {
+			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite") || plugin.getConfig().getBoolean("Options.use-sql.mysql.use")) {
 				try {
 
-					ResultSet result = plugin.SQLite.scanGiftforCancel(player);
+					ResultSet result = plugin.SQL.scanGiftforCancel(player);
 
 					if (!result.next()) {
 
@@ -573,8 +575,8 @@ public class Exchange {
 
 					this.returnGift(player, Victim, Item);
 
-					plugin.SQLite.removeGift(player, Victim, Item, amount);
-					plugin.SQLite.removeSender(player);
+					plugin.SQL.removeGift(player, Victim, Item, amount);
+					plugin.SQL.removeSender(player);
 				} catch (SQLException e) {
 
 					e.printStackTrace();
@@ -637,9 +639,9 @@ public class Exchange {
 			Timeout time = null;
 			Sender Sender1 = null;
 
-			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite")) {
+			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite") || plugin.getConfig().getBoolean("Options.use-sql.mysql.use")) {
 				try {
-					ResultSet result = plugin.SQLite.scanTradeforCancel(player);
+					ResultSet result = plugin.SQL.scanTradeforCancel(player);
 
 					if (!result.next()) {
 
@@ -659,8 +661,8 @@ public class Exchange {
 
 					this.returnTrade(player, Victim, Item, price);
 
-					plugin.SQLite.removeTrade(player, Victim, Item, amount, price);
-					plugin.SQLite.removeSender(player);
+					plugin.SQL.removeTrade(player, Victim, Item, amount, price);
+					plugin.SQL.removeSender(player);
 				} catch (SQLException e) {
 
 					e.printStackTrace();
@@ -722,9 +724,9 @@ public class Exchange {
 			Timeout time = null;
 			Sender Sender1 = null;
 
-			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite")) {
+			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite") || plugin.getConfig().getBoolean("Options.use-sql.mysql.use")) {
 				try {
-					ResultSet result = plugin.SQLite.scanSwapforCancel(player);
+					ResultSet result = plugin.SQL.scanSwapforCancel(player);
 
 					if (!result.next()) {
 
@@ -746,8 +748,8 @@ public class Exchange {
 
 					this.returnSwap(player, Victim, ItemFromVictim, ItemFromVictim);
 
-					plugin.SQLite.removeSwap(player, Victim, Item, amount, ItemFromVictim, amountFromVictim);
-					plugin.SQLite.removeSender(player);
+					plugin.SQL.removeSwap(player, Victim, Item, amount, ItemFromVictim, amountFromVictim);
+					plugin.SQL.removeSender(player);
 				} catch (SQLException e) {
 
 					e.printStackTrace();
@@ -817,10 +819,10 @@ public class Exchange {
 			Timeout time = null;
 			Sender Sender1 = null;
 
-			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite")) {
+			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite") || plugin.getConfig().getBoolean("Options.use-sql.mysql.use")) {
 				try {
 
-					ResultSet result = plugin.SQLite.scanGift(player);
+					ResultSet result = plugin.SQL.scanGift(player);
 
 					if (!result.next()) {
 
@@ -838,8 +840,8 @@ public class Exchange {
 
 					this.giveGift(player, Victim, Item);
 
-					plugin.SQLite.removeGift(player, Victim, Item, amount);
-					plugin.SQLite.removeSender(player);
+					plugin.SQL.removeGift(player, Victim, Item, amount);
+					plugin.SQL.removeSender(player);
 
 
 				} catch (SQLException e) {
@@ -894,9 +896,9 @@ public class Exchange {
 			Timeout time = null;
 			Sender Sender1 = null;
 
-			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite")) {
+			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite") || plugin.getConfig().getBoolean("Options.use-sql.mysql.use")) {
 				try {
-					ResultSet result = plugin.SQLite.scanTrade(player);
+					ResultSet result = plugin.SQL.scanTrade(player);
 
 					if (!result.next()) {
 
@@ -915,8 +917,8 @@ public class Exchange {
 
 					this.returnTrade(player, Victim, Item, price);
 
-					plugin.SQLite.removeTrade(player, Victim, Item, amount, price);
-					plugin.SQLite.removeSender(player);
+					plugin.SQL.removeTrade(player, Victim, Item, amount, price);
+					plugin.SQL.removeSender(player);
 				} catch (SQLException e) {
 
 					e.printStackTrace();
@@ -984,9 +986,9 @@ public class Exchange {
 			Timeout time = null;
 			Sender Sender1 = null;
 
-			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite")) {
+			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite") || plugin.getConfig().getBoolean("Options.use-sql.mysql.use")) {
 				try {
-					ResultSet result = plugin.SQLite.scanSwap(player);
+					ResultSet result = plugin.SQL.scanSwap(player);
 
 					if (!result.next()) {
 
@@ -1008,8 +1010,8 @@ public class Exchange {
 
 					this.giveSwap(player, Victim, Item, ItemFromVictim);
 
-					plugin.SQLite.removeSwap(player, Victim, Item, amount, ItemFromVictim, amountFromVictim);
-					plugin.SQLite.removeSender(player);
+					plugin.SQL.removeSwap(player, Victim, Item, amount, ItemFromVictim, amountFromVictim);
+					plugin.SQL.removeSender(player);
 				} catch (SQLException e) {
 
 					e.printStackTrace();
@@ -1064,30 +1066,74 @@ public class Exchange {
 		String prefix = ChatColor.WHITE + "[" + ChatColor.RED + "sGift" + ChatColor.WHITE + "] ";
 
 		if (Gift) {
-
-			player.sendMessage(prefix + ChatColor.GREEN + "Stopped " + plugin.gifts.size() + " Gifts.");
-
-			while (plugin.gifts.size() > 0) {
-
-				this.cancel(true, false, false);
+			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite") || plugin.getConfig().getBoolean("Options.use-sql.mysql.use")) {
+								
+				if (!plugin.SQL.giftEmpty()) {
+					
+					try {
+						ResultSet result = plugin.SQL.scanGiftforAll();
+						
+						while (result.next()) {
+							
+							player = Bukkit.getPlayer(result.getString("player"));
+							Victim = Bukkit.getPlayer(result.getString("Victim"));
+							Item = Items.itemByName(result.getString("Item")).toStack();
+							
+							Item.setAmount(result.getInt("amount"));
+							
+							this.returnGift(player, Victim, Item);
+						}
+						result.close();
+						
+						plugin.SQLt.wipeTable("Gift");
+						
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			} else {
+				player.sendMessage(prefix + ChatColor.GREEN + "Stopped " + plugin.gifts.size() + " Gifts.");
+				
+				while (plugin.gifts.size() > 0) {
+					
+					this.cancel(true, false, false);
+				}
 			}
 		}
 		if (Trade) {
 
 			player.sendMessage(prefix + ChatColor.GREEN + "Stopped " + plugin.trades.size() + " Trades.");
+			
+			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite") || plugin.getConfig().getBoolean("Options.use-sql.mysql.use")) {
+				
+				while (plugin.SQL.tradeEmpty()) {
+					
+					this.cancel(false, true, false);
+				}
+				
+			} else {
 
-			while (plugin.trades.size() > 0) {
+				while (plugin.trades.size() > 0) { 
 
-				this.cancel(false, true, false);
-			}
+					this.cancel(false, true, false);
+				}
+			}	
 		}
 		if (Swap) {
 
 			player.sendMessage(prefix + ChatColor.GREEN + "Stopped " + plugin.swaps.size() + " Swaps.");
+			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite") || plugin.getConfig().getBoolean("Options.use-sql.mysql.use")) {
+				
+				while (plugin.SQL.swapEmpty()) {
+					
+					this.cancel(false, false, true);
+				}
+			} else {
 
-			while (plugin.swaps.size() > 0) {
-
-				this.cancel(false, false, true);
+				while (plugin.swaps.size() > 0) {
+					
+					this.cancel(false, false, true);
+				}
 			}
 		}
 	}
@@ -1105,10 +1151,10 @@ public class Exchange {
 			Timeout time = null;
 			Sender Sender1 = null;
 
-			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite")) {
+			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite") || plugin.getConfig().getBoolean("Options.use-sql.mysql.use")) {
 				try {
 
-					ResultSet result = plugin.SQLite.scanGift(player);
+					ResultSet result = plugin.SQL.scanGift(player);
 
 					if (!result.next()) {
 
@@ -1126,8 +1172,8 @@ public class Exchange {
 
 					this.giveGift(player, Victim, Item);
 
-					plugin.SQLite.removeGift(player, Victim, Item, amount);
-					plugin.SQLite.removeSender(player);
+					plugin.SQL.removeGift(player, Victim, Item, amount);
+					plugin.SQL.removeSender(player);
 				} catch (SQLException e) {
 
 					e.printStackTrace();
@@ -1182,9 +1228,9 @@ public class Exchange {
 			Timeout time = null;
 			Sender Sender1 = null;
 
-			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite")) {
+			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite") || plugin.getConfig().getBoolean("Options.use-sql.mysql.use")) {
 				try {
-					ResultSet result = plugin.SQLite.scanTrade(Victim);
+					ResultSet result = plugin.SQL.scanTrade(Victim);
 
 					if (!result.next()) {
 
@@ -1204,8 +1250,8 @@ public class Exchange {
 
 					this.returnTrade(player, Victim, Item, price);
 
-					plugin.SQLite.removeTrade(player, Victim, Item, amount, price);
-					plugin.SQLite.removeSender(player);
+					plugin.SQL.removeTrade(player, Victim, Item, amount, price);
+					plugin.SQL.removeSender(player);
 				} catch (SQLException e) {
 
 					e.printStackTrace();
@@ -1260,9 +1306,9 @@ public class Exchange {
 			Timeout time = null;
 			Sender Sender1 = null;
 
-			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite")) {
+			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite") || plugin.getConfig().getBoolean("Options.use-sql.mysql.use")) {
 				try {
-					ResultSet result = plugin.SQLite.scanSwap(Victim);
+					ResultSet result = plugin.SQL.scanSwap(Victim);
 
 					if (!result.next()) {
 
@@ -1284,8 +1330,8 @@ public class Exchange {
 
 					this.returnSwap(player, Victim, Item, ItemFromVictim);
 
-					plugin.SQLite.removeSwap(player, Victim, Item, amount, ItemFromVictim, amountFromVictim);
-					plugin.SQLite.removeSender(player);
+					plugin.SQL.removeSwap(player, Victim, Item, amount, ItemFromVictim, amountFromVictim);
+					plugin.SQL.removeSender(player);
 				} catch (SQLException e) {
 
 					e.printStackTrace();

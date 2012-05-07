@@ -13,6 +13,13 @@
 
 # The "Help" section defines the strings shown to the player when using the help commands. Mainly for Multilingual support.
 # -> These **WONT** change the commands themselves.
+
+# The SQL section defines whether or not to use the SQL features.
+# -> Use of SQL allows exchanges to persist even after a restart or server crash.
+# -> However, SQL Can be quite taxing on the server, So keep this in mind if you have a server with very little RAM (Such as a VPS)
+# -> SQLite is recommended if you have a very small amount of RAM, As it is, as the name suggests, much more lightweight that MySQL.
+# -> If you choose not to use SQL at all, sGift will automatically switch to using server memory to store exchanges. This means that any exchanges will be lost if the server stops in any way.
+# -> Only choose MySQL if you really know what you're doing!
 Features:
   enable-gift: true
   enable-trade: true
@@ -30,6 +37,13 @@ Options:
   allow-creative: false
   use-sql:
    sqlite: true
+   mysql:
+     use: false
+     host: localhost
+     port: 3306
+     user: example_username
+     pass: example_password
+     dbname: sGift
   
 Help:
   Gift:

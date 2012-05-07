@@ -77,7 +77,7 @@ public class RunTimeout implements Runnable {
 		if (plugin.getConfig().getBoolean("Options.use-sql.sqlite") && timeleft != 0) {
 			try {
 				
-				result = plugin.SQLite.scanGiftforCancel(Player);
+				result = plugin.SQL.scanGiftforCancel(Player);
 				
 				if (result.next()) {
 					
@@ -94,12 +94,12 @@ public class RunTimeout implements Runnable {
 						
 						exchange.returnGift(Player, victim, item);
 						
-						plugin.SQLite.removeGift(Player, victim, item, Amount);
-						plugin.SQLite.removeSender(Player);
+						plugin.SQL.removeGift(Player, victim, item, Amount);
+						plugin.SQL.removeSender(Player);
 					}
 				} else {
 					
-					result = plugin.SQLite.scanTradeforCancel(Player);
+					result = plugin.SQL.scanTradeforCancel(Player);
 					
 					if (result.next()) {
 						
@@ -117,13 +117,13 @@ public class RunTimeout implements Runnable {
 							
 							exchange.returnTrade(Player, victim, item, Price);
 							
-							plugin.SQLite.removeTrade(Player, victim, item, Amount, Price);
-							plugin.SQLite.removeSender(Player);
+							plugin.SQL.removeTrade(Player, victim, item, Amount, Price);
+							plugin.SQL.removeSender(Player);
 						}
 						
 					} else {
 						
-						result = plugin.SQLite.scanSwapforCancel(Player);
+						result = plugin.SQL.scanSwapforCancel(Player);
 						
 						if (result.next()) {
 							
@@ -143,8 +143,8 @@ public class RunTimeout implements Runnable {
 								
 								exchange.returnSwap(Player, victim, item, vItem);
 							
-								plugin.SQLite.removeSwap(Player, victim, item, Amount, vItem, Amount);
-								plugin.SQLite.removeSender(Player);
+								plugin.SQL.removeSwap(Player, victim, item, Amount, vItem, Amount);
+								plugin.SQL.removeSender(Player);
 							}
 						} else {
 							
