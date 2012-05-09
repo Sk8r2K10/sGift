@@ -140,13 +140,13 @@ public class sGift extends JavaPlugin {
 		String Trade = "CREATE TABLE IF NOT EXISTS `Trade` (`ID` int AUTO_INCREMENT, `player` VARCHAR(30) NOT NULL, `Victim` VARCHAR(30) NOT NULL, `Item` VARCHAR(255) NOT NULL, `amount` int NOT NULL, `price` int NOT NULL, PRIMARY KEY(`ID`))";
 		String Swap = "CREATE TABLE IF NOT EXISTS `Swap` (`ID` int AUTO_INCREMENT, `player` VARCHAR(30) NOT NULL, `Victim` VARCHAR(30) NOT NULL, `Item` VARCHAR(255) NOT NULL, `amount` int NOT NULL, `ItemFromVictim` VARCHAR(255) NOT NULL, `amountfromVictim` int NOT NULL, PRIMARY KEY(`ID`))";
 		String Sender = "CREATE TABLE IF NOT EXISTS `Sender` (`ID` int AUTO_INCREMENT, `player` VARCHAR(30) NOT NULL, PRIMARY KEY(`ID`))";
-		String Stranded = "CREATE TABLE IF NOT EXISTS `Sender` (`ID` int AUTO_INCREMENT, `player` VARCHAR(30) NOT NULL, `Item` VARCHAR(255) NOT NULL, PRIMARY KEY(`ID`))";
+		String Lost = "CREATE TABLE IF NOT EXISTS `Lost` (`ID` int AUTO_INCREMENT, `player` VARCHAR(30) NOT NULL, `Item` VARCHAR(255) NOT NULL, `amount` int NOT NULL, PRIMARY KEY(`ID`))";
 
 		SQLt.createTable(Gift);
 		SQLt.createTable(Trade);
 		SQLt.createTable(Swap);
 		SQLt.createTable(Sender);
-		SQLt.createTable(Stranded);
+		SQLt.createTable(Lost);
 
 		log.info(logpre + "SQLite is initialised.");
 	}
@@ -168,13 +168,13 @@ public class sGift extends JavaPlugin {
 		String Trade = "CREATE TABLE IF NOT EXISTS `" + db + "`.`Trade` (`ID` int AUTO_INCREMENT, `player` VARCHAR(30) NOT NULL, `Victim` VARCHAR(30) NOT NULL, `Item` VARCHAR(255) NOT NULL, `amount` int NOT NULL, `price` int NOT NULL, PRIMARY KEY(`ID`))";
 		String Swap = "CREATE TABLE IF NOT EXISTS `" + db + "`.`Swap` (`ID` int AUTO_INCREMENT, `player` VARCHAR(30) NOT NULL, `Victim` VARCHAR(30) NOT NULL, `Item` VARCHAR(255) NOT NULL, `amount` int NOT NULL, `ItemFromVictim` VARCHAR(255) NOT NULL, `amountfromVictim` int NOT NULL, PRIMARY KEY(`ID`))";
 		String Sender = "CREATE TABLE IF NOT EXISTS `" + db + "`.`Sender` (`ID` int AUTO_INCREMENT, `player` VARCHAR(30) NOT NULL, PRIMARY KEY(`ID`))";
-		String Stranded = "CREATE TABLE IF NOT EXISTS `" + db + "`.`Sender` (`ID` int AUTO_INCREMENT, `player` VARCHAR(30) NOT NULL, `Item` VARCHAR(255) NOT NULL, PRIMARY KEY(`ID`))";
+		String Lost = "CREATE TABLE IF NOT EXISTS `" + db + "`.`Lost` (`ID` int AUTO_INCREMENT, `player` VARCHAR(30) NOT NULL, `Item` VARCHAR(255) NOT NULL, `amount` int NOT NULL, PRIMARY KEY(`ID`))";
 
 		MSQL.createTable(Gift);
 		MSQL.createTable(Trade);
 		MSQL.createTable(Swap);
 		MSQL.createTable(Sender);
-		MSQL.checkTable(Stranded);
+		MSQL.checkTable(Lost);
 		
 		log.info(logpre + "MySQL is initialised.");
 	}

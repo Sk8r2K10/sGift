@@ -1106,11 +1106,30 @@ public class Exchange {
 			
 			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite") || plugin.getConfig().getBoolean("Options.use-sql.mysql.use")) {
 				
-				while (plugin.SQL.tradeEmpty()) {
+				if (!plugin.SQL.tradeEmpty()) {
 					
-					this.cancel(false, true, false);
+					try {
+						ResultSet result = plugin.SQL.scanTradeforAll();
+						
+						while (result.next()) {
+							
+							player = Bukkit.getPlayer(result.getString("player"));
+							Victim = Bukkit.getPlayer(result.getString("Victim"));
+							Item = Items.itemByName(result.getString("Item")).toStack();
+							price = result.getInt("price");
+							
+							Item.setAmount(result.getInt("amount"));
+							
+							this.returnTrade(player, Victim, Item, price);
+						}
+						result.close();
+						
+						plugin.SQLt.wipeTable("Trade");
+						
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
 				}
-				
 			} else {
 
 				while (plugin.trades.size() > 0) { 
@@ -1124,9 +1143,30 @@ public class Exchange {
 			player.sendMessage(prefix + ChatColor.GREEN + "Stopped " + plugin.swaps.size() + " Swaps.");
 			if (plugin.getConfig().getBoolean("Options.use-sql.sqlite") || plugin.getConfig().getBoolean("Options.use-sql.mysql.use")) {
 				
-				while (plugin.SQL.swapEmpty()) {
+				if (!plugin.SQL.swapEmpty()) {
 					
-					this.cancel(false, false, true);
+					try {
+						ResultSet result = plugin.SQL.scanSwapforAll();
+						
+						while (result.next()) {
+							
+							player = Bukkit.getPlayer(result.getString("player"));
+							Victim = Bukkit.getPlayer(result.getString("Victim"));
+							Item = Items.itemByName(result.getString("Item")).toStack();
+							ItemFromVictim = Items.itemByName(result.getString("ItemFromVictim")).toStack();
+							
+							ItemFromVictim.setAmount(result.getInt("amountFromVictim"));
+							Item.setAmount(result.getInt("amount"));
+							
+							this.returnSwap(player, Victim, Item, ItemFromVictim);
+						}
+						result.close();
+						
+						plugin.SQLt.wipeTable("Swap");
+						
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
 				}
 			} else {
 
@@ -1170,7 +1210,7 @@ public class Exchange {
 
 					Item.setAmount(amount);
 
-					this.giveGift(player, Victim, Item);
+					this.returnGift(player, Victim, Item);
 
 					plugin.SQL.removeGift(player, Victim, Item, amount);
 					plugin.SQL.removeSender(player);

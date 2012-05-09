@@ -456,4 +456,80 @@ public class SQLDataHandler {
 		
 		return result;
 	}
+	
+	public ResultSet scanTradeforAll() {
+		
+		String query = "SELECT * FROM `Trade`";
+		ResultSet result = plugin.SQLt.query(query);
+		
+		return result;
+	}
+	
+	public ResultSet scanSwapforAll() {
+		
+		String query = "SELECT * FROM `Swap`";
+		ResultSet result = plugin.SQLt.query(query);
+		
+		return result;
+	}
+	
+	public boolean addLost(Player player, ItemStack Item, int amount) {
+		
+		String Player = player.getName();
+		String item = Items.itemByStack(Item).getName();
+		
+		if (plugin.SQLt.checkConnection()) {
+			
+			String query = "INSERT INTO `Lost` (`player`, `Item`, `amount`) VALUES('" + Player + "', '" + item + "', '" + amount + "'";
+			plugin.SQLt.query(query);
+		} else if (plugin.MSQL.checkConnection()) {
+			
+			String query = "INSERT INTO `" + plugin.db + "`.`Lost` (`player`, `Item`, `amount`) VALUES('" + Player + "', '" + item + "', '" + amount + "'";
+			plugin.MSQL.query(query);
+		} else {
+			
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public ResultSet scanLost(Player player) {
+		String Player = player.getName();
+
+		if (plugin.SQLt.checkConnection()) {
+			
+			String query = "SELECT * FROM `Lost` WHERE `player` = '" + Player + "'";
+			ResultSet result = plugin.SQLt.query(query);
+			return result;
+		} else if (plugin.MSQL.checkConnection()) {
+			
+			String query = "SELECT * FROM `" + plugin.db + "`.`Lost` WHERE `player` = '" + Player + "'";
+			ResultSet result = plugin.MSQL.query(query);
+			return result;
+		} else {
+			
+			return null;
+		}
+	}
+	
+	public boolean removeLost(Player player, String Item, int amount) {
+		
+		String Player = player.getName();
+		
+		if (plugin.SQLt.checkConnection()) {
+			
+			String query = "DELETE FROM `Lost` WHERE `player` = '" + Player + "' AND `Item` = '" + Item + "' AND `amount` = '" + amount + "'";
+			plugin.SQLt.query(query);
+		} else if (plugin.MSQL.checkConnection()) {
+			
+			String query = "DELETE FROM `" + plugin.db + "`.`Lost` WHERE `player` = '" + Player + "' AND `Item` = '" + Item + "' AND `amount` = '" + amount + "'";
+			plugin.MSQL.query(query);
+		} else {
+			
+			return false;
+		}
+		
+		return true;
+	}
 }
