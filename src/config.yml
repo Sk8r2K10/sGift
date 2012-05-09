@@ -7,6 +7,7 @@
 # The use-vault option has been removed and is now a Hard depend!
 
 # The "Features" section of options define if certain features are enabled or not.
+# -> ***The cancel-gifts-on-leave node requires SQL! Make sure you;re using SQL before enabling this!***
 
 # The "Options" section is for definable characteristics of mechanisms in sGift,
 # -> Set values that take a number to 0 to disable them, such as max-distance and request-timeout
@@ -17,7 +18,7 @@
 # The SQL section defines whether or not to use the SQL features.
 # -> Use of SQL allows exchanges to persist even after a restart or server crash.
 # -> However, SQL Can be quite taxing on the server, So keep this in mind if you have a server with very little RAM (Such as a VPS)
-# -> SQLite is recommended if you have a very small amount of RAM, As it is, as the name suggests, much more lightweight that MySQL.
+# -> SQLite is recommended if you have a very small amount of RAM, As it is - as the name suggests - much more lightweight that MySQL.
 # -> If you choose not to use SQL at all, sGift will automatically switch to using server memory to store exchanges. This means that any exchanges will be lost if the server stops in any way.
 # -> Only choose MySQL if you really know what you're doing!
 Features:
@@ -28,6 +29,7 @@ Features:
     gift: true
     trade: false
     swap: false
+  cancel-exchanges-on-leave: true
     
 Options:
   request-timeout: 60
