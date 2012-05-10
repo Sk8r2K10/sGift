@@ -480,11 +480,11 @@ public class SQLDataHandler {
 		
 		if (plugin.SQLt.checkConnection()) {
 			
-			String query = "INSERT INTO `Lost` (`player`, `Item`, `amount`) VALUES('" + Player + "', '" + item + "', '" + amount + "'";
+			String query = "INSERT INTO `Lost` (`player`, `Item`, `amount`) VALUES('" + Player + "', '" + item + "', '" + amount + "')";
 			plugin.SQLt.query(query);
 		} else if (plugin.MSQL.checkConnection()) {
 			
-			String query = "INSERT INTO `" + plugin.db + "`.`Lost` (`player`, `Item`, `amount`) VALUES('" + Player + "', '" + item + "', '" + amount + "'";
+			String query = "INSERT INTO `" + plugin.db + "`.`Lost` (`player`, `Item`, `amount`) VALUES('" + Player + "', '" + item + "', '" + amount + "')";
 			plugin.MSQL.query(query);
 		} else {
 			
@@ -513,9 +513,10 @@ public class SQLDataHandler {
 		}
 	}
 	
-	public boolean removeLost(Player player, String Item, int amount) {
+	public boolean removeLost(Player player, ItemStack item, int amount) {
 		
 		String Player = player.getName();
+		String Item = Items.itemByStack(item).getName();
 		
 		if (plugin.SQLt.checkConnection()) {
 			

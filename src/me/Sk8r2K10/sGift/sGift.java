@@ -70,7 +70,8 @@ public class sGift extends JavaPlugin {
 		getCommand("sgift").setExecutor(admin);
 		getCommand("swap").setExecutor(swap);
 		
-		//this.getServer().getPluginManager().registerEvents(new LeaveEventHandler(this), this);
+		this.getServer().getPluginManager().registerEvents(new LeaveEventHandler(this), this);
+		this.getServer().getPluginManager().registerEvents(new JoinEventHandler(this), this);
 		
 		PluginDescriptionFile pdf = getDescription();
 		logpre = "[" + pdf.getName() + " " + pdf.getVersion() + "] ";
