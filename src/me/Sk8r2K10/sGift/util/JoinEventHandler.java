@@ -44,10 +44,12 @@ public class JoinEventHandler implements Listener {
 
 		try {
 			result = plugin.SQL.scanLost(e.getPlayer());
-			log.info("debugUNO" + e.getPlayer().getName());
-			if (result.next()) {
+
+			if (!result.next()) {
+				result.close();
+				return;
+			}
 				if (result.getString("player").equals(e.getPlayer().getName())) {
-					log.info("debug");
 					player = Bukkit.getPlayer(result.getString("player"));
 					Item = Items.itemByName(result.getString("Item")).toStack();
 					amount = result.getInt("amount");
@@ -63,12 +65,10 @@ public class JoinEventHandler implements Listener {
 					result.close();
 				}
 
-			}
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
 	}
-
 	public void refundItems(Player player, ItemStack Item) {
 
 		player.sendMessage(errpre + "You were involved in an exchange, Then left.");

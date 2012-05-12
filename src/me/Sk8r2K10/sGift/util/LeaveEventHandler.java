@@ -53,107 +53,134 @@ public class LeaveEventHandler implements Listener {
 				if (result.getString("player").equals(e.getPlayer().getName())) {
 					result.close();
 
-					result = plugin.SQL.scanGiftforCancel(player);
+					result = plugin.SQL.scanGiftforAll();
 
-					if (result.getString("player").equals(player.getName())) {
-
-						Victim = plugin.getServer().getPlayer(result.getString("Victim"));
-						item = Items.itemByName(result.getString("Item")).toStack();
-						amount = result.getInt("amount");
-
-						while (Victim == null && i != 15) {
-							i++;
-							result.next();
+					while (result.next()) {
+						if (result.getString("player").equals(player.getName())) {
 
 							Victim = plugin.getServer().getPlayer(result.getString("Victim"));
 							item = Items.itemByName(result.getString("Item")).toStack();
 							amount = result.getInt("amount");
 
-						}
+							if (Victim == null) {
+								String vic = result.getString("Victim");
+								
+								result.close();
+								
+								item.setAmount(amount);
 
-						if (i == 15) {
-							i = 0;
+								plugin.SQL.addLost(player, item, amount);
+								plugin.SQL.removeGift(player, Bukkit.getOfflinePlayer(vic), item, amount);
+								plugin.SQL.removeSender(player);
+								return;
+							} else {
+								result.close();
+
+								item.setAmount(amount);
+
+								Victim.sendMessage(errpre + "Gift ended, Player sending items left the game.");
+
+								plugin.SQL.addLost(player, item, amount);
+								plugin.SQL.removeGift(player, Victim, item, amount);
+								plugin.SQL.removeSender(player);
+
+							return;
+							}
+
+						} else if (result.isLast()) {
+							
+							result.close();
+						}
+					}
+
+					result = plugin.SQL.scanSwapforAll();
+					
+					while (result.next()) {
+						if (result.getString("player").equals(player.getName())) {
+							
+							player = Bukkit.getPlayer(result.getString("player"));
+							Victim = Bukkit.getPlayer(result.getString("Victim"));
+							item = Items.itemByName(result.getString("Item")).toStack();
+							vItem = Items.itemByName(result.getString("ItemFromVictim")).toStack();
+							amount = result.getInt("amount");
+							vAmount = result.getInt("amountFromVictim");
+
+							result.close();
+
+							item.setAmount(amount);
+							vItem.setAmount(vAmount);
+
+							this.stopSwap(Victim, vItem);
+
+							plugin.SQL.addLost(player, item, amount);
+							plugin.SQL.removeSwap(player, Victim, item, amount, vItem, vAmount);
+							
+							return;
+						} else if (result.getString("Victim").equals(player.getName())) {
+							
+							player = Bukkit.getPlayer(result.getString("player"));
+							Victim = Bukkit.getPlayer(result.getString("Victim"));
+							item = Items.itemByName(result.getString("Item")).toStack();
+							vItem = Items.itemByName(result.getString("ItemFromVictim")).toStack();
+							amount = result.getInt("amount");
+							vAmount = result.getInt("amountFromVictim");
+
+							result.close();
+
+							item.setAmount(amount);
+							vItem.setAmount(vAmount);
+
+							this.stopSwap(player, item);
+
+							plugin.SQL.addLost(Victim, vItem, vAmount);
+							plugin.SQL.removeSwap(player, Victim, item, amount, vItem, vAmount);
+							
+							return;
+						} else if (result.isLast()) {
+							
+							result.close();
+						}
+					}
+					
+					result = plugin.SQL.scanTradeforAll();
+					
+					while (result.next()) {
+						if (result.getString("player").equals(player.getName())) {
+							while (Victim == null) {
+								result.next();
+
+								Victim = Bukkit.getPlayer(result.getString("Victim"));
+								item = Items.itemByName(result.getString("Item")).toStack();
+								amount = result.getInt("amount");
+								price = result.getInt("price");
+								
+								if (result.isLast() && Victim == null) {
+									result.close();
+
+									item.setAmount(amount);
+
+									plugin.SQL.addLost(player, item, amount);
+									plugin.SQL.removeTrade(player, Victim, item, amount, price);
+									return;
+								}
+							}
+							result.close();
+
+							item.setAmount(amount);
+
+							Victim.sendMessage(errpre + "Trade ended, Player offering items left the game.");
+
+							plugin.SQL.addLost(player, item, amount);
+							plugin.SQL.removeTrade(player, Victim, item, amount, price);
+
+						} else if (result.isLast()) {
+							result.close();
 							return;
 						}
-						i = 0;
-						result.close();
-
-						item.setAmount(amount);
-						log.info(Victim.getName());
-						Victim.sendMessage(errpre + "Gift ended, Player sending items left the game.");
-
-						plugin.SQL.addLost(player, item, amount);
-						plugin.SQL.removeGift(player, Victim, item, amount);
-						plugin.SQL.removeSender(player);
-
-						return;
-					} else {
-						result.close();
-					}
-
-					result = plugin.SQL.scanSwap(player);
-
-					if (result.getString("player").equals(player.getName())) {
-
-						Victim = Bukkit.getPlayer(result.getString("Victim"));
-						item = Items.itemByName(result.getString("Item")).toStack();
-						vItem = Items.itemByName(result.getString("ItemFromVictim")).toStack();
-						amount = result.getInt("amount");
-						vAmount = result.getInt("amountFromVictim");
-
-						result.close();
-
-						item.setAmount(amount);
-						vItem.setAmount(vAmount);
-
-						this.stopSwap(Victim, vItem);
-
-						plugin.SQL.addLost(player, item, amount);
-						plugin.SQL.removeSwap(player, Victim, item, amount, vItem, vAmount);
-					} else if (result.getString("Victim").equals(player.getName())) {
-
-						Victim = Bukkit.getPlayer(result.getString("Victim"));
-						item = Items.itemByName(result.getString("Item")).toStack();
-						vItem = Items.itemByName(result.getString("ItemFromVictim")).toStack();
-						amount = result.getInt("amount");
-						vAmount = result.getInt("amountFromVictim");
-
-						result.close();
-
-						item.setAmount(amount);
-						vItem.setAmount(vAmount);
-
-						this.stopSwap(player, item);
-
-						plugin.SQL.addLost(player, vItem, vAmount);
-						plugin.SQL.removeSwap(player, Victim, item, amount, vItem, vAmount);
-					} else {
-						result.close();
-					}
-
-					result = plugin.SQL.scanTrade(player);
-
-					if (result.getString("player").equals(player.getName())) {
-
-						Victim = Bukkit.getPlayer(result.getString("Victim"));
-						item = Items.itemByName(result.getString("Item")).toStack();
-						amount = result.getInt("amount");
-						price = result.getInt("price");
-
-						result.close();
-
-						item.setAmount(amount);
-
-						Victim.sendMessage(errpre + "Trade ended, Player offering items left the game.");
-
-						plugin.SQL.addLost(player, item, amount);
-						plugin.SQL.removeTrade(player, Victim, item, amount, price);
-
-					} else {
-						result.close();
 					}
 				}
 			}
+			result.close();
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}

@@ -420,6 +420,7 @@ public class Exchange {
 
 						plugin.SQL.addSwap(player, Victim, Item, amount, ItemFromVictim, amountFromVictim);
 						plugin.SQL.addSender(player);
+						plugin.SQL.addSender(Victim);
 					} catch (SQLException e) {
 
 						e.printStackTrace();
@@ -1429,13 +1430,13 @@ public class Exchange {
 
 		String prefix = ChatColor.WHITE + "[" + ChatColor.GREEN + "sGift" + ChatColor.WHITE + "] ";
 
-		if (player.getInventory().firstEmpty() == -1) {
+		if (Victim.getInventory().firstEmpty() == -1) {
 
-			Location playerloc = player.getLocation();
-			player.getWorld().dropItemNaturally(playerloc, items);
+			Location playerloc = Victim.getLocation();
+			Victim.getWorld().dropItemNaturally(playerloc, items);
 
-			player.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
-
+			Victim.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
+			
 			playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Delivered to " + ChatColor.YELLOW + Victim.getName() + ChatColor.WHITE + "!");
 			Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + "!");
 
@@ -1454,7 +1455,7 @@ public class Exchange {
 
 		String prefix = ChatColor.WHITE + "[" + ChatColor.GREEN + "sGift" + ChatColor.WHITE + "] ";
 
-		if (playerSendingItems.getInventory().firstEmpty() == -1) {
+		if (playerSendingItems.getInventory().firstEmpty() == -1 && playerSendingItems != null) {
 
 			Location playerloc = playerSendingItems.getLocation();
 
@@ -1464,26 +1465,30 @@ public class Exchange {
 			playerSendingItems.sendMessage(prefix + ChatColor.RED + "Gift Ended.");
 			playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.RED + " Has been returned to you.");
 			Victim.sendMessage(prefix + ChatColor.RED + "Gift Ended.");
-		} else {
+		} else if (playerSendingItems != null) {
 
 			playerSendingItems.getInventory().addItem(items);
 
 			playerSendingItems.sendMessage(prefix + ChatColor.RED + "Gift Ended.");
 			playerSendingItems.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.RED + " Has been returned to you.");
 			Victim.sendMessage(prefix + ChatColor.RED + "Gift Ended.");
+		} else {
+			
+			Victim.sendMessage(prefix + ChatColor.RED + "Gift Ended.");
+			
 		}
 	}
 
 	public void giveTrade(Player playerSendingItems, Player Victim, ItemStack items, int price) {
 
 		String prefix = ChatColor.WHITE + "[" + ChatColor.GOLD + "sGift" + ChatColor.WHITE + "] ";
+		
+		if (plugin.getEcon().getBalance(Victim.getName()) >= price) {
 
-		if (plugin.getEcon().getBalance(player.getName()) >= price) {
-
-			if (player.getInventory().firstEmpty() == -1) {
-				Location playerloc = player.getLocation();
-				player.getWorld().dropItemNaturally(playerloc, items);
-				player.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
+			if (Victim.getInventory().firstEmpty() == -1) {
+				Location playerloc = Victim.getLocation();
+				Victim.getWorld().dropItemNaturally(playerloc, items);
+				Victim.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
 
 				plugin.getEcon().withdrawPlayer(Victim.getName(), price);
 				plugin.getEcon().depositPlayer(playerSendingItems.getName(), price);
@@ -1492,7 +1497,7 @@ public class Exchange {
 				Victim.sendMessage(prefix + ChatColor.YELLOW + items.getAmount() + " " + Items.itemByStack(items).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerSendingItems.getDisplayName() + ChatColor.WHITE + " for " + ChatColor.GOLD + price + plugin.getEcon().currencyNameSingular() + "(s)");
 				log.info(logpre + Victim.getDisplayName() + " recieved " + items.getAmount() + " " + Items.itemByStack(items).getName() + " from " + playerSendingItems.getDisplayName() + " for " + price + plugin.getEcon().currencyNameSingular() + "(s)");
 			} else {
-				player.getInventory().addItem(items);
+				Victim.getInventory().addItem(items);
 
 				plugin.getEcon().withdrawPlayer(Victim.getName(), price);
 				plugin.getEcon().depositPlayer(playerSendingItems.getName(), price);
@@ -1503,7 +1508,7 @@ public class Exchange {
 			}
 		} else {
 
-			player.sendMessage(prefix + ChatColor.RED + "You don't have enough money to accept that!");
+			Victim.sendMessage(prefix + ChatColor.RED + "You don't have enough money to accept that!");
 			playerSendingItems.sendMessage(prefix + ChatColor.RED + "The player you were trading with doesn't have enough money anymore!");
 
 			if (playerSendingItems.getInventory().firstEmpty() == -1) {
@@ -1547,12 +1552,12 @@ public class Exchange {
 
 		String prefix = ChatColor.WHITE + "[" + ChatColor.BLUE + "sGift" + ChatColor.WHITE + "] ";
 
-		if (player.getInventory().firstEmpty() == -1) {
+		if (Victim.getInventory().firstEmpty() == -1) {
 
-			Location playerloc = player.getLocation();
-			player.getWorld().dropItemNaturally(playerloc, itemsFromSender);
+			Location playerloc = Victim.getLocation();
+			Victim.getWorld().dropItemNaturally(playerloc, itemsFromSender);
 
-			player.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
+			Victim.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
 			Victim.sendMessage(prefix + ChatColor.YELLOW + itemsFromSender.getAmount() + " " + Items.itemByStack(itemsFromSender).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerInitial.getName() + ChatColor.WHITE + " for " + ChatColor.YELLOW + itemsFromVictim.getAmount() + " " + Items.itemByStack(itemsFromVictim).getName() + ChatColor.WHITE + "!");
 
 		} else {
@@ -1566,7 +1571,7 @@ public class Exchange {
 			Location playerloc = playerInitial.getLocation();
 			playerInitial.getWorld().dropItemNaturally(playerloc, itemsFromVictim);
 
-			player.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
+			playerInitial.sendMessage(prefix + "Inventory full! Dropped Items at your feet!");
 			Victim.sendMessage(prefix + ChatColor.YELLOW + itemsFromSender.getAmount() + " " + Items.itemByStack(itemsFromSender).getName() + ChatColor.WHITE + " Recieved from " + ChatColor.YELLOW + playerInitial.getName() + ChatColor.WHITE + " for " + ChatColor.YELLOW + itemsFromVictim.getAmount() + " " + Items.itemByStack(itemsFromVictim).getName() + ChatColor.WHITE + "!");
 
 		} else {

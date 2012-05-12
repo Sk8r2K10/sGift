@@ -389,30 +389,21 @@ public class sGift extends JavaPlugin {
 
 		long outtatime = this.getConfig().getInt("Options.request-timeout") * 20;
 
-		task = this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(exc, this, player, Victim, Item, amount), outtatime);
+		task = this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(exc, this, player, Victim, Item, amount, task), outtatime);
 	}
 
 	public void newTimeout(Player player, Player Victim, ItemStack Item, int price, int amount) {
 
 		long outtatime = this.getConfig().getInt("Options.request-timeout") * 20;
 
-		task = this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(exc, this, player, Victim, Item, price, amount), outtatime);
+		task = this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(exc, this, player, Victim, Item, price, amount, task), outtatime);
 	}
 
 	public void newTimeout(Player player, Player Victim, ItemStack Item, ItemStack ItemFromVictim, int amount, int amountFromVictim) {
 
 		long outtatime = this.getConfig().getInt("Options.request-timeout") * 20;
-
-		task = this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(exc, this, player, Victim, Item, ItemFromVictim, amount, amountFromVictim), outtatime);
-	}
-
-	public void stop(Player player, Player victim, String type) {
-
-		PluginDescriptionFile pdf = getDescription();
-		String logpre = "[" + pdf.getName() + " " + pdf.getVersion() + "] ";
-
-		getServer().getScheduler().cancelTask(task);
-		log.info(logpre + player.getName() + "'s " + type + " request to " + victim.getName() + " timed out.");
+		
+		task = this.getServer().getScheduler().scheduleSyncDelayedTask(this, new RunTimeout(exc, this, player, Victim, Item, ItemFromVictim, amount, amountFromVictim, task), outtatime);
 	}
 
 	public boolean alreadyRequested(Player player, Player Victim) {
@@ -422,33 +413,66 @@ public class sGift extends JavaPlugin {
 		if (this.getConfig().getBoolean("Options.use-sql.sqlite") || this.getConfig().getBoolean("Options.use-sql.mysql.use")) {
 			try {
 
-				result = SQL.scanGift(player);
+				result = SQL.scanGiftforAll();
 
-				if (result.next()) {
-					player.sendMessage(errpre + "You are already Involved in a Gift!");
-					player.sendMessage(errpre + ChatColor.GRAY + "Accept or deny this Gift to make a new one!");
-					result.close();
-					return true;
+				while (result.next()) {
+					if (player.getName().equals(result.getString("player"))) {
+						player.sendMessage(errpre + "You are already Involved in a Gift!");
+						player.sendMessage(errpre + ChatColor.GRAY + "Accept, deny or cancel this Gift to make a new one!");
+						result.close();
+						return true;
+					} else if (Victim.getName().equals(result.getString("Victim"))) {
+						Victim.sendMessage(errpre + "You are already Involved in a Gift!");
+						Victim.sendMessage(errpre + ChatColor.GRAY + "Accept, deny or cancel this Gift to make a new one!");
+						result.close();
+						return true;						
+					}
+					if (result.isAfterLast()) {
+						result.close();
+						return false;
+					}
 				}
 				result.close();
 				
-				result = SQL.scanTrade(player);
+				result = SQL.scanTradeforAll();
 				
-				if (result.next()) {
-					player.sendMessage(errpre + "You are already Involved in a Trade!");
-					player.sendMessage(errpre + ChatColor.GRAY + "Accept or deny this Trade to make a new one!");
-					result.close();
-					return true;
+				while (result.next()) {
+					if (player.getName().equals(result.getString("player"))) {
+						player.sendMessage(errpre + "You are already Involved in a Trade!");
+						player.sendMessage(errpre + ChatColor.GRAY + "Accept, deny or cancel this Trade to make a new one!");
+						result.close();
+						return true;
+					} else if (Victim.getName().equals(result.getString("Victim"))) {
+						Victim.sendMessage(errpre + "You are already Involved in a Trade!");
+						Victim.sendMessage(errpre + ChatColor.GRAY + "Accept, deny or cancel this Trade to make a new one!");
+						result.close();
+						return true;						
+					} 
+					if (result.isAfterLast()) {
+						result.close();
+						return false;
+					}
 				}
 				result.close();
 				
-				result = SQL.scanSwap(player);
+				result = SQL.scanSwapforAll();
 				
-				if (result.next()) {
-					player.sendMessage(errpre + "You are already Involved in a Swap!");
-					player.sendMessage(errpre + ChatColor.GRAY + "Accept or deny this Swap to make a new one!");
-					result.close();
-					return true;
+				while (result.next()) {
+					if (player.getName().equals(result.getString("player"))) {
+						player.sendMessage(errpre + "You are already Involved in a Swap!");
+						player.sendMessage(errpre + ChatColor.GRAY + "Accept or deny this Swap to make a new one!");
+						result.close();
+						return true;
+					} else if (Victim.getName().equals(result.getString("Victim"))) {
+						Victim.sendMessage(errpre + "You are already Involved in a Swap!");
+						Victim.sendMessage(errpre + ChatColor.GRAY + "Accept, deny or cancel this Swap to make a new one!");
+						result.close();
+						return true;						
+					} 
+					if (result.isAfterLast()) {
+						result.close();
+						return false;
+					}
 				}
 				result.close();
 			} catch (SQLException e) {

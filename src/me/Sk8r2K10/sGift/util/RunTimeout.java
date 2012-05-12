@@ -21,6 +21,7 @@ public class RunTimeout implements Runnable {
 	private ItemStack vItem;
 	private int Amount;
 	private int vAmount;
+	private int Task;
 	private ResultSet result;
 	Logger log = Logger.getLogger("Minecraft");
 	String errpre = "[" + ChatColor.RED + "sGift" + ChatColor.WHITE + "] " + ChatColor.RED;
@@ -34,16 +35,17 @@ public class RunTimeout implements Runnable {
 		Player = player;
 	}
 	
-	public RunTimeout(Exchange inst, sGift instance, Player player, Player Victim, ItemStack Item, int amount) {
+	public RunTimeout(Exchange inst, sGift instance, Player player, Player Victim, ItemStack Item, int amount, int task) {
 		exchange = inst;
 		plugin = instance;
 		item = Item;
 		victim = Victim;
 		Player = player;
 		Amount = amount;
+		Task = task;
 	}
 
-	public RunTimeout(Exchange inst, sGift instance, Player player, Player Victim, ItemStack Item, int price, int amount) {
+	public RunTimeout(Exchange inst, sGift instance, Player player, Player Victim, ItemStack Item, int price, int amount, int task) {
 		
 		exchange = inst;
 		plugin = instance;
@@ -52,9 +54,10 @@ public class RunTimeout implements Runnable {
 		Player = player;
 		Price = price;
 		Amount = amount;
+		Task = task;
 	}
 
-	public RunTimeout(Exchange inst, sGift instance, Player player, Player Victim, ItemStack Item, ItemStack ItemFromVictim, int amount, int vamount) {
+	public RunTimeout(Exchange inst, sGift instance, Player player, Player Victim, ItemStack Item, ItemStack ItemFromVictim, int amount, int vamount, int task) {
 		exchange = inst;
 		plugin = instance;
 		item = Item;
@@ -63,6 +66,7 @@ public class RunTimeout implements Runnable {
 		vItem = ItemFromVictim;
 		Amount = amount;
 		vAmount = vamount;
+		Task = task;
 		
 	}
 	Timeout timeout = null;
@@ -88,7 +92,7 @@ public class RunTimeout implements Runnable {
 					// Might need these later
 					result.close();
 					
-					gitem.setAmount(gAmount);
+					//gitem.setAmount(gAmount);
 					
 					if (Player == gPlayer && victim == gvictim) {
 						
@@ -111,7 +115,7 @@ public class RunTimeout implements Runnable {
 						// Might need these later
 						result.close();
 						
-						titem.setAmount(tAmount);
+						//titem.setAmount(tAmount);
 						
 						if (Player == tPlayer && victim == tvictim) {
 							
@@ -136,8 +140,8 @@ public class RunTimeout implements Runnable {
 							// Might need these later
 							result.close();
 							
-							sitem.setAmount(Amount);
-							svItem.setAmount(svAmount);
+							//sitem.setAmount(sAmount);
+							//svItem.setAmount(svAmount);
 							
 							if (Player == sPlayer && victim == svictim) {
 								

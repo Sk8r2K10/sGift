@@ -6,6 +6,7 @@ import me.Sk8r2K10.sGift.sGift;
 import net.milkbowl.vault.item.Items;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -88,6 +89,28 @@ public class SQLDataHandler {
 			
 			return null;
 		}
+	}
+	
+	public boolean removeGift(Player player, OfflinePlayer Victim, ItemStack Item, int amount) throws SQLException {
+
+		String Player = player.getName();
+		String victim = Victim.getName();
+		String item = Items.itemByStack(Item).getName();
+
+		if (plugin.SQLt.checkConnection()) {
+			
+			String query = "DELETE FROM `Gift` WHERE `player` = '" + Player + "' AND `Victim` = '" + victim + "' AND `Item` = '" + item + "' AND `amount` = '" + amount + "'";
+			plugin.SQLt.query(query);
+		} else if (plugin.MSQL.checkConnection()) {
+			
+			String query = "DELETE FROM `" + plugin.db + "`.`Gift` WHERE `player` = '" + Player + "' AND `Victim` = '" + victim + "' AND `Item` = '" + item + "' AND `amount` = '" + amount + "'";
+			plugin.MSQL.query(query);
+		} else {
+			
+			return false;
+		}
+
+		return true;
 	}
 
 	public boolean removeGift(Player player, Player Victim, ItemStack Item, int amount) throws SQLException {
@@ -197,7 +220,7 @@ public class SQLDataHandler {
 		return true;
 	}
 
-	public boolean addSwap(Player player, Player Victim, ItemStack Item, int amount, ItemStack ItemFromVictim, int amountFromVictim) throws SQLException {
+	public void addSwap(Player player, Player Victim, ItemStack Item, int amount, ItemStack ItemFromVictim, int amountFromVictim) throws SQLException {
 
 		String Player = player.getName();
 		String victim = Victim.getName();
@@ -215,10 +238,10 @@ public class SQLDataHandler {
 			plugin.MSQL.query(query);
 		} else {
 			
-			return false;
+			//return false;
 		}
 
-		return true;
+		//return true;
 	}
 
 	public ResultSet scanSwap(Player player) throws SQLException {
