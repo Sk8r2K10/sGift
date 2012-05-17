@@ -206,7 +206,8 @@ public class Exchange {
 							ResultSet result = plugin.SQL.scanGift(player);
 
 							if (!result.next()) {
-
+								
+								result.close();
 								player.sendMessage(prefix + ChatColor.RED + "No Gifts to deny!");
 								return;
 							}
@@ -334,7 +335,8 @@ public class Exchange {
 							ResultSet result = plugin.SQL.scanTrade(Victim);
 
 							if (!result.next()) {
-
+								
+								result.close();
 								player.sendMessage(prefix + ChatColor.RED + "No Trades to deny!");
 								return;
 							}
@@ -467,7 +469,8 @@ public class Exchange {
 							ResultSet result = plugin.SQL.scanSwap(Victim);
 
 							if (!result.next()) {
-
+								
+								result.close();
 								player.sendMessage(prefix + ChatColor.RED + "No Swaps to deny!");
 								return;
 							}
@@ -560,7 +563,8 @@ public class Exchange {
 					ResultSet result = plugin.SQL.scanGiftforCancel(player);
 
 					if (!result.next()) {
-
+						
+						result.close();
 						player.sendMessage(prefix + ChatColor.RED + "No Gifts to cancel!");
 						return;
 					}
@@ -645,7 +649,8 @@ public class Exchange {
 					ResultSet result = plugin.SQL.scanTradeforCancel(player);
 
 					if (!result.next()) {
-
+						
+						result.close();
 						player.sendMessage(prefix + ChatColor.RED + "No Trades to cancel!");
 						return;
 					}
@@ -730,7 +735,8 @@ public class Exchange {
 					ResultSet result = plugin.SQL.scanSwapforCancel(player);
 
 					if (!result.next()) {
-
+						
+						result.close();
 						player.sendMessage(prefix + ChatColor.RED + "No Swaps to cancel!");
 						return;
 					}
@@ -826,7 +832,8 @@ public class Exchange {
 					ResultSet result = plugin.SQL.scanGift(player);
 
 					if (!result.next()) {
-
+						
+						result.close();
 						player.sendMessage(prefix + ChatColor.RED + "No Gifts to accept!");
 						return;
 					}
@@ -902,7 +909,8 @@ public class Exchange {
 					ResultSet result = plugin.SQL.scanTrade(player);
 
 					if (!result.next()) {
-
+						
+						result.close();
 						player.sendMessage(prefix + ChatColor.RED + "No Trades to accept!");
 						return;
 					}
@@ -992,7 +1000,8 @@ public class Exchange {
 					ResultSet result = plugin.SQL.scanSwap(player);
 
 					if (!result.next()) {
-
+						
+						result.close();
 						player.sendMessage(prefix + ChatColor.RED + "No Swaps to accept!");
 						return;
 					}
@@ -1198,7 +1207,8 @@ public class Exchange {
 					ResultSet result = plugin.SQL.scanGift(player);
 
 					if (!result.next()) {
-
+						
+						result.close();
 						player.sendMessage(prefix + ChatColor.RED + "No Gifts to deny!");
 						return;
 					}
@@ -1274,7 +1284,8 @@ public class Exchange {
 					ResultSet result = plugin.SQL.scanTrade(Victim);
 
 					if (!result.next()) {
-
+						
+						result.close();
 						player.sendMessage(prefix + ChatColor.RED + "No Trades to deny!");
 						return;
 					}
@@ -1352,7 +1363,8 @@ public class Exchange {
 					ResultSet result = plugin.SQL.scanSwap(Victim);
 
 					if (!result.next()) {
-
+						
+						result.close();
 						player.sendMessage(prefix + ChatColor.RED + "No Swaps to deny!");
 						return;
 					}
@@ -1429,7 +1441,7 @@ public class Exchange {
 		logpre = "[" + pdf.getName() + " " + pdf.getVersion() + "] ";
 
 		String prefix = ChatColor.WHITE + "[" + ChatColor.GREEN + "sGift" + ChatColor.WHITE + "] ";
-
+		
 		if (Victim.getInventory().firstEmpty() == -1) {
 
 			Location playerloc = Victim.getLocation();

@@ -25,16 +25,16 @@ public class RunTimeout implements Runnable {
 	private ResultSet result;
 	Logger log = Logger.getLogger("Minecraft");
 	String errpre = "[" + ChatColor.RED + "sGift" + ChatColor.WHITE + "] " + ChatColor.RED;
-	
+
 	public RunTimeout(Exchange instance) {
-		exchange = instance;			
+		exchange = instance;
 	}
-	
+
 	public RunTimeout(sGift instance, Player player) {
 		plugin = instance;
 		Player = player;
 	}
-	
+
 	public RunTimeout(Exchange inst, sGift instance, Player player, Player Victim, ItemStack Item, int amount, int task) {
 		exchange = inst;
 		plugin = instance;
@@ -46,7 +46,7 @@ public class RunTimeout implements Runnable {
 	}
 
 	public RunTimeout(Exchange inst, sGift instance, Player player, Player Victim, ItemStack Item, int price, int amount, int task) {
-		
+
 		exchange = inst;
 		plugin = instance;
 		item = Item;
@@ -67,7 +67,7 @@ public class RunTimeout implements Runnable {
 		Amount = amount;
 		vAmount = vamount;
 		Task = task;
-		
+
 	}
 	Timeout timeout = null;
 	Gift gift = null;
@@ -80,84 +80,82 @@ public class RunTimeout implements Runnable {
 
 		if (plugin.getConfig().getBoolean("Options.use-sql.sqlite") && timeleft != 0) {
 			try {
-				
-				result = plugin.SQL.scanGiftforCancel(Player);
-				
-				if (result.next()) {
-					
-					Player gPlayer = plugin.getServer().getPlayer(result.getString("player"));
-					Player gvictim = plugin.getServer().getPlayer(result.getString("Victim"));
-					ItemStack gitem = Items.itemByName(result.getString("Item")).toStack();
-					int gAmount = result.getInt("amount");
-					// Might need these later
-					result.close();
-					
-					//gitem.setAmount(gAmount);
-					
-					if (Player == gPlayer && victim == gvictim) {
-						
-						exchange.returnGift(Player, victim, item);
-						
-						plugin.SQL.removeGift(Player, victim, item, Amount);
-						plugin.SQL.removeSender(Player);
-					}
-				} else {
-					
-					result = plugin.SQL.scanTradeforCancel(Player);
-					
-					if (result.next()) {
-						
-						Player tPlayer = plugin.getServer().getPlayer(result.getString("player"));
-						Player tvictim = plugin.getServer().getPlayer(result.getString("Victim"));
-						ItemStack titem = Items.itemByName(result.getString("Item")).toStack();
-						int tAmount = result.getInt("amount");
-						int tPrice = result.getInt("price");
+
+				result = plugin.SQL.scanGiftforAll();
+
+				while (result.next()) {
+					if (Player.getName().equals(result.getString("player"))) {
+						Player gPlayer = plugin.getServer().getPlayer(result.getString("player"));
+						Player gvictim = plugin.getServer().getPlayer(result.getString("Victim"));
+						ItemStack gitem = Items.itemByName(result.getString("Item")).toStack();
+						int gAmount = result.getInt("amount");
 						// Might need these later
 						result.close();
-						
-						//titem.setAmount(tAmount);
-						
-						if (Player == tPlayer && victim == tvictim) {
-							
-							exchange.returnTrade(Player, victim, item, Price);
-							
-							plugin.SQL.removeTrade(Player, victim, item, Amount, Price);
+
+						gitem.setAmount(gAmount);
+
+						if (Player == gPlayer && victim == gvictim && gitem == item) {
+
+							exchange.returnGift(Player, victim, item);
+
+							plugin.SQL.removeGift(Player, victim, item, Amount);
 							plugin.SQL.removeSender(Player);
 						}
-						
-					} else {
-						
-						result = plugin.SQL.scanSwapforCancel(Player);
-						
-						if (result.next()) {
-							
-							Player sPlayer = plugin.getServer().getPlayer(result.getString("player"));
-							Player svictim = plugin.getServer().getPlayer(result.getString("Victim"));
-							ItemStack sitem = Items.itemByName(result.getString("Item")).toStack();
-							ItemStack svItem = Items.itemByName(result.getString("ItemFromVictim")).toStack();
-							int sAmount = result.getInt("amount");
-							int svAmount = result.getInt("amountFromVictim");
-							// Might need these later
-							result.close();
-							
-							//sitem.setAmount(sAmount);
-							//svItem.setAmount(svAmount);
-							
-							if (Player == sPlayer && victim == svictim) {
-								
-								exchange.returnSwap(Player, victim, item, vItem);
-							
-								plugin.SQL.removeSwap(Player, victim, item, Amount, vItem, Amount);
-								plugin.SQL.removeSender(Player);
-							}
-						} else {
-							
-						}					
-					}		
+					}
+				}
+				result.close();
+
+				result = plugin.SQL.scanTradeforCancel(Player);
+
+				while (result.next()) {
+
+					Player tPlayer = plugin.getServer().getPlayer(result.getString("player"));
+					Player tvictim = plugin.getServer().getPlayer(result.getString("Victim"));
+					ItemStack titem = Items.itemByName(result.getString("Item")).toStack();
+					int tAmount = result.getInt("amount");
+					int tPrice = result.getInt("price");
+					// Might need these later
+					result.close();
+
+					titem.setAmount(tAmount);
+
+					if (Player == tPlayer && victim == tvictim && titem == item && tPrice == Price) {
+
+						exchange.returnTrade(Player, victim, item, Price);
+
+						plugin.SQL.removeTrade(Player, victim, item, Amount, Price);
+						plugin.SQL.removeSender(Player);
+					}
+				}
+				result.close();
+
+				result = plugin.SQL.scanSwapforCancel(Player);
+
+				while (result.next()) {
+
+					Player sPlayer = plugin.getServer().getPlayer(result.getString("player"));
+					Player svictim = plugin.getServer().getPlayer(result.getString("Victim"));
+					ItemStack sitem = Items.itemByName(result.getString("Item")).toStack();
+					ItemStack svItem = Items.itemByName(result.getString("ItemFromVictim")).toStack();
+					int sAmount = result.getInt("amount");
+					int svAmount = result.getInt("amountFromVictim");
+					// Might need these later
+					result.close();
+
+					sitem.setAmount(sAmount);
+					svItem.setAmount(svAmount);
+
+					if (Player == sPlayer && victim == svictim && sitem == item && svItem == vItem) {
+
+						exchange.returnSwap(Player, victim, item, vItem);
+
+						plugin.SQL.removeSwap(Player, victim, item, Amount, vItem, Amount);
+						plugin.SQL.removeSender(Player);
+					}
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}	
+			}
 		} else {
 			if (timeleft != 0) {
 				for (Gift g : plugin.gifts) {

@@ -196,6 +196,29 @@ public class SQLDataHandler {
 			return null;
 		}
 	}
+	
+	public boolean removeTrade(Player player, OfflinePlayer Victim, ItemStack Item, int amount, int price) throws SQLException {
+
+		String Player = player.getName();
+		String victim = Victim.getName();
+		String item = Items.itemByStack(Item).getName();
+
+				
+		if (plugin.SQLt.checkConnection()) {
+			
+			String query = "DELETE FROM `Trade` WHERE `player` = '" + Player + "' AND `Victim` = '" + victim + "' AND `Item` = '" + item + "' AND `amount` = '" + amount + "' AND `price` = '" + price + "'";
+			plugin.SQLt.query(query);
+		} else if (plugin.MSQL.checkConnection()) {
+			
+			String query = "DELETE FROM `" + plugin.db + "`.`Trade` WHERE `player` = '" + Player + "' AND `Victim` = '" + victim + "' AND `Item` = '" + item + "' AND `amount` = '" + amount + "' AND `price` = '" + price + "'";
+			plugin.MSQL.query(query);
+		} else {
+			
+			return false;
+		}
+
+		return true;
+	}
 
 	public boolean removeTrade(Player player, Player Victim, ItemStack Item, int amount, int price) throws SQLException {
 
@@ -283,7 +306,7 @@ public class SQLDataHandler {
 			return null;
 		}
 	}
-
+	
 	public boolean removeSwap(Player player, Player Victim, ItemStack Item, int amount, ItemStack ItemFromVictim, int amountFromVictim) throws SQLException {
 
 		String Player = player.getName();
