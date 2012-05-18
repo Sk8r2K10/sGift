@@ -90,12 +90,10 @@ public class LeaveEventHandler implements Listener {
 								return;
 							}
 
-						} else {
-							
-							result.close();
 						}
 					}
-
+                    result.close();
+                    
 					result = plugin.SQL.scanSwapforAll();
 					
 					while (result.next()) {
@@ -139,11 +137,9 @@ public class LeaveEventHandler implements Listener {
 							plugin.SQL.removeSwap(player, Victim, item, amount, vItem, vAmount);
 							
 							return;
-						} else {
-							
-							result.close();
 						}
 					}
+                    result.close();
 					
 					result = plugin.SQL.scanTradeforAll();
 					
@@ -178,14 +174,11 @@ public class LeaveEventHandler implements Listener {
 								plugin.SQL.removeSender(player);
 								return;
 							}
-						} else {
-							result.close();
-							return;
 						}
+                        result.close();
 					}
 				}
 			}
-			result.close();
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}

@@ -17,73 +17,74 @@ import org.bukkit.inventory.ItemStack;
 
 public class JoinEventHandler implements Listener {
 
-	private sGift plugin;
-	private Player player;
-	private ItemStack Item;
-	private int amount;
-	private ResultSet result;
-	private String errpre = "[" + ChatColor.RED + "sGift" + ChatColor.WHITE + "] " + ChatColor.RED;
-	private final static Logger log = Logger.getLogger("Minecraft");
+    private sGift plugin;
+    private Player player;
+    private ItemStack Item;
+    private int amount;
+    private ResultSet result;
+    private String errpre = "[" + ChatColor.RED + "sGift" + ChatColor.WHITE + "] " + ChatColor.RED;
+    private final static Logger log = Logger.getLogger("Minecraft");
 
-	public JoinEventHandler(sGift instance) {
+    public JoinEventHandler(sGift instance) {
 
-		plugin = instance;
-	}
+        plugin = instance;
+    }
 
-	@EventHandler(priority = EventPriority.LOW)
-	public void onPlayerJoin(PlayerJoinEvent e) {
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPlayerJoin(PlayerJoinEvent e) {
 
-		if (!plugin.getConfig().getBoolean("Features.cancel-exchanges-on-leave")) {
+        if (!plugin.getConfig().getBoolean("Features.cancel-exchanges-on-leave")) {
 
-			return;
-		}
-		if (!plugin.getConfig().getBoolean("Options.use-sql.sqlite") && !plugin.getConfig().getBoolean("Options.use-sql.mysql.use")) {
+            return;
+        }
+        if (!plugin.getConfig().getBoolean("Options.use-sql.sqlite") && !plugin.getConfig().getBoolean("Options.use-sql.mysql.use")) {
 
-			return;
-		}
+            return;
+        }
 
-		try {
-			result = plugin.SQL.scanLost(e.getPlayer());
+        try {
+            result = plugin.SQL.scanLost(e.getPlayer());
 
-			if (!result.next()) {
-				result.close();
-				return;
-			}
-				if (result.getString("player").equals(e.getPlayer().getName())) {
-					player = Bukkit.getPlayer(result.getString("player"));
-					Item = Items.itemByName(result.getString("Item")).toStack();
-					amount = result.getInt("amount");
+            if (!result.next()) {
+                result.close();
+                return;
+            }
+            if (result.getString("player").equals(e.getPlayer().getName())) {
+                player = Bukkit.getPlayer(result.getString("player"));
+                Item = Items.itemByName(result.getString("Item")).toStack();
+                amount = result.getInt("amount");
 
-					result.close();
+                result.close();
 
-					Item.setAmount(amount);
+                Item.setAmount(amount);
 
-					this.refundItems(player, Item);
+                this.refundItems(player, Item);
 
-					plugin.SQL.removeLost(player, Item, amount);
-				} else {
-					result.close();
-				}
+                plugin.SQL.removeLost(player, Item, amount);
+            } else {
+                result.close();
+            }
 
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		}
-	}
-	public void refundItems(Player player, ItemStack Item) {
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
 
-		player.sendMessage(errpre + "You were involved in an exchange, Then left.");
-		player.sendMessage(errpre + "Returning your items.");
+    public void refundItems(Player player, ItemStack Item) {
 
-		if (player.getInventory().firstEmpty() == -1) {
+        player.sendMessage(errpre + "You were involved in an exchange, Then left.");
+        player.sendMessage(errpre + "Returning your items.");
 
-			Location playerLoc = player.getLocation();
+        if (player.getInventory().firstEmpty() == -1) {
 
-			playerLoc.getWorld().dropItemNaturally(playerLoc, Item);
-			player.sendMessage(errpre + "No room in your inventory!");
-			player.sendMessage(errpre + "Dropped items at your feet.");
-		} else {
+            Location playerLoc = player.getLocation();
 
-			player.getInventory().addItem(Item);
-		}
-	}
+            playerLoc.getWorld().dropItemNaturally(playerLoc, Item);
+            player.sendMessage(errpre + "No room in your inventory!");
+            player.sendMessage(errpre + "Dropped items at your feet.");
+        } else {
+
+            player.getInventory().addItem(Item);
+        }
+    }
 }
